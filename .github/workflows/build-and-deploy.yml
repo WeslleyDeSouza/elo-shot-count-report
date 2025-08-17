@@ -154,28 +154,41 @@ jobs:
       # Build only affected projects instead of all
       - name: Build affected projects
         run: |
-          echo "Building affected projects..."
+          echo "Building projects..."
 
-          # Check if we have any affected projects
-          if [ "${{ needs.install.outputs.has-affected }}" = "0" ]; then
-            echo "No affected projects found, skipping build"
-            mkdir -p dist
-            echo "placeholder" > dist/.placeholder
-            exit 0
+          # On main branch, always build something to ensure deployment works
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            if [ "${{ needs.install.outputs.has-affected }}" = "0" ]; then
+              echo "No affected projects on main branch - building all projects to ensure deployment"
+              npx nx run-many --target=build --all --configuration=production --parallel=3
+            else
+              echo "Building affected projects on main branch"
+              # Build API first if affected (dependency)
+              if echo "${{ needs.install.outputs.affected-apps }}" | grep -q "api"; then
+                echo "Building API..."
+                npx nx build api
+                npm run ng-swagger
+              fi
+              # Build other affected projects
+              npx nx affected --target=build --configuration=production --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
+            fi
+          else
+            # Feature branches - only build affected
+            if [ "${{ needs.install.outputs.has-affected }}" = "0" ]; then
+              echo "No affected projects found, skipping build"
+              exit 0
+            fi
+            # Build API first if affected (dependency)
+            if echo "${{ needs.install.outputs.affected-apps }}" | grep -q "api"; then
+              echo "Building API..."
+              npx nx build api
+              npm run ng-swagger
+            fi
+            # Build other affected projects
+            npx nx affected --target=build --configuration=production --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
           fi
 
-          # Build API first if affected (dependency)
-          if echo "${{ needs.install.outputs.affected-apps }}" | grep -q "api"; then
-            echo "Building API..."
-            npx nx build api
-            npm run ng-swagger
-          fi
-
-          # Build other affected projects in production mode
-          echo "Building other affected projects..."
-          npx nx affected --target=build --configuration=production --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
-
-          # Only run ngsw if we have Angular apps that were affected
+          # Only run ngsw if we have Angular apps that were built
           if ls dist/*/ngsw-worker.js 1> /dev/null 2>&1; then
             echo "Running ngsw..."
             npm run ngsw
@@ -195,13 +208,13 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
-          name: nx-dist-final
+          name: nXdist
           path: dist/
           retention-days: 30
           if-no-files-found: warn
 
   deploy:
-    needs: [build, tests]
+    needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
     environment: production
@@ -211,7 +224,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: nx-dist-final
+          name: nXdist
           path: ./dist
 
       - name: Verify artifacts
@@ -220,12 +233,6 @@ jobs:
           ls -la
           echo "Dist directory contents:"
           ls -la dist/ || echo "No dist directory found"
-
-          # Check if we have actual build artifacts (not just placeholder)
-          if [ -f "dist/.placeholder" ]; then
-            echo "Only placeholder found, no real artifacts to deploy"
-            exit 0
-          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -248,8 +255,6 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
-        # Only build if we have real artifacts
-        if: ${{ !contains(steps.verify-artifacts.outputs.stdout, 'placeholder') }}
         uses: docker/build-push-action@v6
         with:
           context: ./
@@ -263,7 +268,3 @@ jobs:
           build-args: |
             NPM_TOKEN=${{ secrets.NPM_TOKEN }}
             BUILDKIT_INLINE_CACHE=1
-
-      - name: Skip deployment message
-        if: ${{ contains(steps.verify-artifacts.outputs.stdout, 'placeholder') }}
-        run: echo "No affected projects detected, skipping Docker deployment"
