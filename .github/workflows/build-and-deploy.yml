@@ -39,7 +39,7 @@ jobs:
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --legacy-peer-deps
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   tests:
     needs: install
@@ -66,7 +66,7 @@ jobs:
           echo "Running tests..."
           # npx nx run-many --target=test --all --parallel
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   build:
     needs: install
@@ -95,7 +95,7 @@ jobs:
           npx nx run-many --target=build --all --configuration=production
           npm run ngsw
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: List build outputs
         run: ls -la dist/
