@@ -68,14 +68,23 @@ export class ArealComponent implements OnInit, OnDestroy {
       return categories;
     }
 
+    const matchesCategory = (category: ArealCategory): boolean => {
+      return category.name.toLowerCase().includes(search) ||
+             category.code.toLowerCase().includes(search);
+    };
+
+    const matchesArea = (area: any): boolean => {
+      return area.name.toLowerCase().includes(search);
+    };
+
     return categories.filter(category =>
-      category.name.toLowerCase().includes(search) ||
-      category.areas.some(area => area.name.toLowerCase().includes(search))
+      matchesCategory(category) ||
+      category.areas.some(area => matchesArea(area))
     ).map(category => (<ArealCategory>{
       ...category,
       areas: category.areas.filter(area =>
-        area.name.toLowerCase().includes(search) ||
-        category.name.toLowerCase().includes(search)
+        matchesArea(area) ||
+        matchesCategory(category)
       )
     }));
   });
@@ -109,7 +118,29 @@ export class ArealComponent implements OnInit, OnDestroy {
   }
 
   searchAreas(event: any): void {
-    this.searchText.set(event.target.value);
+    const searchValue = event.target.value;
+    this.searchText.set(searchValue);
+    
+    // Auto-expand matching categories when searching
+    if (searchValue.trim()) {
+      const search = searchValue.toLowerCase();
+      const categories = this.allCategories();
+      const newStates = { ...this.collapsedStates() };
+      
+      categories.forEach(category => {
+        const categoryMatches = category.name.toLowerCase().includes(search) ||
+                               category.code.toLowerCase().includes(search);
+        const hasMatchingArea = category.areas.some(area => 
+          area.name.toLowerCase().includes(search)
+        );
+        
+        if (categoryMatches || hasMatchingArea) {
+          newStates[category.id] = false;
+        }
+      });
+      
+      this.collapsedStates.set(newStates);
+    }
   }
 
   refreshAreas(): void {

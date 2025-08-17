@@ -47,7 +47,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
-        run: npm i -g nx && npm i --legacy-peer-deps
+        run: npm i --legacy-peer-deps
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -147,7 +147,6 @@ jobs:
           path: |
             ./dist
           if-no-files-found: error
-
 
   deploy:
     needs: build

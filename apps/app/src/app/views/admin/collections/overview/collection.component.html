@@ -1,0 +1,152 @@
+<!-- Action buttons -->
+<div class="row mb-3">
+  <div class="col-12">
+    <button type="button" class="btn btn-primary me-2" (click)="createCollection()">
+      <i class="ri-add-line"></i> {{ 'admin.common.add_collection' | translate }}
+    </button>
+    <button type="button" class="btn btn-outline-primary me-2" (click)="openBulkEditor()">
+      <i class="ri-table-line"></i> {{ 'admin.common.bulk_edit' | translate }}
+    </button>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="row mb-3">
+  <div class="col-md-3">
+    <label class="form-label">{{ 'admin.common.enabled' | translate }}</label>
+    <select class="form-select" [(ngModel)]="filterEnabled" (change)="applyFilters()">
+      <option [ngValue]="undefined">{{ 'admin.common.all' | translate }}</option>
+      <option [ngValue]="true">{{ 'admin.common.yes' | translate }}</option>
+      <option [ngValue]="false">{{ 'admin.common.no' | translate }}</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">{{ 'admin.collection.year' | translate }}</label>
+    <input type="text" class="form-control" [(ngModel)]="filterYear" (input)="applyFilters()" 
+           [placeholder]="'admin.collection.enter_year' | translate">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">{{ 'admin.common.pin' | translate }}</label>
+    <input type="text" class="form-control" [(ngModel)]="filterPin" (input)="applyFilters()" 
+           [placeholder]="'admin.collection.enter_pin' | translate">
+  </div>
+  <div class="col-md-3">
+    <button type="button" class="btn btn-outline-secondary mt-4" (click)="clearFilters()">
+      <i class="ri-refresh-line"></i> {{ 'admin.common.clear_filters' | translate }}
+    </button>
+  </div>
+</div>
+
+<!-- Search -->
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="ri-search-line"></i>
+      </span>
+      <input 
+        type="text" 
+        class="form-control" 
+        [placeholder]="'admin.common.search' | translate"
+        [value]="searchText()"
+        (input)="searchCollections($event)">
+    </div>
+  </div>
+</div>
+
+<!-- Loading indicator -->
+@if(loading()) {
+<div class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+}
+
+<!-- Error message -->
+@if(error()) {
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{ error() }}
+  <button type="button" class="btn-close" (click)="clearError()"></button>
+</div>
+}
+
+<!-- Collections table -->
+@if(!loading() && filteredCollections().length > 0) {
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ 'admin.common.pin' | translate }}</th>
+        <th>{{ 'admin.collection.person' | translate }}</th>
+        <th>{{ 'admin.collection.user_type' | translate }}</th>
+        <th>{{ 'admin.collection.date' | translate }}</th>
+        <th>{{ 'admin.collection.weapons_count' | translate }}</th>
+        <th style="width: 120px;">{{ 'admin.common.enabled' | translate }}</th>
+        <th style="width: 100px;">{{ 'admin.common.actions' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(collection of filteredCollections(); track collection.id) {
+      <tr class="collection-row">
+        <td>{{ collection.pin }}</td>
+        <td>
+          @if(collection.personData) {
+            <div>
+              <strong>{{ collection.personData.name }}</strong>
+              @if(collection.personData.responsible) {
+                <br><small class="text-muted">{{ collection.personData.responsible }}</small>
+              }
+            </div>
+          }
+        </td>
+        <td>{{ collection.userType }}</td>
+        <td>
+          @if(collection.dateData) {
+            {{ collection.dateData.date }}
+          }
+        </td>
+        <td>
+          @if(collection.weaponsData) {
+            <span class="badge bg-info">{{ getWeaponsCount(collection.weaponsData) }}</span>
+          }
+        </td>
+        <td>
+          <div class="form-check form-switch">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [id]="'switch-' + collection.id"
+              [checked]="collection.enabled"
+              (change)="toggleCollectionEnabled(collection)">
+            <label class="form-check-label" [for]="'switch-' + collection.id"></label>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-primary" (click)="editCollection(collection)">
+              <i class="ri-edit-line"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-danger" (click)="deleteCollection(collection)">
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+}
+
+<!-- No data message -->
+@if(!loading() && filteredCollections().length === 0) {
+  <app-empty-state 
+    [title]="'admin.collection.overview.no_entries' | translate"
+    [subtitle]="'admin.collection.overview.no_entries_subtitle' | translate"
+    iconClass="ri-database-2-line">
+    <button type="button" class="btn btn-primary" (click)="createCollection()">
+      <i class="ri-add-line"></i> {{ 'admin.collection.overview.create_first_collection' | translate }}
+    </button>
+  </app-empty-state>
+}

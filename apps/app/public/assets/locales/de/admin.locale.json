@@ -20,7 +20,11 @@
       "name": "Name",
       "email": "E-Mail",
       "allowed_areals": "Erlaubte Areale",
-      "no_restrictions": "Keine Einschränkungen"
+      "no_restrictions": "Keine Einschränkungen",
+      "search": "Suchen",
+      "add_collection": "Sammlung hinzufügen",
+      "all": "Alle",
+      "clear_filters": "Filter löschen"
     },
     "areal": {
       "form": {
@@ -107,6 +111,20 @@
         "no_entries_subtitle": "Erstellen Sie Ihre erste Koordinationsstelle"
       },
       "create_first_coordination_office": "Erste Koordinationsstelle erstellen"
+    },
+    "collection": {
+      "person": "Person",
+      "user_type": "Benutzertyp",
+      "date": "Datum",
+      "weapons_count": "Waffenanzahl",
+      "year": "Jahr",
+      "enter_year": "Jahr eingeben",
+      "enter_pin": "PIN eingeben",
+      "overview": {
+        "no_entries": "Keine Einträge",
+        "no_entries_subtitle": "Erstellen Sie Ihre erste Sammlung",
+        "create_first_collection": "Erste Sammlung erstellen"
+      }
     },
     "route": {
       "title": {

@@ -38,6 +38,7 @@ import {AppConfigModule} from "./core/config";
 import {AreaModule} from "./modules/admin-areal";
 import {CoordinationOfficeModule} from "./modules/admin-coordination-office";
 import {WeaponModule} from "./modules/admin-weapon";
+import {CollectionModule} from "./modules/admin-collection";
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import {WeaponModule} from "./modules/admin-weapon";
         ...  (<any>AreaModule.DBOptions.entities),
         ...  (<any>CoordinationOfficeModule.DBOptions.entities),
         ...  (<any>WeaponModule.DBOptions.entities),
+        ...  (<any>CollectionModule.DBOptions.entities),
       ],
     }),
 
@@ -96,7 +98,8 @@ import {WeaponModule} from "./modules/admin-weapon";
     UploadFTPModule,
     AreaModule,
     CoordinationOfficeModule,
-    WeaponModule
+    WeaponModule,
+    CollectionModule
   ],
 })
 export class AppModule implements NestModule {

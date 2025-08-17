@@ -14,6 +14,23 @@
   </div>
 </div>
 
+<!-- Search -->
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="ri-search-line"></i>
+      </span>
+      <input 
+        type="text" 
+        class="form-control" 
+        [placeholder]="'admin.common.search' | translate"
+        [value]="searchText()"
+        (input)="searchAreas($event)">
+    </div>
+  </div>
+</div>
+
 <!-- Loading indicator -->
 @if(loading()) {
 <div class="text-center py-4">

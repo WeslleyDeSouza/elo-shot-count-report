@@ -13,7 +13,8 @@ const PATHS = {
   WEAPON_CREATE: '/admin/weapon/create',
   WEAPON_EDIT: '/admin/weapon/edit',
   WEAPON_CREATE_CATEGORY: '/admin/weapon/create-category',
-  WEAPON_EDIT_CATEGORY: '/admin/weapon/edit-category'
+  WEAPON_EDIT_CATEGORY: '/admin/weapon/edit-category',
+  WEAPON_BULK_EDIT: '/admin/weapon/bulk-edit'
 } as const;
 
 @Component({
@@ -67,13 +68,20 @@ export class WeaponComponent implements OnInit, OnDestroy {
       return categories;
     }
 
+    const matchesWeapon = (weapon: Weapon): boolean => {
+      return weapon.name.toLowerCase().includes(search) ||
+             weapon.nameDe.toLowerCase().includes(search) ||
+             weapon.nameFr.toLowerCase().includes(search) ||
+             weapon.nameIt.toLowerCase().includes(search);
+    };
+
     return categories.filter(category =>
       category.name.toLowerCase().includes(search) ||
-      category.weapons.some(weapon => weapon.name.toLowerCase().includes(search))
+      category.weapons.some(weapon => matchesWeapon(weapon))
     ).map(category => {
       const filteredCategory = new WeaponCategory(category);
       filteredCategory.weapons = category.weapons.filter(weapon =>
-        weapon.name.toLowerCase().includes(search) ||
+        matchesWeapon(weapon) ||
         category.name.toLowerCase().includes(search)
       );
       return filteredCategory;
@@ -115,7 +123,31 @@ export class WeaponComponent implements OnInit, OnDestroy {
   }
 
   searchWeapons(event: any): void {
-    this.searchText.set(event.target.value);
+    const searchValue = event.target.value;
+    this.searchText.set(searchValue);
+    
+    // Auto-expand matching categories when searching
+    if (searchValue.trim()) {
+      const search = searchValue.toLowerCase();
+      const categories = this.allCategories();
+      const newStates = { ...this.collapsedStates() };
+      
+      categories.forEach(category => {
+        const categoryMatches = category.name.toLowerCase().includes(search);
+        const hasMatchingWeapon = category.weapons.some(weapon => 
+          weapon.name.toLowerCase().includes(search) ||
+          weapon.nameDe.toLowerCase().includes(search) ||
+          weapon.nameFr.toLowerCase().includes(search) ||
+          weapon.nameIt.toLowerCase().includes(search)
+        );
+        
+        if (categoryMatches || hasMatchingWeapon) {
+          newStates[category.id] = false;
+        }
+      });
+      
+      this.collapsedStates.set(newStates);
+    }
   }
 
   refreshWeapons(): void {
@@ -204,5 +236,9 @@ export class WeaponComponent implements OnInit, OnDestroy {
     });
     
     this.collapsedStates.set(newStates);
+  }
+
+  openBulkEditor(): void {
+    this.router.navigate([PATHS.WEAPON_BULK_EDIT]);
   }
 }

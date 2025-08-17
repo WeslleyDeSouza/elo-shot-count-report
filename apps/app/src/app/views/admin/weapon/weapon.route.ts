@@ -3,6 +3,7 @@ import { WeaponComponent } from "./overview/weapon.component";
 import { WeaponFacade } from "./weapon.facade";
 import { WeaponFormComponent } from "./form";
 import { WeaponCategoryFormComponent } from "./form";
+import { WeaponBulkFormComponent } from "./form/weapon-bulk-form.component";
 
 export const WEAPON_ROUTES: Route[] = [
   {
@@ -28,6 +29,10 @@ export const WEAPON_ROUTES: Route[] = [
       {
         path: 'edit-category/:id',
         component: WeaponCategoryFormComponent
+      },
+      {
+        path: 'bulk-edit',
+        component: WeaponBulkFormComponent
       },
       {
         path: '',

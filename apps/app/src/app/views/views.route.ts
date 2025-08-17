@@ -31,6 +31,11 @@ export const VIEWS_ROUTES: Route[] = [
         loadChildren:()=> import('./admin/weapon')
           .then(mod => mod.WEAPON_ROUTES),
       },
+      {
+        path:'collections',
+        loadChildren:()=> import('./admin/collections')
+          .then(mod => mod.COLLECTION_ROUTES),
+      },
     ]
   }
 ,
