@@ -16,7 +16,7 @@ jobs:
           cache: 'npm'
       - name: NPM Login & Install
         run: |
-          sed -i "s|//registry.npmjs.org/:_authToken=.*|//registry.npmjs.org/:_authToken=$NPM_TOKEN|" .npmrc
+          sed -i 's|//registry\.npmjs\.org/:_authToken=.*|//registry.npmjs.org/:_authToken='$NPM_TOKEN'|' .npmrc
           npm whoami --silent || exit 1
           npm install
         env:
@@ -34,7 +34,7 @@ jobs:
           cache: 'npm'
       - name: NPM Login & Install
         run: |
-          sed -i "s|//registry.npmjs.org/:_authToken=.*|//registry.npmjs.org/:_authToken=$NPM_TOKEN|" .npmrc
+          sed -i 's|//registry\.npmjs\.org/:_authToken=.*|//registry.npmjs.org/:_authToken='$NPM_TOKEN'|' .npmrc
           npm whoami --silent || exit 1
           npm install
         env:
