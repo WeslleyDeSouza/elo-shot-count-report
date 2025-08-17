@@ -14,9 +14,10 @@ jobs:
         with:
           node-version: '23'
           cache: 'npm'
-      - name: Configure NPM token
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
-      - run: npm install
+      - name: NPM Login
+        run: npm install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npx nx run-many --parallel --target=build --projects="api" && npm run ng-swagger
       - run: npx nx run-many --target=build --all --prod
       - run: npm run ngsw
