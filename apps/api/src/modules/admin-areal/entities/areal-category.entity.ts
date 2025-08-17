@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -10,10 +11,13 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { AreaEntity } from './areal.entity';
 import { Unique } from 'typeorm';
-import { DbPlatformColumn } from '@app-galaxy/core-api';
+import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 @Entity('areal_category')
-@Unique(['code', 'name'])
-export class AreaCategoryEntity extends BaseEntity {
+@Unique(['tenantId','code', 'name'])
+export class AreaCategoryEntity extends TenantBaseEntity {
+
+  protected readonly self = AreaCategoryEntity
+
   @ApiProperty({ type: String })
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -29,4 +33,9 @@ export class AreaCategoryEntity extends BaseEntity {
   @ApiProperty({ type: AreaEntity, isArray: true })
   @OneToMany(() => AreaEntity, (aE) => aE.category)
   areas: AreaEntity[];
+
+  @BeforeInsert()
+  protected async beforeInsert(): Promise<any> {
+
+  }
 }

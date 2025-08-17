@@ -33,7 +33,9 @@ module.exports = withNativeFederation({
     'rxjs/fetch',
     'rxjs/testing',
     'rxjs/webSocket',
-    '@ui-lib/page-booking',
+    '@api-elo/common',
+    '@api-elo/models',
+
     // Add further packages you don't need at runtime
   ],
 
@@ -44,7 +46,6 @@ module.exports = withNativeFederation({
     // New feature for more performance and avoiding
     // issues with node libs. Comment this out to
     // get the traditional behavior:
-   // ignoreUnusedDeps: true
+    ignoreUnusedDeps: true
   }
-
 });

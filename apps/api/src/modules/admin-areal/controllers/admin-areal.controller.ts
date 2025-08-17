@@ -2,20 +2,21 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch,
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AppsRolesGuard, ReplayGuard } from '@movit/auth-api';
-import {  TenantGuard } from '@app-galaxy/core-api';
+import {GetTenantId, TenantGuard} from '@app-galaxy/core-api';
 import {API_APPS_MAPPING} from "../../../main.mock-data";
-import {ArealService} from "../dto/areal.service";
 
 import {
   ArealCreateDto,
   ArealUpdateDto,
   ArealResultDto,
   ArealCategoryResultDto
-} from '@api-elo/models';
+} from '../dto';
 
 import {CordsRolesGuard, GetCordsRules} from "@api-elo/common";
+import {ArealService} from "../areal.service";
 
-@ApiTags('admin - areal')
+
+@ApiTags('Admin - Areal')
 @Controller('admin/areal')
 @UseGuards(AuthGuard('jwt'), TenantGuard, AppsRolesGuard(
   API_APPS_MAPPING.ADMIN_REPORT_ENTRIES,
@@ -36,7 +37,9 @@ export class AdminArealController {
     isArray: true,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  allowedArealRulSet(@GetCordsRules() allowedRules: string[]): string[] {
+  allowedArealRulSet(
+    @GetTenantId() tenantId: string,
+    @GetCordsRules() allowedRules: string[]): string[] {
     return allowedRules;
   }
 
@@ -47,8 +50,8 @@ export class AdminArealController {
     isArray: true,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  listAreal(@GetCordsRules() allowedRules: string[]) {
-    return this.arealService.listCategoryWithAreas().then((cateogires) => {
+  listAreal(@GetTenantId() tenantId: string, @GetCordsRules() allowedRules: string[]) {
+    return this.arealService.listCategoryWithAreas(tenantId).then((cateogires) => {
       return cateogires.filter((category) =>
         allowedRules.find((allowedCode) => (category.code + '')?.startsWith(allowedCode))
       );
@@ -57,18 +60,18 @@ export class AdminArealController {
 
   @Delete(':id')
   @ApiParam({ name: 'id', type: String })
-  @UseGuards(AppsRolesGuard(3))
-  deleteAreal(@Param('id') id: string) {
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  deleteAreal(@GetTenantId() tenantId: string, @Param('id') id: string) {
     if (!id) throw new HttpException('ID required', HttpStatus.BAD_REQUEST);
-    return this.arealService.deleteAreal(id);
+    return this.arealService.deleteAreal(tenantId, id);
   }
 
   @Put('')
   @ApiBody({ type: ArealCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: ArealResultDto })
-  @UseGuards(AppsRolesGuard(3))
-  createAreal(@Body() body: ArealCreateDto) {
-    return this.arealService.createAreal(body).catch((e) => {
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  createAreal(@GetTenantId() tenantId: string, @Body() body: ArealCreateDto) {
+    return this.arealService.createAreal(tenantId, body).catch((e) => {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
   }
@@ -78,10 +81,10 @@ export class AdminArealController {
   @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: ArealUpdateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: ArealResultDto })
-  @UseGuards(AppsRolesGuard(3))
-  updateAreal(@Param('id') id: string, @Body() body: ArealUpdateDto) {
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  updateAreal(@GetTenantId() tenantId: string, @Param('id') id: string, @Body() body: ArealUpdateDto) {
     return this.arealService
-      .updateAreal(id, body)
+      .updateAreal(tenantId, id, body)
       .then((data) => (data.affected ? body : new HttpException('Item not updated', 500)))
       .catch((e) => {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);

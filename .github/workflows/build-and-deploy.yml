@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '23'
           cache: 'npm'
       - run: npm install
       - run: npx nx run-many --parallel --target=build --projects="api" && npm run ng-swagger
@@ -57,6 +57,6 @@ jobs:
           context: ./
           file: ./dockerfile
           push: true
-          tags: '${{ secrets.REGISTRY_URL }}/app-fiorello-booking:latest'
+          tags: '${{ secrets.REGISTRY_URL }}/${{ secrets.REGISTRY_URL_PATH }}:latest'
 #          cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/app-fiorello-booking:latest
 #          cache-to: type=inline

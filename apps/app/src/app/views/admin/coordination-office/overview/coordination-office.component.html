@@ -1,0 +1,109 @@
+<!-- Search and action buttons -->
+<div class="row mb-3">
+  <div class="col-md-6">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="fa fa-search"></i>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        [placeholder]="'search_coordination_offices' | translate"
+        (input)="searchOffices($event)">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary me-2" (click)="createCoordinationOffice()">
+      <i class="fa fa-plus"></i> {{ 'add_coordination_office' | translate }}
+    </button>
+    <button type="button" class="btn btn-outline-secondary" (click)="refreshOffices()">
+      <i class="fa fa-refresh"></i> {{ 'refresh' | translate }}
+    </button>
+  </div>
+</div>
+
+<!-- Loading indicator -->
+@if(loading()) {
+<div class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+}
+
+<!-- Error message -->
+@if(error()) {
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{ error() }}
+  <button type="button" class="btn-close" (click)="clearError()"></button>
+</div>
+}
+
+<!-- Coordination offices table -->
+@if(!loading() && filteredOffices().length > 0) {
+<div class="card">
+  <div class="card-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{{ 'pin' | translate | titlecase }}</th>
+          <th>{{ 'name' | translate | titlecase }}</th>
+          <th>{{ 'email' | translate | titlecase }}</th>
+          <th>{{ 'allowed_areals' | translate | titlecase }}</th>
+          <th style="width: 120px;">{{ 'enabled' | translate | titlecase }}</th>
+          <th style="width: 140px;">{{ 'actions' | translate | titlecase }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(office of filteredOffices(); track office.id) {
+        <tr>
+          <td><strong>{{ office.pin }}</strong></td>
+          <td>{{ office.name }}</td>
+          <td>{{ office.email }}</td>
+          <td>
+            @if(office.allowedArealNames) {
+              <small class="text-muted">{{ office.allowedArealNames }}</small>
+            } @else {
+              <small class="text-muted">{{ 'no_restrictions' | translate }}</small>
+            }
+          </td>
+          <td>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                [checked]="office.enabled"
+                (change)="toggleOfficeEnabled(office)">
+              <span class="slider"></span>
+            </label>
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-sm btn-primary" (click)="editCoordinationOffice(office)">
+                <i class="fa-regular fa-edit"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-danger" (click)="deleteCoordinationOffice(office)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+}
+
+<!-- No data message -->
+@if(!loading() && filteredOffices().length === 0) {
+<div class="card mb-0 mt-3 text-white bg-info">
+  <div class="card-body">
+    <blockquote class="card-bodyquote mb-0">
+      <p class="mb-0">{{ 'coordination_office.overview.no_entries' | translate }}</p>
+      <button type="button" class="btn btn-light btn-sm mt-2" (click)="createCoordinationOffice()">
+        <i class="fa fa-plus"></i> {{ 'create_first_coordination_office' | translate }}
+      </button>
+    </blockquote>
+  </div>
+</div>
+}

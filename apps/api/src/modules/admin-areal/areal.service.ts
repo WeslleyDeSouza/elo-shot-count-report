@@ -13,9 +13,10 @@ export class ArealService {
     protected areaCatRepo: Repository<AreaCategoryEntity>
   ) { }
 
-  async listCategoryWithAreas(filterParams: { enabled?: boolean } = {}) {
+  async listCategoryWithAreas(tenantId: string, filterParams: { enabled?: boolean } = {}) {
     return this.areaCatRepo.find(<any>{
       where: {
+        tenantId,
         areas: {
           ...filterParams,
         },
@@ -29,13 +30,14 @@ export class ArealService {
     });
   }
 
-  async listCategoryWithFilteredAreas(allowedRules: string[]) {
+  async listCategoryWithFilteredAreas(tenantId: string, allowedRules: string[]) {
     const conditions = []
     allowedRules.forEach(element => {
       conditions.push({ areas: Like(`${element}%`) })
     });
     return this.areaCatRepo.find(<any>{
       where: {
+        tenantId,
         areas: conditions
       },
       relations: {
@@ -48,59 +50,67 @@ export class ArealService {
 
   }
 
-  async listCategory(filterParams: { enabled?: boolean } = {}) {
+  async listCategory(tenantId: string, filterParams: { enabled?: boolean } = {}) {
     return this.areaCatRepo.find({
-      where: {},
-
+      where: {
+        tenantId,
+        ...filterParams,
+      },
       order: {
         code: 'asc',
       },
     });
   }
 
-  async listAreas(filterParams: { enabled?: boolean } = {}) {
+  async listAreas(tenantId: string, filterParams: { enabled?: boolean } = {}) {
     return this.areaRepo.find({
       where: {
+        tenantId,
         ...filterParams,
       },
     });
   }
 
-  async findCategory(fullName: string) {
+  async findCategory(tenantId: string, fullName: string) {
     const [code, name] = fullName?.trim().split(' ');
     return this.areaCatRepo.findOne({
       where: {
+        tenantId,
         name: fullName?.trim(),
       },
     });
   }
-  async findCategoryById(id: string) {
+  async findCategoryById(tenantId: string, id: string) {
     return this.areaCatRepo.findOne({
       where: {
+        tenantId,
         id,
       },
     });
   }
-  async findArealById(id: string) {
+  async findArealById(tenantId: string, id: string) {
     return this.areaRepo.findOne({
       where: {
+        tenantId,
         id: id,
       },
     });
   }
-  async findAreal(name: string, categoryId: string) {
+  async findAreal(tenantId: string, name: string, categoryId: string) {
     return this.areaRepo.findOne({
       where: {
+        tenantId,
         categoryId: categoryId,
         name: name,
       },
     });
   }
-  async findOrCreateCategory(fullName: string) {
+  async findOrCreateCategory(tenantId: string, fullName: string) {
     const [code, name] = fullName?.trim().split(' ');
     const category =
       (await this.areaCatRepo.findOne({
         where: {
+          tenantId,
           name: name,
           code: code,
         },
@@ -108,41 +118,44 @@ export class ArealService {
 
     category.code = code;
     category.name = fullName;
+    category.tenantId = tenantId;
 
     return category.save().catch(() => null);
   }
 
-  async findOrCreate(name: string, categoryId: string) {
+  async findOrCreate(tenantId: string, name: string, categoryId: string) {
     const areal =
       (await this.areaRepo.findOne({
         where: {
+          tenantId,
           categoryId,
           name: name,
         },
       })) || this.areaRepo.create();
     areal.name = name;
-
+    areal.tenantId = tenantId;
     areal.categoryId = categoryId;
     return areal.save().catch(() => null);
   }
 
-  deleteAreal(id: string) {
+  deleteAreal(tenantId: string, id: string) {
     if (!id) throw new Error('ID required');
-    return this.areaRepo.delete(id);
+    return this.areaRepo.delete({ tenantId, id });
   }
-  createAreal(createValues: Partial<AreaEntity>) {
-    return this.areaRepo.create(createValues).save();
+  createAreal(tenantId: string, createValues: Partial<AreaEntity>) {
+    return this.areaRepo.create({ ...createValues, tenantId }).save();
   }
-  updateAreal(id: string, updateValues: Partial<AreaEntity>) {
-    return this.areaRepo.update({ id: id }, updateValues).then((data) => ({
+  updateAreal(tenantId: string, id: string, updateValues: Partial<AreaEntity>) {
+    return this.areaRepo.update({ tenantId, id: id }, updateValues).then((data) => ({
       ...data,
       id,
     }));
   }
-  deleteArealCat(id: string) {
+  deleteArealCat(tenantId: string, id: string) {
     this.areaRepo
       .find({
         where: {
+          tenantId,
           categoryId: id,
         },
       })
@@ -153,20 +166,20 @@ export class ArealService {
         });
       });
 
-    return this.areaCatRepo.delete(id);
+    return this.areaCatRepo.delete({ tenantId, id });
   }
 
-  createArealCat(createValues: Partial<ArealCategoryModel>) {
-    return this.areaCatRepo.create(createValues).save();
+  createArealCat(tenantId: string, createValues: Partial<ArealCategoryModel>) {
+    return this.areaCatRepo.create({ ...createValues, tenantId }).save();
   }
-  updateArealCat(id: string, updateValues: Partial<ArealCategoryModel>) {
-    return this.areaCatRepo.update({ id: id }, updateValues);
+  updateArealCat(tenantId: string, id: string, updateValues: Partial<ArealCategoryModel>) {
+    return this.areaCatRepo.update({ tenantId, id: id }, updateValues);
   }
 
-  async categoryCodeExists(code: string) {
+  async categoryCodeExists(tenantId: string, code: string) {
     return this.areaCatRepo
       .findOne({
-        where: { code },
+        where: { tenantId, code },
       })
       .then((hasValue) => !!hasValue);
   }

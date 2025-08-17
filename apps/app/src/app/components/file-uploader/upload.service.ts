@@ -1,6 +1,6 @@
 import {inject, Injectable} from "@angular/core";
 import { catchError, map, Observable, throwError } from "rxjs";
-import { UploadService } from "@ui-lib/apiClient";
+import { UploadService } from "@ui-elo/apiClient";
 
 interface UploadFileResponseDto {
   status: boolean;

@@ -1,11 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
 import { Unique } from 'typeorm';
-import { DbPlatformColumn } from '@app-galaxy/core-api';
+import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 
 @Entity('areal_category_weapon')
 @Unique(['categoryId', 'weaponId'])
-export class AreaCategoryWeaponLinkEntity extends BaseEntity {
+export class AreaCategoryWeaponLinkEntity extends TenantBaseEntity {
+  protected self  = AreaCategoryWeaponLinkEntity;
+
   @PrimaryGeneratedColumn('increment')
   private id: number;
 
@@ -14,4 +16,9 @@ export class AreaCategoryWeaponLinkEntity extends BaseEntity {
 
   @DbPlatformColumn({ type: 'uuid' })
   weaponId: string;
+
+  @BeforeInsert()
+  protected async beforeInsert(): Promise<any> {
+
+  }
 }

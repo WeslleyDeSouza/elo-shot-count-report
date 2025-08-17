@@ -1,4 +1,4 @@
-import { AuthService } from "@ui-lib/apiClient";
+import { AuthService } from "@ui-elo/apiClient"
 import { inject } from "@angular/core";
 import { catchError, debounceTime, firstValueFrom, of } from "rxjs";
 import { Store } from "@ngrx/store";

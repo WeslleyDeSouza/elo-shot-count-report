@@ -1,11 +1,11 @@
 import { CanActivate, createParamDecorator, ExecutionContext } from '@nestjs/common';
-import {AuthUserEntity} from "@movit/auth-api";
+import {AuthUserEntity } from "@movit/auth-api";
 
 export const CordsRolesGuard: () => any = createCordsRolesGuard;
 
 function createCordsRolesGuard() {
   return class MixinAppsRoleGuard implements CanActivate {
-    protected getData(context:any): { user: AuthUserEntity } {
+    protected  getData(context:any): { user: AuthUserEntity } {
       const { user } = context.switchToHttp().getRequest();
       return { user };
     }
@@ -21,11 +21,11 @@ function createCordsRolesGuard() {
       ).then((rows) => rows[0]?.roleId);
 
       if (!!isSuperAdmin) {
-        return connection.query(`select distinct sca.* from setting_cord_areal sca`);
+        return connection.query(
+          `select distinct co.* from coordination_office co`);
       }
 
-      return connection.query(
-        `select distinct sca.* from setting_cord_areal sca
+      return connection.query(`select distinct co.* from coordination_office co
                                       left join (SELECT
                                                    JSON_UNQUOTE(JSON_EXTRACT(j.value, '$.id')) AS id,
                                                    JSON_UNQUOTE(JSON_EXTRACT(j.value, '$.metadata.title')) AS title,
@@ -39,10 +39,10 @@ function createCordsRolesGuard() {
                                                      '$[*]' COLUMNS (
                            value JSON PATH '$'
                            )
-                                                   ) AS j) as cords on sca.pin = cords.code
+                                                   ) AS j) as cords on co.pin = cords.code
                                       left join tenant_structure_user_role scauau
                                                 on cords.id = scauau.structureItemId
-         where sca.createdBy = ? or scauau.userId = ?`,
+         where co.createdBy = ? or scauau.userId = ?`,
         [userId, userId]
       ).then((r) => r);
     }

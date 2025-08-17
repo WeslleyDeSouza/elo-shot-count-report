@@ -10,7 +10,8 @@
       "executor": "@angular-architects/native-federation:build",
       "options": {
         "serviceWorker": true,
-        "ngswConfigPath": "ngsw-config.json"
+        "ngswConfigPath": "ngsw-config.json",
+        "generateTsConfig": false
       },
       "configurations": {
         "production": {

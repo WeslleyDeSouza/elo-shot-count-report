@@ -3,43 +3,22 @@ import { TestMockTenantMock } from '@app-galaxy/core-api';
 import { DataSource } from 'typeorm';
 
 export enum API_APPS_MAPPING {
-  ADMIN_APPS_OVERVIEW = 10,
-  ADMIN_SETTINGS_OVERVIEW = 11,
   TEMPLATE_BUILDER_EMAIL = 12,
   BOOKMARKS_OVERVIEW = 16,
   DOCUMENTATION_OVERVIEW = 19,
   ADMIN_REPORT_ENTRIES = 20,
   ADMIN_REPORT_EXPORT = 21,
+
   ADMIN_DATA_LIST_AREAL = 22,
   ADMIN_DATA_LIST_WEAPON = 23,
   ADMIN_DATA_LIST_RELATION = 24,
+  ADMIN_COORDINATION_OFFICE = 25,
 }
 
 
 export namespace API_MOCK_DATA {
 
   export const customApps = [
-    // Category 1: menu.ad (Admin/Settings items)
-    {
-      appId: API_APPS_MAPPING.ADMIN_APPS_OVERVIEW,
-      domain: 'business',
-      tenantId: null,
-      title: 'Apps overview',
-      path: '/admin/apps/overview',
-      categoryId: 1,
-      img: null,
-      icon: 'ri-apps-line',
-    },
-    {
-      appId: API_APPS_MAPPING.ADMIN_SETTINGS_OVERVIEW,
-      domain: 'business',
-      tenantId: null,
-      title: 'Settings overview',
-      path: '/settings/app-config/overview',
-      categoryId: 1,
-      img: null,
-      icon: 'ri-cog-line',
-    },
     // Category 2: menu.settings (Template builders)
     {
       appId: API_APPS_MAPPING.TEMPLATE_BUILDER_EMAIL,
@@ -100,7 +79,7 @@ export namespace API_MOCK_DATA {
       domain: 'business',
       tenantId: null,
       title: 'menu.area',
-      path: '/admin/data-list-areal',
+      path: '/admin/areal/overview',
       categoryId: 8,
       img: null,
       icon: 'ri-map-line',
@@ -110,7 +89,7 @@ export namespace API_MOCK_DATA {
       domain: 'business',
       tenantId: null,
       title: 'menu.weapon_list',
-      path: '/admin/data-list-weapon',
+      path: '/admin/weapon/overview',
       categoryId: 8,
       img: null,
       icon: 'ri-sword-line',
@@ -124,6 +103,16 @@ export namespace API_MOCK_DATA {
       categoryId: 8,
       img: null,
       icon: 'ri-links-line',
+    },
+    {
+      appId: API_APPS_MAPPING.ADMIN_COORDINATION_OFFICE,
+      domain: 'business',
+      tenantId: null,
+      title: 'menu.co',
+      path: '/admin/coordination-office/overview',
+      categoryId: 8,
+      img: null,
+      icon: 'ri-building-line',
     },
   ];
 

@@ -36,6 +36,8 @@ import {HealthModule} from "./core";
 import {CoreStaticFileModule} from "./core/static-file";
 import {AppConfigModule} from "./core/config";
 import {AreaModule} from "./modules/admin-areal";
+import {CoordinationOfficeModule} from "./modules/admin-coordination-office";
+import {WeaponModule} from "./modules/admin-weapon";
 
 @Module({
   imports: [
@@ -63,6 +65,8 @@ import {AreaModule} from "./modules/admin-areal";
         // Mods
         ...  (<any>BookmarkModule.DBOptions.entities),
         ...  (<any>AreaModule.DBOptions.entities),
+        ...  (<any>CoordinationOfficeModule.DBOptions.entities),
+        ...  (<any>WeaponModule.DBOptions.entities),
       ],
     }),
 
@@ -90,6 +94,9 @@ import {AreaModule} from "./modules/admin-areal";
     // Modules - Main
     BookmarkModule,
     UploadFTPModule,
+    AreaModule,
+    CoordinationOfficeModule,
+    WeaponModule
   ],
 })
 export class AppModule implements NestModule {

@@ -1,5 +1,5 @@
 import {
-  BaseEntity,
+  BaseEntity, BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -9,11 +9,13 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { AreaCategoryEntity } from './areal-category.entity';
-import { DbPlatformColumn } from '@app-galaxy/core-api';
+import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 
 @Entity('areal')
-@Unique(['categoryId', 'name'])
-export class AreaEntity extends BaseEntity {
+@Unique(['tenantId', 'categoryId', 'name'])
+export class AreaEntity extends TenantBaseEntity {
+  protected self = AreaEntity;
+
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -30,10 +32,15 @@ export class AreaEntity extends BaseEntity {
   @ManyToOne(() => AreaCategoryEntity, (cat) => cat.areas, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'categoryId' })
+  @JoinColumn([{name: 'tenantId'},{name: 'categoryId' }])
   category: AreaCategoryEntity;
 
   @ApiProperty()
   @DbPlatformColumn({ type: 'boolean', nullable: true, default: 0 })
   enabled: boolean;
+
+  @BeforeInsert()
+  protected async beforeInsert(): Promise<any> {
+
+  }
 }

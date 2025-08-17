@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title mb-0">{{ formTitle() | translate }}</h4>
+        </div>
+        <div class="card-body">
+          @if (error(); as errorMessage) {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+              {{ errorMessage | translate }}
+              <button type="button" class="btn-close" (click)="clearError()"></button>
+            </div>
+          }
+
+          <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="name" class="form-label">{{ 'Category Name' | translate }} *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                    [class.is-invalid]="isFieldInvalid('name')"
+                    placeholder="{{ 'Enter category name' | translate }}"
+                  />
+                  @if (getFieldError('name'); as error) {
+                    <div class="invalid-feedback">{{ error | translate }}</div>
+                  }
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="code" class="form-label">{{ 'Category Code' | translate }} *</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="code"
+                    formControlName="code"
+                    [class.is-invalid]="isFieldInvalid('code')"
+                    placeholder="{{ 'Enter category code (e.g., 100, 200)' | translate }}"
+                  />
+                  @if (getFieldError('code'); as error) {
+                    <div class="invalid-feedback">{{ error | translate }}</div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <div>
+                @if (isEditMode()) {
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="onDelete()"
+                    [disabled]="loading()"
+                  >
+                    {{ 'Delete' | translate }}
+                  </button>
+                }
+              </div>
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="onCancel()"
+                  [disabled]="loading()"
+                >
+                  {{ 'Cancel' | translate }}
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="!categoryForm.valid || loading()"
+                >
+                  @if (loading()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  }
+                  {{ submitButtonText() | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

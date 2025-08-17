@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch,
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AppsRolesGuard, GetUserId, ReplayGuard } from '@movit/auth-api';
-import { TenantGuard } from '@app-galaxy/core-api';
+import { GetTenantId, TenantGuard } from '@app-galaxy/core-api';
 import {CordsRolesGuard} from "@api-elo/common";
 import {API_APPS_MAPPING} from "../../../main.mock-data";
 import {ArealService} from "../areal.service";
@@ -11,9 +11,9 @@ import {
   ArealCategoryCreateDto,
   ArealCategoryUpdateDto,
   ArealCategoryResultDto,
-} from '@api-elo/models';
+} from  '../dto';
 
-@ApiTags('admin - areal - category')
+@ApiTags('Admin - Areal - Category')
 @Controller('admin/areal-category')
 @UseGuards(AuthGuard('jwt'), TenantGuard, AppsRolesGuard(
   API_APPS_MAPPING.ADMIN_REPORT_ENTRIES,
@@ -26,23 +26,23 @@ export class AdminArealCategoryController {
 
   @Get('')
   @ApiResponse({ status: 200, type: ArealCategoryResultDto, isArray: true })
-  list() {
-    return this.adminService.listCategory();
+  list(@GetTenantId() tenantId: string) {
+    return this.adminService.listCategory(tenantId);
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, type: ArealCategoryResultDto })
-  getById(@Param('id') id: string) {
-    return this.adminService.findCategoryById(id);
+  getById(@GetTenantId() tenantId: string, @Param('id') id: string) {
+    return this.adminService.findCategoryById(tenantId, id);
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id', type: String })
-  @UseGuards(AppsRolesGuard(3))
-  delete(@Param('id') id: string) {
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  delete(@GetTenantId() tenantId: string, @Param('id') id: string) {
     if (!id) throw new HttpException('ID required', HttpStatus.BAD_REQUEST);
-    return this.adminService.deleteArealCat(id);
+    return this.adminService.deleteArealCat(tenantId, id);
   }
 
   @Put('')
@@ -52,9 +52,9 @@ export class AdminArealCategoryController {
     type: ArealCategoryResultDto,
     isArray: false,
   })
-  @UseGuards(AppsRolesGuard(3))
-  create(@Body() body: ArealCategoryCreateDto, @GetUserId() userId: string) {
-    return this.adminService.createArealCat(body).catch((e) => {
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  create(@GetTenantId() tenantId: string, @Body() body: ArealCategoryCreateDto, @GetUserId() userId: string) {
+    return this.adminService.createArealCat(tenantId, body).catch((e) => {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
   }
@@ -67,10 +67,10 @@ export class AdminArealCategoryController {
     type: ArealCategoryResultDto,
     isArray: false,
   })
-  @UseGuards(AppsRolesGuard(3))
-  update(@Param('id') id: string, @Body() body: ArealCategoryUpdateDto) {
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  update(@GetTenantId() tenantId: string, @Param('id') id: string, @Body() body: ArealCategoryUpdateDto) {
     return this.adminService
-      .updateArealCat(id, body)
+      .updateArealCat(tenantId, id, body)
       .then((data) => (data.affected ? body : new HttpException('Item not saved', 500)));
   }
 
@@ -80,7 +80,7 @@ export class AdminArealCategoryController {
     status: 200,
     type: Boolean,
   })
-  codeExits(@Param('code') id: string) {
-    return this.adminService.categoryCodeExists(id);
+  codeExits(@GetTenantId() tenantId: string, @Param('code') id: string) {
+    return this.adminService.categoryCodeExists(tenantId, id);
   }
 }

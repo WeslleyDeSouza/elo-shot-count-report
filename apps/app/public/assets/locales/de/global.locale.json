@@ -5,7 +5,8 @@
     "admin_role": "Rollenverwaltung",
     "admin_tenant": "Mandatenverwaltung",
     "app-config": "Applikationverwaltung",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "co": "Koordinationsstellen"
   },
   "error": {
     "404": {
