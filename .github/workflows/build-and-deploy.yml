@@ -16,9 +16,7 @@ jobs:
           cache: 'npm'
       - name: NPM Login & Install
         run: |
-          grep -v "//registry.npmjs.org/:_authToken=" .npmrc > temp_npmrc || true
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> temp_npmrc
-          mv temp_npmrc .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           npm whoami --silent || exit 1
           npm install
         env:
@@ -34,13 +32,6 @@ jobs:
         with:
           node-version: '23'
           cache: 'npm'
-      - name: NPM Login & Install
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          npm whoami --silent || exit 1
-          npm install --legacy-peer-deps
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Test & Builds
         run: |
           npx nx run-many --parallel --target=build --projects="api" && npm run ng-swagger
