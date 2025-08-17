@@ -36,7 +36,7 @@ jobs:
           cache: 'npm'
       - name: NPM Login & Install
         run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           npm whoami --silent || exit 1
           npm install --legacy-peer-deps
         env:
