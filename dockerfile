@@ -2,6 +2,12 @@ FROM node:23-alpine3.20
 
 WORKDIR /usr/src/app/
 
+ARG NPM_TOKEN
+RUN if [ -n "$NPM_TOKEN" ]; then \
+        echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc && \
+        echo "registry=https://registry.npmjs.org/" >> .npmrc; \
+    fi
+
 # Installiere curl
 RUN apk add --no-cache curl
 

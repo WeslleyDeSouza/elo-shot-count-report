@@ -257,4 +257,5 @@ jobs:
           cache-to: type=gha,mode=max
           # Add build-time optimization
           build-args: |
+            NPM_TOKEN=${{ secrets.NPM_TOKEN }}
             BUILDKIT_INLINE_CACHE=1
