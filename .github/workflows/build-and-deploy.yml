@@ -155,7 +155,7 @@ jobs:
       - name: Build affected projects
         run: |
           echo "Building projects..."
-
+          npm i --legacy-peer-deps
           # On main branch, always build something to ensure deployment works
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             if [ "${{ needs.install.outputs.has-affected }}" = "0" ]; then
