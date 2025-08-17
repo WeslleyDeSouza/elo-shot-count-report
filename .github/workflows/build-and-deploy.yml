@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,7 +15,28 @@ jobs:
           node-version: '23'
           cache: 'npm'
       - name: NPM Login & Install
-        run: npm install
+        run: |
+          sed -i "s|//registry.npmjs.org/:_authToken=.*|//registry.npmjs.org/:_authToken=$NPM_TOKEN|" .npmrc
+          npm whoami --silent || exit 1
+          npm install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  build:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+          cache: 'npm'
+      - name: NPM Login & Install
+        run: |
+          sed -i "s|//registry.npmjs.org/:_authToken=.*|//registry.npmjs.org/:_authToken=$NPM_TOKEN|" .npmrc
+          npm whoami --silent || exit 1
+          npm install
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Test & Builds
