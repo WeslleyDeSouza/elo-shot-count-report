@@ -1,0 +1,201 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
+import { ArealCategoryFormComponent } from './areal-category-form.component';
+import { ArealFacade } from '../areal.facade';
+import { ArealCategory } from '../areal.model';
+
+describe('ArealCategoryFormComponent', () => {
+  let component: ArealCategoryFormComponent;
+  let fixture: ComponentFixture<ArealCategoryFormComponent>;
+  let mockFacade: jasmine.SpyObj<ArealFacade>;
+  let mockRouter: jasmine.SpyObj<Router>;
+
+  const mockCategory: ArealCategory = {
+    id: '1',
+    name: 'Test Category',
+    code: 'TEST',
+    areas: []
+  } as ArealCategory;
+
+  beforeEach(async () => {
+    mockFacade = jasmine.createSpyObj('ArealFacade', [
+      'loadCategories',
+      'createArealCategory',
+      'updateArealCategory',
+      'deleteArealCategory',
+      'clearError'
+    ], {
+      loading$: of(false),
+      error$: of(null)
+    });
+
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+
+    await TestBed.configureTestingModule({
+      imports: [ArealCategoryFormComponent, ReactiveFormsModule],
+      providers: [
+        { provide: ArealFacade, useValue: mockFacade },
+        { provide: Router, useValue: mockRouter }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ArealCategoryFormComponent);
+    component = fixture.componentInstance;
+    
+    mockFacade.loadCategories.and.returnValue(of([mockCategory]));
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize form with default values for create mode', () => {
+    expect(component.categoryForm.get('name')?.value).toBe('');
+    expect(component.categoryForm.get('code')?.value).toBe('');
+    expect(component.isEditMode()).toBeFalse();
+  });
+
+  it('should initialize form with category data for edit mode', () => {
+    fixture.componentRef.setInput('category', mockCategory);
+    component.ngOnInit();
+    
+    expect(component.categoryForm.get('name')?.value).toBe('Test Category');
+    expect(component.categoryForm.get('code')?.value).toBe('TEST');
+  });
+
+  it('should validate required fields', () => {
+    const nameControl = component.categoryForm.get('name');
+    const codeControl = component.categoryForm.get('code');
+
+    nameControl?.setValue('');
+    codeControl?.setValue('');
+    nameControl?.markAsTouched();
+    codeControl?.markAsTouched();
+
+    expect(component.isFieldInvalid('name')).toBeTrue();
+    expect(component.isFieldInvalid('code')).toBeTrue();
+    expect(component.getFieldError('name')).toBe('Category Name is required');
+    expect(component.getFieldError('code')).toBe('Category Code is required');
+  });
+
+  it('should validate code pattern', () => {
+    const codeControl = component.categoryForm.get('code');
+    codeControl?.setValue('invalid-lowercase');
+    codeControl?.markAsTouched();
+
+    expect(component.isFieldInvalid('code')).toBeTrue();
+    expect(component.getFieldError('code')).toBe('Category Code must contain only uppercase letters, numbers, hyphens, and underscores');
+  });
+
+  it('should create category on valid form submission', () => {
+    mockFacade.createArealCategory.and.returnValue(of(mockCategory));
+    
+    component.categoryForm.patchValue({
+      name: 'New Category',
+      code: 'NEW'
+    });
+
+    component.onSubmit();
+
+    expect(mockFacade.createArealCategory).toHaveBeenCalledWith({
+      name: 'New Category',
+      code: 'NEW'
+    });
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/areal/overview']);
+  });
+
+  it('should update category in edit mode', () => {
+    component.setId('1');
+    mockFacade.updateArealCategory.and.returnValue(of(mockCategory));
+    
+    component.categoryForm.patchValue({
+      id: '1',
+      name: 'Updated Category',
+      code: 'UPDATED'
+    });
+
+    component.onSubmit();
+
+    expect(mockFacade.updateArealCategory).toHaveBeenCalledWith('1', {
+      id: '1',
+      name: 'Updated Category',
+      code: 'UPDATED'
+    });
+  });
+
+  it('should handle form validation errors', () => {
+    component.categoryForm.patchValue({
+      name: '',
+      code: ''
+    });
+
+    component.onSubmit();
+
+    expect(mockFacade.createArealCategory).not.toHaveBeenCalled();
+    expect(component.categoryForm.get('name')?.touched).toBeTrue();
+    expect(component.categoryForm.get('code')?.touched).toBeTrue();
+  });
+
+  it('should navigate to overview on cancel', () => {
+    component.onCancel();
+    
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/areal/overview']);
+  });
+
+  it('should handle facade loading state', () => {
+    mockFacade.loading$ = of(true);
+    component.ngOnInit();
+    
+    expect(component.loading()).toBeTrue();
+  });
+
+  it('should handle facade error state', () => {
+    const errorMessage = 'Test error';
+    mockFacade.error$ = of(errorMessage);
+    component.ngOnInit();
+    
+    expect(component.error()).toBe(errorMessage);
+  });
+
+  it('should clear errors', () => {
+    component.clearError();
+    
+    expect(component.error()).toBeNull();
+    expect(mockFacade.clearError).toHaveBeenCalled();
+  });
+
+  it('should handle duplicate code constraint error', () => {
+    const duplicateError = {
+      message: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.code'
+    };
+    mockFacade.createArealCategory.and.returnValue(throwError(() => duplicateError));
+    
+    component.categoryForm.patchValue({
+      name: 'Test Category',
+      code: 'DUPLICATE'
+    });
+
+    component.onSubmit();
+
+    expect(component.error()).toBe('A category with this code already exists');
+  });
+
+  it('should handle duplicate name constraint error', () => {
+    const duplicateError = {
+      message: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.name'
+    };
+    mockFacade.createArealCategory.and.returnValue(throwError(() => duplicateError));
+    
+    component.categoryForm.patchValue({
+      name: 'Duplicate Name',
+      code: 'TEST'
+    });
+
+    component.onSubmit();
+
+    expect(component.error()).toBe('A category with this name already exists');
+  });
+});

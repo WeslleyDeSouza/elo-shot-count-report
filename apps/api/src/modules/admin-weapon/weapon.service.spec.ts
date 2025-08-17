@@ -30,6 +30,9 @@ describe('WeaponService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports:[
+       // jestTestSetup()
+      ].flat(2),
       providers: [
         WeaponService,
         {

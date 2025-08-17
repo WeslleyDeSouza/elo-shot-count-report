@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Put, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AppsRolesGuard, ReplayGuard, GetUserId } from '@movit/auth-api';
@@ -119,5 +119,56 @@ export class AdminCoordinationOfficeController {
     return this.coordinationOfficeService.toggleEnabled(tenantId, id).catch((e) => {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
+  }
+
+  // User Management Endpoints
+
+  @Get('users')
+  @ApiResponse({ status: 200, description: 'Get all users.', isArray: true })
+  async getUsers(@GetTenantId() tenantId: string) {
+    return this.coordinationOfficeService.getAllUsers(tenantId);
+  }
+
+  @Get('users/pin/:pin')
+  @ApiParam({ name: 'pin', type: String })
+  @ApiResponse({ status: 200, description: 'Get users by PIN.', isArray: true })
+  async getUsersByPin(@GetTenantId() tenantId: string, @Param('pin') pin: string) {
+    return this.coordinationOfficeService.getUsersByPin(tenantId, pin);
+  }
+
+  @Post('assign-user')
+  @ApiBody({ 
+    schema: { 
+      type: 'object', 
+      properties: { 
+        userId: { type: 'string' }, 
+        coordinationOfficeId: { type: 'string' } 
+      } 
+    } 
+  })
+  @ApiResponse({ status: 200, description: 'User assigned successfully.' })
+  async assignUser(
+    @GetTenantId() tenantId: string, 
+    @Body() body: { userId: string; coordinationOfficeId: string }
+  ) {
+    return this.coordinationOfficeService.assignUser(tenantId, body.userId, body.coordinationOfficeId);
+  }
+
+  @Delete('unassign-user')
+  @ApiBody({ 
+    schema: { 
+      type: 'object', 
+      properties: { 
+        userId: { type: 'string' }, 
+        coordinationOfficeId: { type: 'string' } 
+      } 
+    } 
+  })
+  @ApiResponse({ status: 200, description: 'User unassigned successfully.' })
+  async unassignUser(
+    @GetTenantId() tenantId: string, 
+    @Body() body: { userId: string; coordinationOfficeId: string }
+  ) {
+    return this.coordinationOfficeService.unassignUser(tenantId, body.userId, body.coordinationOfficeId);
   }
 }

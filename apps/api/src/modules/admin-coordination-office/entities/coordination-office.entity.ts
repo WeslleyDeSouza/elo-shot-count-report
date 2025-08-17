@@ -1,8 +1,8 @@
 import {BaseEntity, BeforeInsert, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import {DbPlatformColumn, TenantBaseEntity, TenantEntity} from '@app-galaxy/core-api';
+
 import { CoordinationOfficeModel } from '../dto/coordination-office.model';
-import {Injectable} from "@nestjs/common";
 
 @Entity('coordination_office')
 export class CoordinationOfficeEntity extends TenantBaseEntity implements CoordinationOfficeModel {

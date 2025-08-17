@@ -145,6 +145,16 @@
           </form>
         </div>
       </div>
+
+      <!-- User Assignment Card -->
+      @if(isEditMode()) {
+        <div class="mt-4">
+          <app-user-assignment 
+            [coordinationOfficeId]="getId()" 
+            [pin]="coordinationOfficeForm.get('pin')?.value || ''">
+          </app-user-assignment>
+        </div>
+      }
     </div>
   </div>
 </div>

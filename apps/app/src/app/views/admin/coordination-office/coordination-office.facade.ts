@@ -2,6 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import { Observable, BehaviorSubject, map, catchError, of, finalize } from "rxjs";
 import { CoordinationOffice } from "./coordination-office.model";
 import { AdminCoordinationOfficeService } from "@ui-elo/apiClient";
+import { HttpClient } from "@angular/common/http";
 
 /**
  * Facade service for managing coordination office operations.
@@ -22,6 +23,7 @@ export class CoordinationOfficeFacade {
 
   // Injected API service
   protected api = inject(AdminCoordinationOfficeService);
+  private http = inject(HttpClient);
 
   /**
    * Loads all coordination offices from the server.
@@ -157,5 +159,72 @@ export class CoordinationOfficeFacade {
    */
   isLoading(): boolean {
     return this._loading.value;
+  }
+
+  /**
+   * Gets all available users in the system.
+   * @returns Observable of users array
+   */
+  getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>('/api/admin/coordination-office/users').pipe(
+      catchError(error => {
+        this._error.next('Failed to load users');
+        console.error('Error loading users:', error);
+        return of([]);
+      })
+    );
+  }
+
+  /**
+   * Gets users assigned to a coordination office by PIN.
+   * @param pin - Coordination office PIN
+   * @returns Observable of assigned users array
+   */
+  getUsersByPin(pin: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/admin/coordination-office/users/pin/${pin}`).pipe(
+      catchError(error => {
+        console.error('Error loading users by PIN:', error);
+        return of([]);
+      })
+    );
+  }
+
+  /**
+   * Assigns a user to a coordination office.
+   * @param userId - User ID to assign
+   * @param coordinationOfficeId - Coordination office ID
+   * @returns Observable boolean indicating success
+   */
+  assignUserToCoordinationOffice(userId: string, coordinationOfficeId: string): Observable<boolean> {
+    return this.http.post<boolean>('/api/admin/coordination-office/assign-user', {
+      userId,
+      coordinationOfficeId
+    }).pipe(
+      map(() => true),
+      catchError(error => {
+        this._error.next('Failed to assign user');
+        console.error('Error assigning user:', error);
+        return of(false);
+      })
+    );
+  }
+
+  /**
+   * Unassigns a user from a coordination office.
+   * @param userId - User ID to unassign
+   * @param coordinationOfficeId - Coordination office ID
+   * @returns Observable boolean indicating success
+   */
+  unassignUserFromCoordinationOffice(userId: string, coordinationOfficeId: string): Observable<boolean> {
+    return this.http.request<boolean>('DELETE', '/api/admin/coordination-office/unassign-user', {
+      body: { userId, coordinationOfficeId }
+    }).pipe(
+      map(() => true),
+      catchError(error => {
+        this._error.next('Failed to unassign user');
+        console.error('Error unassigning user:', error);
+        return of(false);
+      })
+    );
   }
 }

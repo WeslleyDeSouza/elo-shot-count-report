@@ -1,6 +1,8 @@
 import { ConnectionOptions } from 'typeorm';
 import * as path from 'path';
 import { CoordinationOfficeEntity } from '../entities/coordination-office.entity';
+import {CoordinationOfficeUserEntity} from "../entities/coordination-office-user.entity";
+import {AuthUserEntity} from "@movit/auth-api";
 
 const DBOptions = <ConnectionOptions>{
   type: process.env['DB_TYPE'],
@@ -16,7 +18,7 @@ const DBOptions = <ConnectionOptions>{
   cli: {
     migrationsDir: path.resolve('./migrations'),
   },
-  entities: [CoordinationOfficeEntity],
+  entities: [CoordinationOfficeEntity,CoordinationOfficeUserEntity,AuthUserEntity],
 };
 
 export default DBOptions;

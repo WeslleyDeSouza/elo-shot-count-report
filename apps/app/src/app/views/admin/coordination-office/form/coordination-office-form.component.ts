@@ -7,10 +7,11 @@ import { Subject, takeUntil, firstValueFrom } from 'rxjs';
 import { ComponentFormBase, Confirmable } from "@app-galaxy/sdk-ui";
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
+import { UserAssignmentComponent } from './user-assignment.component';
 
 @Component({
   selector: 'app-coordination-office-form',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, UserAssignmentComponent],
   templateUrl: './coordination-office-form.component.html',
   styleUrls: ['./coordination-office-form.component.scss'],
   providers: [CoordinationOfficeFacade],
