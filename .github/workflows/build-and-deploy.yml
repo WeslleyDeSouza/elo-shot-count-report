@@ -17,7 +17,7 @@ jobs:
       - name: NPM Login & Install
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          npm whoami --silent || exit 1
+          npm whoami --silent
           npm install
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
