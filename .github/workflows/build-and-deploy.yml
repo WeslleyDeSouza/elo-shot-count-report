@@ -14,13 +14,15 @@ jobs:
         with:
           node-version: '23'
           cache: 'npm'
-      - name: NPM Login
+      - name: NPM Login & Install
         run: npm install
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npx nx run-many --parallel --target=build --projects="api" && npm run ng-swagger
-      - run: npx nx run-many --target=build --all --prod
-      - run: npm run ngsw
+      - name: Test & Builds
+        run: |
+          npx nx run-many --parallel --target=build --projects="api" && npm run ng-swagger
+          npx nx run-many --target=build --all --prod
+          npm run ngsw
       - run: ls dist
 
       - name: Archive production artifacts
