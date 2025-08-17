@@ -48,6 +48,6 @@ Thumbs.db
 /local.database.sqlite
 /.angular/
 /apps/app/public/assets/locales/.cache/
-
-.angular
 /libs/app/generated/src/core/
+
+.npmrc
