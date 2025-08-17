@@ -32,6 +32,12 @@ export interface BulkEditorConfig {
           }
         </div>
         <div class="d-flex gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            (click)="toggleExpanded()">
+            <i [class]="isExpanded() ? 'ri-contract-line' : 'ri-expand-line'"></i>
+          </button>
           @if(config().canEdit) {
             <button
               type="button"
@@ -120,6 +126,7 @@ export class BulkEditorComponent<T = any> implements OnInit, OnDestroy {
   // Internal state
   selectedItems = signal<T[]>([]);
   changedItems = signal<Set<T>>(new Set());
+  isExpanded = signal(false);
 
   selectedCount = signal(0);
   hasChanges = signal(false);
@@ -186,6 +193,17 @@ export class BulkEditorComponent<T = any> implements OnInit, OnDestroy {
     if (selected.length > 0) {
       if (confirm(`Are you sure you want to delete ${selected.length} items?`)) {
         this.delete.emit(selected);
+      }
+    }
+  }
+
+  toggleExpanded(): void {
+    this.isExpanded.update(expanded => !expanded);
+    if (this.gridApi) {
+      if (this.isExpanded()) {
+        this.gridApi.expandAll();
+      } else {
+        this.gridApi.collapseAll();
       }
     }
   }

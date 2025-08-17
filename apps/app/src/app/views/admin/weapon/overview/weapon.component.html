@@ -1,9 +1,19 @@
 <!-- Action buttons -->
 <div class="row mb-3">
-  <div class="col-12">
-    <button type="button" class="btn btn-primary me-2" (click)="createWeaponCategory()">
-      <i class="ri-add-line"></i> {{ 'add_category' | translate }}
-    </button>
+  <div class="col-12 d-flex justify-content-between">
+    <div>
+      <button type="button" class="btn btn-primary me-2" (click)="createWeaponCategory()">
+        <i class="ri-add-line"></i> {{ 'add_category' | translate }}
+      </button>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm"
+        (click)="toggleExpandAll()">
+        <i [class]="isAllExpanded() ? 'ri-contract-line' : 'ri-expand-line'"></i>
+      </button>
+    </div>
   </div>
 </div>
 

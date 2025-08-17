@@ -80,6 +80,12 @@ export class WeaponComponent implements OnInit, OnDestroy {
     });
   });
 
+  isAllExpanded: Signal<boolean> = computed(() => {
+    const categories = this.filteredCategories();
+    const collapsed = this.collapsedStates();
+    return categories.length > 0 && categories.every(cat => !collapsed[cat.id]);
+  });
+
   ngOnInit(): void {
     this.setupFacadeSubscriptions();
     this.loadCategories();
@@ -186,5 +192,17 @@ export class WeaponComponent implements OnInit, OnDestroy {
 
   isCategoryCollapsed(categoryId: string): boolean {
     return this.collapsedStates()[categoryId] ?? true;
+  }
+
+  toggleExpandAll(): void {
+    const categories = this.filteredCategories();
+    const shouldExpandAll = !this.isAllExpanded();
+    const newStates: {[key: string]: boolean} = {};
+    
+    categories.forEach(category => {
+      newStates[category.id] = !shouldExpandAll;
+    });
+    
+    this.collapsedStates.set(newStates);
   }
 }

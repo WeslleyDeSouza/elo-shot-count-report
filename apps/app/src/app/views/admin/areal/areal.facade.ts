@@ -12,6 +12,28 @@ export class ArealFacade {
   private _categories = new BehaviorSubject<ArealCategory[]>([]);
   private _error = new BehaviorSubject<string | null>(null);
 
+  private parseConstraintError(error: any): string {
+    const errorMessage = error?.message || error?.error?.message || '';
+    
+    if (errorMessage.includes('UNIQUE constraint failed')) {
+      if (errorMessage.includes('areal.tenantId, areal.categoryId, areal.name')) {
+        return 'An areal with this name already exists in the selected category';
+      }
+      if (errorMessage.includes('weapon.tenantId, weapon.categoryId, weapon.name')) {
+        return 'A weapon with this name already exists in the selected category';
+      }
+      if (errorMessage.includes('areal_category.tenantId, areal_category.code')) {
+        return 'A category with this code already exists';
+      }
+      if (errorMessage.includes('areal_category.tenantId, areal_category.name')) {
+        return 'A category with this name already exists';
+      }
+      return 'This item already exists';
+    }
+    
+    return errorMessage || 'An unexpected error occurred';
+  }
+
   public readonly loading$ = this._loading.asObservable();
   public readonly categories$ = this._categories.asObservable();
   public readonly error$ = this._error.asObservable();
@@ -47,7 +69,8 @@ export class ArealFacade {
     }).pipe(
       map((createdAreal: any) => new Areal(createdAreal)),
       catchError(error => {
-        this._error.next('Failed to create areal');
+        const errorMessage = this.parseConstraintError(error);
+        this._error.next(errorMessage.startsWith('An areal') ? errorMessage : 'Failed to create areal');
         console.error('Error creating areal:', error);
         return of(null);
       }),
@@ -65,7 +88,8 @@ export class ArealFacade {
     }).pipe(
       map((updatedAreal: any) => new Areal(updatedAreal)),
       catchError(error => {
-        this._error.next('Failed to update areal');
+        const errorMessage = this.parseConstraintError(error);
+        this._error.next(errorMessage.startsWith('An areal') ? errorMessage : 'Failed to update areal');
         console.error('Error updating areal:', error);
         return of(null);
       }),
@@ -97,7 +121,8 @@ export class ArealFacade {
     }).pipe(
       map((createdCategory: any) => new ArealCategory(createdCategory)),
       catchError(error => {
-        this._error.next('Failed to create areal category');
+        const errorMessage = this.parseConstraintError(error);
+        this._error.next(errorMessage.startsWith('A category') ? errorMessage : 'Failed to create areal category');
         console.error('Error creating areal category:', error);
         return of(null);
       }),
@@ -115,7 +140,8 @@ export class ArealFacade {
     }).pipe(
       map((updatedCategory: any) => new ArealCategory(updatedCategory)),
       catchError(error => {
-        this._error.next('Failed to update areal category');
+        const errorMessage = this.parseConstraintError(error);
+        this._error.next(errorMessage.startsWith('A category') ? errorMessage : 'Failed to update areal category');
         console.error('Error updating areal category:', error);
         return of(null);
       }),

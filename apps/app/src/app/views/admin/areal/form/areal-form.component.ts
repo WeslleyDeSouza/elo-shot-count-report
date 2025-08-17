@@ -141,7 +141,7 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
 
       name :formValue .name,
 
-      enabled :formValue.enabled,
+      enabled :!!formValue.enabled,
     })
       .pipe(takeUntil(this.destroy$))
       .subscribe(areal => {

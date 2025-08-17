@@ -191,11 +191,11 @@ export class ArealService {
     const areal = await this.areaRepo.findOne({
       where: { tenantId, id }
     });
-    
+
     if (!areal) {
       throw new Error('Areal not found');
     }
-    
+
     areal.enabled = !areal.enabled;
     return areal.save();
   }

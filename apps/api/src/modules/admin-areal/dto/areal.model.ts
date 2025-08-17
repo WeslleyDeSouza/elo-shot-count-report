@@ -33,6 +33,7 @@ export class ArealCreateDto {
   name: string;
 
   @IsNotEmpty()
+  @IsBoolean()
   @ApiProperty({ type: Boolean })
   enabled: boolean;
 }

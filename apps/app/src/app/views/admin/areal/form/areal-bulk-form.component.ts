@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import {firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { ArealFacade } from '../areal.facade';
 import { Areal, ArealCategory } from '../areal.model';
@@ -87,10 +87,7 @@ export class ArealBulkFormComponent implements OnInit, OnDestroy {
         editable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: () => ({
-          values: this.categories().map(cat => ({
-            value: cat.id,
-            label: `${cat.code} - ${cat.name}`
-          }))
+          values: this.categories().map(cat => cat.id)
         }),
         valueFormatter: (params) => this.getCategoryName(params.value)
       },
@@ -164,11 +161,7 @@ export class ArealBulkFormComponent implements OnInit, OnDestroy {
   onSaveChanges(changedAreals: ArealWithCategory[]): void {
     // Process each changed areal
     const savePromises = changedAreals.map(areal =>
-      this.facade.updateAreal(areal.id, {
-        name: areal.name,
-        enabled: areal.enabled,
-        categoryId: areal.categoryId
-      }).toPromise()
+      firstValueFrom(this.facade.updateAreal(areal.id, areal))
     );
 
     Promise.all(savePromises)
