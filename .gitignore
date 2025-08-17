@@ -49,5 +49,3 @@ Thumbs.db
 /.angular/
 /apps/app/public/assets/locales/.cache/
 /libs/app/generated/src/core/
-
-.npmrc
