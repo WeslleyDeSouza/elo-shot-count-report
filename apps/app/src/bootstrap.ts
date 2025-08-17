@@ -3,6 +3,16 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { provideStore } from "@ngrx/store";
 import { loadConfig, mfeConfig } from "./mfe";
+import {CustomFilterModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule,ValidationModule ,CheckboxEditorModule,TextEditorModule ,
+
+  TextFilterModule, NumberFilterModule, DateFilterModule,RowSelectionModule,SelectEditorModule
+} from 'ag-grid-community';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([ClientSideRowModelModule,ValidationModule,CheckboxEditorModule,TextEditorModule,
+  TextFilterModule, NumberFilterModule, DateFilterModule,  CustomFilterModule,RowSelectionModule,SelectEditorModule
+]);
 
 loadConfig(mfeConfig)
   .then(([

@@ -110,4 +110,14 @@ export class AdminCoordinationOfficeController {
     if (!id) throw new HttpException('ID required', HttpStatus.BAD_REQUEST);
     return this.coordinationOfficeService.delete(tenantId, id);
   }
+
+  // Toggle enabled status
+  @Patch(':id/toggle')
+  @ApiParam({ name: 'id', type: String })
+  @ApiResponse({ status: 200, description: 'Success.', type: CoordinationOfficeResultDto })
+  async toggleCoordinationOffice(@GetTenantId() tenantId: string, @Param('id') id: string) {
+    return this.coordinationOfficeService.toggleEnabled(tenantId, id).catch((e) => {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    });
+  }
 }

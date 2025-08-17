@@ -3,7 +3,13 @@
 <div class="row mb-3">
   <div class="col-12">
     <button type="button" class="btn btn-primary me-2" (click)="createArealCategory()">
-      <i class="fa fa-plus"></i> {{ 'add_category' | translate }}
+      <i class="ri-add-line"></i> {{ 'add_category' | translate }}
+    </button>
+    <button type="button" class="btn btn-primary me-2" (click)="createAreal()">
+      <i class="ri-add-line"></i> {{ 'add_areal' | translate }}
+    </button>
+    <button type="button" class="btn btn-outline-primary me-2" (click)="openBulkEditor()">
+      <i class="ri-table-line"></i> {{ 'bulk_edit' | translate }}
     </button>
   </div>
 </div>
@@ -27,38 +33,31 @@
 
 <!-- Categories accordion -->
 @if(!loading() && filteredCategories().length > 0) {
-<div class="accordion" id="arealAccordion">
+<div>
   @for(category of filteredCategories(); track category.id; let i = $index) {
-  <div class="accordion-item">
-    <h2 class="accordion-header" [id]="'heading' + i">
+  <div class="card mb-2">
+    <div class="card-header">
       <button
-        class="accordion-button collapsed"
         type="button"
-        data-bs-toggle="collapse"
-        [attr.data-bs-target]="'#collapse' + i"
-        [attr.aria-expanded]="false"
-        [attr.aria-controls]="'collapse' + i">
+        class="btn btn-link text-decoration-none w-100 text-start p-0"
+        (click)="toggleCategoryCollapse(category.id)"
+        [attr.aria-expanded]="!isCategoryCollapsed(category.id)"
+        [attr.aria-controls]="'collapse-' + category.id">
         <div class="category-header w-100">
           <span>
-            <strong>{{ category.name }}</strong>
+            <strong>{{ category.code }} - {{ category.name }}</strong>
             <small class="text-muted ms-2">({{ category.areasCount }} areas, {{ category.enabledAreasCount }} enabled)</small>
           </span>
-          <div class="action-buttons" (click)="$event.stopPropagation()">
-            <button type="button" class="btn btn-sm btn-success me-1" (click)="createAreal(category.id)">
-              <i class="fa fa-plus"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-primary me-1" (click)="editArealCategory($any(category))">
-              <i class="fa-regular fa-edit"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-danger" (click)="deleteArealCategory($any(category))">
-              <i class="fa fa-trash"></i>
-            </button>
+          <div class="action-buttons d-flex gap-2" (click)="$event.stopPropagation()">
+            <i class="ri-add-line text-success cursor-pointer" (click)="createAreal(category.id)" title="Add area"></i>
+            <i class="ri-edit-line text-primary cursor-pointer" (click)="editArealCategory($any(category))" title="Edit category"></i>
+            <i class="ri-delete-bin-line text-danger cursor-pointer" (click)="deleteArealCategory($any(category))" title="Delete category"></i>
           </div>
         </div>
       </button>
-    </h2>
-    <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i" data-bs-parent="#arealAccordion">
-      <div class="accordion-body">
+    </div>
+    <div [id]="'collapse-' + category.id" [ngbCollapse]="isCategoryCollapsed(category.id)">
+      <div class="card-body">
         @if(category.areas.length > 0) {
         <table class="table table-striped">
           <thead>
@@ -73,21 +72,23 @@
             <tr>
               <td>{{ area.name }}</td>
               <td>
-                <label class="toggle-switch">
+                <div class="form-check form-switch">
                   <input
                     type="checkbox"
+                    class="form-check-input"
+                    [id]="'switch-' + area.id"
                     [checked]="area.enabled"
                     (change)="toggleArealEnabled($any(area))">
-                  <span class="slider"></span>
-                </label>
+                  <label class="form-check-label" [for]="'switch-' + area.id"></label>
+                </div>
               </td>
               <td>
                 <div class="d-flex gap-2">
                   <button type="button" class="btn btn-sm btn-primary" (click)="editAreal($any(area))">
-                    <i class="fa-regular fa-edit"></i>
+                    <i class="ri-edit-line"></i>
                   </button>
                   <button type="button" class="btn btn-sm btn-danger" (click)="deleteAreal($any(area))">
-                    <i class="fa fa-trash"></i>
+                    <i class="ri-delete-bin-line"></i>
                   </button>
                 </div>
               </td>
@@ -99,7 +100,7 @@
         <div class="text-center py-3 text-muted">
           <p>{{ 'no_areas_in_category' | translate }}</p>
           <button type="button" class="btn btn-primary btn-sm" (click)="createAreal(category.id)">
-            <i class="fa fa-plus"></i> {{ 'add_first_area' | translate }}
+            <i class="ri-add-line"></i> {{ 'add_first_area' | translate }}
           </button>
         </div>
         }
@@ -112,14 +113,12 @@
 
 <!-- No data message -->
 @if(!loading() && filteredCategories().length === 0) {
-<div class="card mb-0 mt-3 text-white bg-info">
-  <div class="card-body">
-    <blockquote class="card-bodyquote mb-0">
-      <p class="mb-0">{{ 'areal.overview.no_entries' | translate }}</p>
-      <button type="button" class="btn btn-light btn-sm mt-2" (click)="createArealCategory()">
-        <i class="fa fa-plus"></i> {{ 'create_first_category' | translate }}
-      </button>
-    </blockquote>
-  </div>
-</div>
+  <app-empty-state 
+    [title]="'areal.overview.no_entries' | translate"
+    [subtitle]="'areal.overview.no_entries_subtitle' | translate"
+    iconClass="ri-map-pin-line">
+    <button type="button" class="btn btn-primary" (click)="createArealCategory()">
+      <i class="ri-add-line"></i> {{ 'create_first_category' | translate }}
+    </button>
+  </app-empty-state>
 }

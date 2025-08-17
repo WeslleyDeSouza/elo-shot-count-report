@@ -90,4 +90,15 @@ export class AdminWeaponController {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       });
   }
+
+  // Toggle enabled status
+  @Patch(':id/toggle')
+  @ApiParam({ name: 'id', type: String })
+  @ApiResponse({ status: 200, description: 'Success.', type: WeaponResultDto })
+  @UseGuards(AppsRolesGuard(API_APPS_MAPPING.ADMIN_DATA_LIST_WEAPON))
+  toggleWeapon(@GetTenantId() tenantId: string, @Param('id') id: string) {
+    return this.weaponService.toggleWeaponEnabled(tenantId, id).catch((e) => {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    });
+  }
 }

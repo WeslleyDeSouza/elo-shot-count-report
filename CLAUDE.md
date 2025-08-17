@@ -33,3 +33,27 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+## Icon
+- use icons from https://remixicon.com/
+
+
+# Forms Example:
+- Toggle switch element:
+   <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="customSwitch1" />
+          <label class="form-check-label" for="customSwitch1"
+            >Toggle this switch element</label
+          >
+   </div>
+- Checkbox example 
+  <div class="form-check mb-2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="customCheckcolor1"
+            checked
+          />
+          <label class="form-check-label" for="customCheckcolor1"
+            >Default Checkbox</label
+          >
+  </div>

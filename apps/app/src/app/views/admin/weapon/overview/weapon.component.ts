@@ -1,11 +1,13 @@
 import {Component, signal, computed, OnInit, OnDestroy, inject, Signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { WeaponFacade } from '../weapon.facade';
 import {Weapon, WeaponCategory} from '../weapon.model';
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
+import {EmptyStateComponent} from "../../../../components/empty-state";
 
 const PATHS = {
   WEAPON_CREATE: '/admin/weapon/create',
@@ -19,7 +21,9 @@ const PATHS = {
   imports: [
     CommonModule,
     FormsModule,
-    TranslatePipe
+    NgbCollapseModule,
+    TranslatePipe,
+    EmptyStateComponent
   ],
   templateUrl: './weapon.component.html',
   styles: `
@@ -35,49 +39,9 @@ const PATHS = {
       gap: 0.5rem;
     }
 
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
 
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
+    .cursor-pointer {
       cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: #007bff;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(26px);
     }
   `
 })
@@ -90,6 +54,7 @@ export class WeaponComponent implements OnInit, OnDestroy {
   searchText = signal('');
   loading = signal(false);
   error = signal<string | null>(null);
+  collapsedStates = signal<{[key: string]: boolean}>({});
 
   title = "Weapon";
   subTitle = "Weapons";
@@ -209,5 +174,17 @@ export class WeaponComponent implements OnInit, OnDestroy {
           this.loadCategories();
         }
       });
+  }
+
+  toggleCategoryCollapse(categoryId: string): void {
+    const current = this.collapsedStates();
+    this.collapsedStates.set({
+      ...current,
+      [categoryId]: !current[categoryId]
+    });
+  }
+
+  isCategoryCollapsed(categoryId: string): boolean {
+    return this.collapsedStates()[categoryId] ?? true;
   }
 }

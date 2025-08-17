@@ -191,4 +191,17 @@ export class WeaponService {
       })
       .then((hasValue) => !!hasValue);
   }
+
+  async toggleWeaponEnabled(tenantId: string, id: string) {
+    const weapon = await this.weaponRepo.findOne({
+      where: { tenantId, id }
+    });
+    
+    if (!weapon) {
+      throw new Error('Weapon not found');
+    }
+    
+    weapon.enabled = !weapon.enabled;
+    return weapon.save();
+  }
 }

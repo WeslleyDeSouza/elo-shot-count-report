@@ -13,6 +13,7 @@ import { AreaEntity } from './areal.entity';
 import { Unique } from 'typeorm';
 import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 @Entity('areal_category')
+@Unique(['tenantId','id'])
 @Unique(['tenantId','code', 'name'])
 export class AreaCategoryEntity extends TenantBaseEntity {
 

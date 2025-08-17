@@ -50,6 +50,6 @@ export class CoordinationOfficeEntity extends TenantBaseEntity implements Coordi
   }
 
   @BeforeInsert()
-  protected beforeInsert(): Promise<any> {
+  protected async beforeInsert(): Promise<any> {
   }
 }

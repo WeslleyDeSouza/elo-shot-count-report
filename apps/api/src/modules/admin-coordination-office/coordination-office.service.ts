@@ -71,4 +71,17 @@ export class CoordinationOfficeService {
     
     return query.getOne().then(result => !!result);
   }
+
+  async toggleEnabled(tenantId: string, id: string) {
+    const office = await this.coordinationOfficeRepo.findOne({
+      where: { tenantId, id }
+    });
+    
+    if (!office) {
+      throw new Error('Coordination office not found');
+    }
+    
+    office.enabled = !office.enabled;
+    return office.save();
+  }
 }

@@ -3,7 +3,7 @@
   <div class="col-md-6">
     <div class="input-group">
       <span class="input-group-text">
-        <i class="fa fa-search"></i>
+        <i class="ri-search-line"></i>
       </span>
       <input
         type="text"
@@ -14,10 +14,10 @@
   </div>
   <div class="col-md-6">
     <button type="button" class="btn btn-primary me-2" (click)="createCoordinationOffice()">
-      <i class="fa fa-plus"></i> {{ 'add_coordination_office' | translate }}
+      <i class="ri-add-line"></i> {{ 'add_coordination_office' | translate }}
     </button>
     <button type="button" class="btn btn-outline-secondary" (click)="refreshOffices()">
-      <i class="fa fa-refresh"></i> {{ 'refresh' | translate }}
+      <i class="ri-refresh-line"></i> {{ 'refresh' | translate }}
     </button>
   </div>
 </div>
@@ -68,21 +68,23 @@
             }
           </td>
           <td>
-            <label class="toggle-switch">
+            <div class="form-check form-switch">
               <input
                 type="checkbox"
+                class="form-check-input"
+                [id]="'switch-' + office.id"
                 [checked]="office.enabled"
                 (change)="toggleOfficeEnabled(office)">
-              <span class="slider"></span>
-            </label>
+              <label class="form-check-label" [for]="'switch-' + office.id"></label>
+            </div>
           </td>
           <td>
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-sm btn-primary" (click)="editCoordinationOffice(office)">
-                <i class="fa-regular fa-edit"></i>
+                <i class="ri-edit-line"></i>
               </button>
               <button type="button" class="btn btn-sm btn-danger" (click)="deleteCoordinationOffice(office)">
-                <i class="fa fa-trash"></i>
+                <i class="ri-delete-bin-line"></i>
               </button>
             </div>
           </td>
@@ -96,14 +98,12 @@
 
 <!-- No data message -->
 @if(!loading() && filteredOffices().length === 0) {
-<div class="card mb-0 mt-3 text-white bg-info">
-  <div class="card-body">
-    <blockquote class="card-bodyquote mb-0">
-      <p class="mb-0">{{ 'coordination_office.overview.no_entries' | translate }}</p>
-      <button type="button" class="btn btn-light btn-sm mt-2" (click)="createCoordinationOffice()">
-        <i class="fa fa-plus"></i> {{ 'create_first_coordination_office' | translate }}
-      </button>
-    </blockquote>
-  </div>
-</div>
+  <app-empty-state 
+    [title]="'coordination_office.overview.no_entries' | translate"
+    [subtitle]="'coordination_office.overview.no_entries_subtitle' | translate"
+    iconClass="ri-building-line">
+    <button type="button" class="btn btn-primary" (click)="createCoordinationOffice()">
+      <i class="ri-add-line"></i> {{ 'create_first_coordination_office' | translate }}
+    </button>
+  </app-empty-state>
 }

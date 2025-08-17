@@ -32,7 +32,10 @@ export class AreaEntity extends TenantBaseEntity {
   @ManyToOne(() => AreaCategoryEntity, (cat) => cat.areas, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn([{name: 'tenantId'},{name: 'categoryId' }])
+  @JoinColumn([
+    { name: 'tenantId' ,referencedColumnName: 'tenantId' },
+    { name: 'categoryId' ,referencedColumnName: 'id' },
+  ])
   category: AreaCategoryEntity;
 
   @ApiProperty()

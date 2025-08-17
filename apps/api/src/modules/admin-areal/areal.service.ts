@@ -143,7 +143,10 @@ export class ArealService {
     return this.areaRepo.delete({ tenantId, id });
   }
   createAreal(tenantId: string, createValues: Partial<AreaEntity>) {
-    return this.areaRepo.create({ ...createValues, tenantId }).save();
+    return this.areaRepo.create({ ...createValues, tenantId }).save()
+      .catch((e) => {
+        console.error(e)
+      });
   }
   updateAreal(tenantId: string, id: string, updateValues: Partial<AreaEntity>) {
     return this.areaRepo.update({ tenantId, id: id }, updateValues).then((data) => ({
@@ -182,5 +185,18 @@ export class ArealService {
         where: { tenantId, code },
       })
       .then((hasValue) => !!hasValue);
+  }
+
+  async toggleArealEnabled(tenantId: string, id: string) {
+    const areal = await this.areaRepo.findOne({
+      where: { tenantId, id }
+    });
+    
+    if (!areal) {
+      throw new Error('Areal not found');
+    }
+    
+    areal.enabled = !areal.enabled;
+    return areal.save();
   }
 }

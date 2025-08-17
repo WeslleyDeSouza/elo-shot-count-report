@@ -5,6 +5,7 @@ import { ArealResultDto, ArealCategoryResultDto } from '@ui-elo/apiClient'
 
 export class Areal implements ArealModel {
   id!: string;
+  arealId?: string;
   name!: string;
   enabled!: boolean;
   categoryId!: string;

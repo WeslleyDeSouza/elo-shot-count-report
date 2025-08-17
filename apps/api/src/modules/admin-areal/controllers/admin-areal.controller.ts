@@ -76,7 +76,7 @@ export class AdminArealController {
     });
   }
 
-  // Import
+  // Update
   @Patch(':id')
   @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: ArealUpdateDto })
@@ -90,4 +90,16 @@ export class AdminArealController {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       });
   }
+
+  // Toggle enabled status
+  @Patch(':id/toggle')
+  @ApiParam({ name: 'id', type: String })
+  @ApiResponse({ status: 200, description: 'Success.', type: ArealResultDto })
+  @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
+  toggleAreal(@GetTenantId() tenantId: string, @Param('id') id: string) {
+    return this.arealService.toggleArealEnabled(tenantId, id).catch((e) => {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    });
+  }
+
 }

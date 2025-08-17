@@ -7,9 +7,10 @@ import { Subject, takeUntil, firstValueFrom } from 'rxjs';
 import { ComponentFormBase, Confirmable } from "@app-galaxy/sdk-ui";
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
+import {ApiProperty} from "@nestjs/swagger";
 
 const PATHS = {
-  AREAL_OVERVIEW: '/areal/overview'
+  AREAL_OVERVIEW: '/admin/areal/overview'
 } as const;
 
 @Component({
@@ -132,7 +133,16 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
   }
 
   private updateAreal(id: string, formValue: any): void {
-    this.facade.updateAreal(id, formValue)
+    this.facade.updateAreal(id, {
+
+      arealId : formValue.arealId,
+
+      categoryId :formValue.categoryId,
+
+      name :formValue .name,
+
+      enabled :formValue.enabled,
+    })
       .pipe(takeUntil(this.destroy$))
       .subscribe(areal => {
         if (areal) {

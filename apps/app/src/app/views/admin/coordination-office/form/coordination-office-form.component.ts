@@ -115,6 +115,7 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
   }
 
   private createCoordinationOffice(formValue: any): void {
+    formValue.enabled = !!formValue.enabled
     this.facade.createCoordinationOffice(formValue)
       .pipe(takeUntil(this.destroy$))
       .subscribe(office => {
@@ -127,6 +128,7 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
   }
 
   private updateCoordinationOffice(id: string, formValue: any): void {
+    formValue.enabled = !!formValue.enabled
     this.facade.updateCoordinationOffice(id, formValue)
       .pipe(takeUntil(this.destroy$))
       .subscribe(office => {

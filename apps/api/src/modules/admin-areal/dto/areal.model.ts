@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArealCategoryModel } from './areal-category.model';
-import { IsNotEmpty } from 'class-validator';
+import {IsBoolean, IsNotEmpty, IsOptional, IsString} from 'class-validator';
 import { BaseModel } from "@api-elo/models";
 
 export class ArealModel extends BaseModel<ArealCategoryModel> {
@@ -39,15 +39,23 @@ export class ArealCreateDto {
 
 export class ArealUpdateDto {
   @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
   arealId?: string;
 
   @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
   categoryId?: string;
 
   @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
   name?: string;
 
   @ApiProperty({ type: Boolean, required: false })
+  @IsOptional()
+  @IsBoolean()
   enabled?: boolean;
 }
 

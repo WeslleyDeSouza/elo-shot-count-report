@@ -3,6 +3,7 @@ import { ArealComponent } from "./overview/areal.component";
 import { ArealFacade } from "./areal.facade";
 import { ArealFormComponent } from "./form/areal-form.component";
 import { ArealCategoryFormComponent } from "./form/areal-category-form.component";
+import { ArealBulkFormComponent } from "./form/areal-bulk-form.component";
 
 export const AREAL_ROUTES: Route[] = [
   {
@@ -28,6 +29,10 @@ export const AREAL_ROUTES: Route[] = [
       {
         path: 'edit-category/:id',
         component: ArealCategoryFormComponent
+      },
+      {
+        path: 'bulk-edit',
+        component: ArealBulkFormComponent
       },
       {
         path: '',

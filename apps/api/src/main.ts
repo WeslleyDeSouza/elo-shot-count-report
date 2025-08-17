@@ -19,7 +19,11 @@ async function bootstrap() {
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalPipes(new ValidationPipe({ forbidUnknownValues: true }));
+  app.useGlobalPipes(new ValidationPipe({
+    forbidUnknownValues: true,
+    skipUndefinedProperties:true,
+    skipNullProperties:true,
+  }));
   const dataSource = app.get(DataSource);
 
   // Coolify WorkAround
