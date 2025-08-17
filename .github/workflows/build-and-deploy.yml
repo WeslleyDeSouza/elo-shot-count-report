@@ -16,9 +16,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Configure npm auth
         run: |
-          rm -f ~/.npmrc
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       # Cache node_modules for other jobs
