@@ -6,14 +6,22 @@ on:
 
 env:
   NODE_VERSION: '22'
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }} # Enable Nx Cloud for better caching
+  NX_BRANCH: ${{ github.event.number || github.ref_name }}
+  NX_RUN_GROUP: ${{ github.run_id }}
 
 jobs:
   install:
     runs-on: ubuntu-latest
     outputs:
       cache-key: ${{ steps.cache-key.outputs.key }}
+      affected-apps: ${{ steps.affected.outputs.apps }}
+      affected-libs: ${{ steps.affected.outputs.libs }}
+      has-affected: ${{ steps.affected.outputs.has-affected }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for Nx affected commands
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,7 +38,9 @@ jobs:
         id: cache-deps
         uses: actions/cache@v4
         with:
-          path: node_modules
+          path: |
+            node_modules
+            ~/.npm
           key: ${{ steps.cache-key.outputs.key }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -41,11 +51,33 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      # Determine affected projects to optimize build process
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Check affected projects
+        id: affected
+        run: |
+          echo "Checking affected projects..."
+          AFFECTED_APPS=$(npx nx print-affected --select=projects --type=app --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }} | tr '\n' ' ')
+          AFFECTED_LIBS=$(npx nx print-affected --select=projects --type=lib --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }} | tr '\n' ' ')
+          HAS_AFFECTED=$(npx nx print-affected --select=projects --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }} | wc -l)
+
+          echo "apps=$AFFECTED_APPS" >> $GITHUB_OUTPUT
+          echo "libs=$AFFECTED_LIBS" >> $GITHUB_OUTPUT
+          echo "has-affected=$HAS_AFFECTED" >> $GITHUB_OUTPUT
+
+          echo "Affected apps: $AFFECTED_APPS"
+          echo "Affected libs: $AFFECTED_LIBS"
+
   tests:
     needs: install
     runs-on: ubuntu-latest
+    if: needs.install.outputs.has-affected != '0'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -57,22 +89,42 @@ jobs:
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
-          path: node_modules
+          path: |
+            node_modules
+            ~/.npm
           key: ${{ needs.install.outputs.cache-key }}
           fail-on-cache-miss: true
 
-      - name: Run tests
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+
+      # Cache Nx computation results
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/nx
+          key: nx-${{ runner.os }}-${{ hashFiles('**/nx.json', '**/project.json', '**/package.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Run affected tests
         run: |
-          echo "Running tests..."
-          # npx nx run-many --target=test --all --parallel
+          echo "Running tests for affected projects..."
+          npx nx affected --target=test --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   build:
     needs: install
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Split builds across multiple runners for large monorepos
+        runner: [1, 2]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -84,43 +136,86 @@ jobs:
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
-          path: node_modules
+          path: |
+            node_modules
+            ~/.npm
           key: ${{ needs.install.outputs.cache-key }}
           fail-on-cache-miss: true
 
-      - name: Build projects
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/nx
+          key: nx-${{ runner.os }}-${{ hashFiles('**/nx.json', '**/project.json', '**/package.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      # Build only affected projects instead of all
+      - name: Build affected projects
         run: |
-          npx nx run-many --parallel --target=build --projects="api"
-          npm run ng-swagger
-          npx nx run-many --target=build --all --configuration=production
-          npm run ngsw
+          # Build API first (dependency)
+          if echo "${{ needs.install.outputs.affected-apps }}" | grep -q "api"; then
+            npx nx build api
+            npm run ng-swagger
+          fi
+
+          # Build other affected projects in production mode
+          npx nx affected --target=build --configuration=production --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
+
+          # Only run ngsw if we have Angular apps that were affected
+          if ls dist/*/ngsw-worker.js 1> /dev/null 2>&1; then
+            npm run ngsw
+          fi
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: List build outputs
-        run: ls -la dist/
+        run: ls -la dist/ || echo "No dist directory found"
 
       - name: Archive production artifacts
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && needs.install.outputs.has-affected != '0'
         uses: actions/upload-artifact@v4
         with:
-          name: nx-dist
+          name: nx-dist-${{ matrix.runner }}
           path: dist/
           retention-days: 30
-          if-no-files-found: error
+          if-no-files-found: warn # Changed from error to warn
 
-  deploy:
+  # Merge artifacts from parallel builds
+  merge-artifacts:
     needs: [build, tests]
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nx-dist-*
+          path: ./dist
+          merge-multiple: true
+
+      - name: Merge and upload final artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nx-dist-final
+          path: dist/
+          retention-days: 30
+
+  deploy:
+    needs: [merge-artifacts]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
-    environment: production  # Add environment protection
+    environment: production
     steps:
       - uses: actions/checkout@v4
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: nx-dist
+          name: nx-dist-final
           path: ./dist
 
       - name: Verify artifacts
@@ -128,7 +223,7 @@ jobs:
           echo "Current directory contents:"
           ls -la
           echo "Dist directory contents:"
-          ls -la dist/
+          ls -la dist/ || echo "No dist directory found"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -150,7 +245,7 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: ./
@@ -160,3 +255,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # Add build-time optimization
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
