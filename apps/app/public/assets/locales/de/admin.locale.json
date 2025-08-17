@@ -87,8 +87,8 @@
     },
     "coordination_office": {
       "form": {
-        "office_name": "Büroname",
-        "enter_office_name": "Büroname eingeben",
+        "office_name": "Koordinationsstelle",
+        "enter_office_name": "Koordinationsnamen eingeben",
         "pin": "PIN",
         "enter_pin": "PIN eingeben",
         "email_address": "E-Mail-Adresse",
@@ -99,8 +99,8 @@
         "enabled": "Aktiviert",
         "edit_coordination_office": "Koordinationsstelle bearbeiten",
         "create_new_coordination_office": "Neue Koordinationsstelle erstellen",
-        "update_office": "Büro aktualisieren",
-        "create_office": "Büro erstellen"
+        "update_office": "Aktualisieren",
+        "create_office": "Erstellen"
       },
       "overview": {
         "no_entries": "Keine Einträge",

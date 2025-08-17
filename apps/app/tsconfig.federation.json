@@ -5,8 +5,7 @@
     "types": []
   },
   "include": [
-    "src/**/*.ts",
-    "..\\..\\libs\\app\\generated\\src\\index.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "jest.config.ts",

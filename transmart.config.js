@@ -31,7 +31,7 @@ module.exports = {
   //localePath: './libs/app/assets/locales/',
   localePath: './apps/app/public/assets/locales',
   openAIApiKey: process.env['OPEN_API_KEY'],
-  openAIApiModel: "gpt-5-nano",
+  openAIApiModel: "gpt-5-nano-2025-05-14",
   context: 'Saas Application',
   overrides: {},
 };
