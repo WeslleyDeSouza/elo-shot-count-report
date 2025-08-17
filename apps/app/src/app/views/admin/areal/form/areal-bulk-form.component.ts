@@ -18,7 +18,6 @@ interface ArealWithCategory extends Areal {
     CommonModule,
     BulkEditorComponent,
     TranslatePipe,
-    RouterLink
   ],
   template: `
     <div class="container">

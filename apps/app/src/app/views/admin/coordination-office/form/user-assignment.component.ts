@@ -38,8 +38,8 @@ export interface User {
                 <tr>
                   <th>{{ 'User' | translate }}</th>
                   <th class="text-end">
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       class="btn btn-link btn-sm p-0 text-decoration-none"
                       (click)="toggleAllUsers()">
                       {{ 'Toggle All' | translate }}
@@ -90,12 +90,12 @@ export interface User {
     .card-title {
       color: #495057;
     }
-    
+
     .table th {
       border-top: none;
       font-weight: 600;
     }
-    
+
     .form-check-input:disabled {
       opacity: 0.5;
     }
@@ -117,8 +117,8 @@ export class UserAssignmentComponent implements OnInit, OnDestroy {
 
   totalUsers = computed(() => this.availableUsers().length);
   assignedCount = computed(() => this.assignedUserIds().size);
-  allUsersSelected = computed(() => 
-    this.availableUsers().length > 0 && 
+  allUsersSelected = computed(() =>
+    this.availableUsers().length > 0 &&
     this.availableUsers().every(user => this.isUserAssigned(user.userId) || this.isUserCreator(user.userId))
   );
 
@@ -142,7 +142,7 @@ export class UserAssignmentComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (users) => {
-          this.availableUsers.set(users);
+          this.availableUsers.set(<any>users);
           this.loadAssignedUsers();
         },
         error: (error) => {
@@ -163,7 +163,7 @@ export class UserAssignmentComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (assignedUsers) => {
-          const assignedIds = new Set(assignedUsers.map(user => user.userId));
+          const assignedIds = new Set(assignedUsers.map((user:any) => user.userId));
           this.assignedUserIds.set(assignedIds);
           this.loading.set(false);
         },
@@ -184,7 +184,7 @@ export class UserAssignmentComponent implements OnInit, OnDestroy {
 
   toggleUserAssignment(userId: string, event: any): void {
     const isAssigned = event.target.checked;
-    
+
     if (isAssigned) {
       this.assignUser(userId);
     } else {
@@ -224,10 +224,10 @@ export class UserAssignmentComponent implements OnInit, OnDestroy {
 
   toggleAllUsers(): void {
     const shouldAssignAll = !this.allUsersSelected();
-    
+
     this.availableUsers().forEach(user => {
       if (this.isUserCreator(user.userId)) return; // Skip creator
-      
+
       if (shouldAssignAll && !this.isUserAssigned(user.userId)) {
         this.assignUser(user.userId);
       } else if (!shouldAssignAll && this.isUserAssigned(user.userId)) {

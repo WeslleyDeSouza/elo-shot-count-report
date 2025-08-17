@@ -3,6 +3,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use strict type checking
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain
+
 ## Angular Best Practices
 - Always use standalone components over NgModules
 - Must NOT set `standalone: true` inside Angular decorators. It's the default.
@@ -11,6 +12,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
 - Use `NgOptimizedImage` for all static images.
   - `NgOptimizedImage` does not work for inline base64 images.
+  - Avoid the CommonModule
 ## Components
 - Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators

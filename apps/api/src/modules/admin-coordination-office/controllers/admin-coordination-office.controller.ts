@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Put, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { AppsRolesGuard, ReplayGuard, GetUserId } from '@movit/auth-api';
+import {AppsRolesGuard, ReplayGuard, GetUserId, UserDTO} from '@movit/auth-api';
 import { GetTenantId, TenantGuard } from '@app-galaxy/core-api';
 import { API_APPS_MAPPING } from '../../../main.mock-data';
 
@@ -26,7 +26,7 @@ import { CoordinationOfficeService } from '../coordination-office.service';
 export class AdminCoordinationOfficeController {
   constructor(private readonly coordinationOfficeService: CoordinationOfficeService) {}
 
-  @Get('list')
+  @Get('coordination/list')
   @ApiResponse({
     status: 200,
     type: CoordinationOfficeResultDto,
@@ -37,14 +37,14 @@ export class AdminCoordinationOfficeController {
     return this.coordinationOfficeService.findByPins(tenantId, pins);
   }
 
-  @Get('verify/:pin')
+  @Get('coordination/verify/:pin')
   @ApiParam({ type: String, required: true, name: 'pin' })
   @ApiResponse({ type: Boolean, isArray: false })
   async verifyCoordinationOffice(@GetTenantId() tenantId: string, @Param('pin') pin: string) {
     return this.coordinationOfficeService.findByPin(tenantId, pin).then(result => !!result);
   }
 
-  @Get(':id')
+  @Get('coordination/:id')
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({
     status: 200,
@@ -64,7 +64,7 @@ export class AdminCoordinationOfficeController {
     return coordinationOffice;
   }
 
-  @Put('')
+  @Put('coordination')
   @ApiBody({ type: CoordinationOfficeCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: CoordinationOfficeResultDto })
   @UseGuards(AppsRolesGuard(3))
@@ -82,7 +82,7 @@ export class AdminCoordinationOfficeController {
     });
   }
 
-  @Patch(':id')
+  @Patch('coordination/:id')
   @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: CoordinationOfficeUpdateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: CoordinationOfficeResultDto })
@@ -102,7 +102,7 @@ export class AdminCoordinationOfficeController {
       });
   }
 
-  @Delete(':id')
+  @Delete('coordination/:id')
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Success.' })
   @UseGuards(AppsRolesGuard(3))
@@ -112,7 +112,7 @@ export class AdminCoordinationOfficeController {
   }
 
   // Toggle enabled status
-  @Patch(':id/toggle')
+  @Patch('coordination/:id/toggle')
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Success.', type: CoordinationOfficeResultDto })
   async toggleCoordinationOffice(@GetTenantId() tenantId: string, @Param('id') id: string) {
@@ -124,49 +124,49 @@ export class AdminCoordinationOfficeController {
   // User Management Endpoints
 
   @Get('users')
-  @ApiResponse({ status: 200, description: 'Get all users.', isArray: true })
+  @ApiResponse({ status: 200, description: 'Get all users.', isArray: true, type:UserDTO })
   async getUsers(@GetTenantId() tenantId: string) {
     return this.coordinationOfficeService.getAllUsers(tenantId);
   }
 
   @Get('users/pin/:pin')
   @ApiParam({ name: 'pin', type: String })
-  @ApiResponse({ status: 200, description: 'Get users by PIN.', isArray: true })
+  @ApiResponse({ status: 200, description: 'Get users by PIN.', isArray: true , type:UserDTO})
   async getUsersByPin(@GetTenantId() tenantId: string, @Param('pin') pin: string) {
     return this.coordinationOfficeService.getUsersByPin(tenantId, pin);
   }
 
-  @Post('assign-user')
-  @ApiBody({ 
-    schema: { 
-      type: 'object', 
-      properties: { 
-        userId: { type: 'string' }, 
-        coordinationOfficeId: { type: 'string' } 
-      } 
-    } 
+  @Post('users/assign-user')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string' },
+        coordinationOfficeId: { type: 'string' }
+      }
+    }
   })
-  @ApiResponse({ status: 200, description: 'User assigned successfully.' })
+  @ApiResponse({ status: 200, description: 'User assigned successfully.' ,type:Boolean})
   async assignUser(
-    @GetTenantId() tenantId: string, 
+    @GetTenantId() tenantId: string,
     @Body() body: { userId: string; coordinationOfficeId: string }
   ) {
     return this.coordinationOfficeService.assignUser(tenantId, body.userId, body.coordinationOfficeId);
   }
 
-  @Delete('unassign-user')
-  @ApiBody({ 
-    schema: { 
-      type: 'object', 
-      properties: { 
-        userId: { type: 'string' }, 
-        coordinationOfficeId: { type: 'string' } 
-      } 
-    } 
+  @Delete('users/unassign-user')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string' },
+        coordinationOfficeId: { type: 'string' }
+      }
+    }
   })
   @ApiResponse({ status: 200, description: 'User unassigned successfully.' })
   async unassignUser(
-    @GetTenantId() tenantId: string, 
+    @GetTenantId() tenantId: string,
     @Body() body: { userId: string; coordinationOfficeId: string }
   ) {
     return this.coordinationOfficeService.unassignUser(tenantId, body.userId, body.coordinationOfficeId);

@@ -71,27 +71,27 @@ export class CoordinationOfficeUserService {
     const assignments = await this.coordinationOfficeUserRepo
       .createQueryBuilder('assignment')
       .innerJoin('assignment.coordinationOffice', 'office')
-      .innerJoin('assignment.user', 'user')
+      .innerJoin('assignment.user', 'user', 'user.userId = assignment.userId')
       .select([
         'user.userId',
-        'user.firstName',
-        'user.lastName',
-        'user.email',
-        'user.avatar',
-        'user.gender'
       ])
+
       .where('assignment.tenantId = :tenantId', { tenantId })
       .andWhere('office.pin = :pin', { pin })
-      .getMany();
+      .getRawMany();
 
-    return assignments.map(assignment => ({
-      userId: assignment.user.userId,
-      firstName: assignment.user.firstName,
-      lastName: assignment.user.lastName,
-      email: assignment.user.email,
-      avatar: assignment.user.avatar,
-      gender: assignment.user.gender
-    }));
+      const removePrefix = (prefix)=> ( obj) => {
+      return Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => {
+          if (key.startsWith(prefix)) {
+            return [key.slice(prefix.length), value];
+          }
+          return [key, value];
+        })
+      );
+    }
+
+      return assignments.map(removePrefix('user_'));
   }
 
   /**
@@ -119,7 +119,7 @@ export class CoordinationOfficeUserService {
 
       // Verify user exists
       const user = await this.userRepo.findOne({
-        where: <any>{ tenantId, userId }
+        where: {  userId }
       });
 
       if (!user) {

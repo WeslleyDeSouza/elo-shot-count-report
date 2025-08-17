@@ -165,8 +165,8 @@ export class CoordinationOfficeFacade {
    * Gets all available users in the system.
    * @returns Observable of users array
    */
-  getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>('/api/admin/coordination-office/users').pipe(
+  getAllUsers() {
+    return this.api.adminCoordinationOfficeGetUsers().pipe(
       catchError(error => {
         this._error.next('Failed to load users');
         console.error('Error loading users:', error);
@@ -180,8 +180,10 @@ export class CoordinationOfficeFacade {
    * @param pin - Coordination office PIN
    * @returns Observable of assigned users array
    */
-  getUsersByPin(pin: string): Observable<any[]> {
-    return this.http.get<any[]>(`/api/admin/coordination-office/users/pin/${pin}`).pipe(
+  getUsersByPin(pin: string) {
+    return this.api.adminCoordinationOfficeGetUsersByPin({
+      pin: pin,
+    }).pipe(
       catchError(error => {
         console.error('Error loading users by PIN:', error);
         return of([]);
@@ -196,9 +198,11 @@ export class CoordinationOfficeFacade {
    * @returns Observable boolean indicating success
    */
   assignUserToCoordinationOffice(userId: string, coordinationOfficeId: string): Observable<boolean> {
-    return this.http.post<boolean>('/api/admin/coordination-office/assign-user', {
-      userId,
-      coordinationOfficeId
+    return this.api.adminCoordinationOfficeAssignUser({
+      body:{
+        userId: userId,
+        coordinationOfficeId: coordinationOfficeId,
+      }
     }).pipe(
       map(() => true),
       catchError(error => {
@@ -216,9 +220,14 @@ export class CoordinationOfficeFacade {
    * @returns Observable boolean indicating success
    */
   unassignUserFromCoordinationOffice(userId: string, coordinationOfficeId: string): Observable<boolean> {
-    return this.http.request<boolean>('DELETE', '/api/admin/coordination-office/unassign-user', {
-      body: { userId, coordinationOfficeId }
-    }).pipe(
+    return this.api.adminCoordinationOfficeUnassignUser(
+      {
+        body:{
+          userId: userId,
+          coordinationOfficeId: coordinationOfficeId,
+        }
+      }
+    ) .pipe(
       map(() => true),
       catchError(error => {
         this._error.next('Failed to unassign user');
