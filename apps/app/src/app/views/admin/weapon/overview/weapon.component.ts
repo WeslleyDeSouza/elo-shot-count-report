@@ -99,25 +99,20 @@ export class WeaponComponent implements OnInit, OnDestroy {
     const search = this.searchText().toLowerCase();
 
     if (!search) {
-      return categories.map(category => ({
-        ...category,
-        weaponsCount: category.weapons.length,
-        enabledWeaponsCount: category.weapons.filter(w => w.enabled).length
-      }));
+      return categories;
     }
 
     return categories.filter(category =>
       category.name.toLowerCase().includes(search) ||
       category.weapons.some(weapon => weapon.name.toLowerCase().includes(search))
-    ).map(category => ({
-      ...category,
-      weapons: category.weapons.filter(weapon =>
+    ).map(category => {
+      const filteredCategory = new WeaponCategory(category);
+      filteredCategory.weapons = category.weapons.filter(weapon =>
         weapon.name.toLowerCase().includes(search) ||
         category.name.toLowerCase().includes(search)
-      ),
-      weaponsCount: category.weapons.length,
-      enabledWeaponsCount: category.weapons.filter(w => w.enabled).length
-    }));
+      );
+      return filteredCategory;
+    });
   });
 
   ngOnInit(): void {

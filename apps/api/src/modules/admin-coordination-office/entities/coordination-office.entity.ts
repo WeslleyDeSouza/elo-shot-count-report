@@ -1,10 +1,14 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, BeforeInsert, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import {DbPlatformColumn, TenantEntity} from '@app-galaxy/core-api';
+import {DbPlatformColumn, TenantBaseEntity, TenantEntity} from '@app-galaxy/core-api';
 import { CoordinationOfficeModel } from '../dto/coordination-office.model';
+import {Injectable} from "@nestjs/common";
 
 @Entity('coordination_office')
-export class CoordinationOfficeEntity extends TenantEntity implements CoordinationOfficeModel {
+export class CoordinationOfficeEntity extends TenantBaseEntity implements CoordinationOfficeModel {
+
+  protected self = CoordinationOfficeEntity;
+
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -43,5 +47,9 @@ export class CoordinationOfficeEntity extends TenantEntity implements Coordinati
 
   static initialise(entity: Partial<CoordinationOfficeModel>): CoordinationOfficeModel {
     return Object.assign(new CoordinationOfficeEntity(), entity);
+  }
+
+  @BeforeInsert()
+  protected beforeInsert(): Promise<any> {
   }
 }

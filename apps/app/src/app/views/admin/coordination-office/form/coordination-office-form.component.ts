@@ -110,6 +110,7 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
       }
     } else {
       this.markFormGroupTouched();
+      console.log(this.coordinationOfficeForm);
     }
   }
 

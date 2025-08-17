@@ -13,7 +13,7 @@
             </div>
           }
 
-          <form [formGroup]="coordinationOfficeForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="coordinationOfficeForm"  >
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
@@ -130,6 +130,7 @@
                   {{ 'Cancel' | translate }}
                 </button>
                 <button
+                  (click)="onSubmit()"
                   type="submit"
                   class="btn btn-primary"
                   [disabled]="!coordinationOfficeForm.valid || loading()"
