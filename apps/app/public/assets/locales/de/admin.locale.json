@@ -1,0 +1,155 @@
+{
+  "admin": {
+    "common": {
+      "add_category": "Kategorie hinzufügen",
+      "add_areal": "Areal hinzufügen",
+      "add_coordination_office": "Koordinationsstelle hinzufügen",
+      "bulk_edit": "Massenbearbeitung",
+      "areal": "Areal",
+      "weapon": "Waffe",
+      "weight": "Gewicht",
+      "enabled": "Aktiviert",
+      "actions": "Aktionen",
+      "delete": "Löschen",
+      "cancel": "Abbrechen",
+      "yes": "Ja",
+      "no": "Nein",
+      "search_coordination_offices": "Koordinationsstellen durchsuchen",
+      "refresh": "Aktualisieren",
+      "pin": "PIN",
+      "name": "Name",
+      "email": "E-Mail",
+      "allowed_areals": "Erlaubte Areale",
+      "no_restrictions": "Keine Einschränkungen"
+    },
+    "areal": {
+      "form": {
+        "areal_name": "Areal-Name",
+        "enter_areal_name": "Areal-Name eingeben",
+        "category": "Kategorie",
+        "select_a_category": "Kategorie auswählen",
+        "enabled": "Aktiviert",
+        "edit_areal": "Areal bearbeiten",
+        "create_new_areal": "Neues Areal erstellen",
+        "update_areal": "Areal aktualisieren",
+        "create_areal": "Areal erstellen",
+        "category_name": "Kategoriename",
+        "enter_category_name": "Kategoriename eingeben",
+        "category_code": "Kategoriecode",
+        "enter_category_code_eg_prod_dev": "Kategoriecode eingeben (z.B. PROD, DEV)",
+        "edit_areal_category": "Areal-Kategorie bearbeiten",
+        "create_new_areal_category": "Neue Areal-Kategorie erstellen",
+        "update_category": "Kategorie aktualisieren",
+        "create_category": "Kategorie erstellen"
+      },
+      "overview": {
+        "no_areas_in_category": "Keine Areale in dieser Kategorie",
+        "add_first_area": "Erstes Areal hinzufügen",
+        "no_entries": "Keine Einträge",
+        "no_entries_subtitle": "Erstellen Sie Ihre erste Areal-Kategorie",
+        "create_first_category": "Erste Kategorie erstellen"
+      }
+    },
+    "weapon": {
+      "form": {
+        "weapon_name": "Waffenname",
+        "enter_weapon_name": "Waffenname eingeben",
+        "category": "Kategorie",
+        "select_a_category": "Kategorie auswählen",
+        "german_name": "Deutscher Name",
+        "enter_german_name": "Deutschen Namen eingeben",
+        "french_name": "Französischer Name",
+        "enter_french_name": "Französischen Namen eingeben",
+        "italian_name": "Italienischer Name",
+        "enter_italian_name": "Italienischen Namen eingeben",
+        "enabled": "Aktiviert",
+        "angaben_in_gewicht": "Angaben in Gewicht",
+        "edit_weapon": "Waffe bearbeiten",
+        "create_new_weapon": "Neue Waffe erstellen",
+        "update_weapon": "Waffe aktualisieren",
+        "create_weapon": "Waffe erstellen",
+        "category_name": "Kategoriename",
+        "enter_category_name": "Kategoriename eingeben",
+        "category_code": "Kategoriecode",
+        "enter_category_code_eg_100_200": "Kategoriecode eingeben (z.B. 100, 200)",
+        "edit_weapon_category": "Waffen-Kategorie bearbeiten",
+        "create_new_weapon_category": "Neue Waffen-Kategorie erstellen",
+        "update_category": "Kategorie aktualisieren",
+        "create_category": "Kategorie erstellen"
+      },
+      "overview": {
+        "no_weapons_in_category": "Keine Waffen in dieser Kategorie",
+        "add_first_weapon": "Erste Waffe hinzufügen",
+        "no_entries": "Keine Einträge",
+        "no_entries_subtitle": "Erstellen Sie Ihre erste Waffen-Kategorie",
+        "create_first_category": "Erste Kategorie erstellen"
+      }
+    },
+    "coordination_office": {
+      "form": {
+        "office_name": "Büroname",
+        "enter_office_name": "Büroname eingeben",
+        "pin": "PIN",
+        "enter_pin": "PIN eingeben",
+        "email_address": "E-Mail-Adresse",
+        "enter_email_address": "E-Mail-Adresse eingeben",
+        "allowed_areals": "Erlaubte Areale",
+        "enter_comma_separated_areal_names_optional": "Kommagetrennte Arealennamen eingeben (optional)",
+        "leave_empty_to_allow_all_areals": "Leer lassen, um alle Areale zu erlauben",
+        "enabled": "Aktiviert",
+        "edit_coordination_office": "Koordinationsstelle bearbeiten",
+        "create_new_coordination_office": "Neue Koordinationsstelle erstellen",
+        "update_office": "Büro aktualisieren",
+        "create_office": "Büro erstellen"
+      },
+      "overview": {
+        "no_entries": "Keine Einträge",
+        "no_entries_subtitle": "Erstellen Sie Ihre erste Koordinationsstelle"
+      },
+      "create_first_coordination_office": "Erste Koordinationsstelle erstellen"
+    },
+    "route": {
+      "title": {
+        "report-entries": "Datensätze",
+        "report-export": "Datenexport",
+        "report-statistic": "Statistische Auswertungen",
+        "report-scheduler": "Report Scheduler",
+        "admin-data-list-relation": "Relationen",
+        "admin-data-list-areal": "Areal- und Kategorienverwaltung",
+        "admin-data-list-weapon": "Waffen- und Kategorienverwaltung",
+        "admin-settings": "Einstellungen",
+        "admin-data-import": "Datenimport",
+        "user-overview": "Benutzerübersicht",
+        "role-overview": "Benurtzerrollen",
+        "user-create": "Benutzer erstellen",
+        "user-edit": "Benutzer bearbeiten",
+        "role-create": "Rolle erstellen",
+        "role-edit": "Rolle bearbeiten",
+        "tenant-overview": "Standortübersicht",
+        "tenant-create": "Standort erstellen",
+        "tenant-edit": "Standort bearbeiten"
+      },
+      "description": {
+        "admin-data-list-relation": "Relationen geben an, welche Waffen an welche Areale verfügbar\n    sind. Wenn alle Waffen dargestellt werden soll, <br />lasse\n    die Liste der Relationen leer. <br />\n    Wenn du nur bestimmte Waffen für bestimmte Areale verfügbar\n    machen möchtest, füge diese Waffen-Relationen hinzu.",
+        "admin-data-list-areal": "Auf dieser Seite können Sie verschiedene Areale und deren Kategorien verwalten. Es werden ausschliesslich aktive Areale dargestellt, die Sie nach Bedarf hinzufügen, bearbeiten oder löschen können.",
+        "admin-data-list-weapon": "Auf dieser Seite können Sie Waffen sowie deren zugehörige Kategorien verwalten. Es werden ausschliesslich aktive Einträge angezeigt, die Sie nach Bedarf hinzufügen, bearbeiten oder entfernen können.",
+        "admin-settings": "Auf dieser Seite können Sie Koordinationsstellen hinzufügen, deren Standorte mit einem Pin hinterlegen und die entsprechenden Berechtigungen für den Zugriff und die Verwaltung festlegen.",
+        "report-entries": "Auf dieser Seite können Sie sämtliche erfassten Daten verwalten, durchsuchen und bearbeiten. Hier haben Sie einen strukturierten Überblick über alle vorhandenen Einträge.",
+        "report-export": "Hier können Sie Daten aus dem System exportieren, beispielsweise als Excel-Datei. Zudem können Sie Filter setzen, um gezielt bestimmte Informationen zu exportieren.",
+        "report-scheduler":" ",
+        "report-statistic": "Diese Ansicht bietet detaillierte Analysen und Berichte basierend auf den erfassten Daten. Diagramme und Tabellen helfen dabei, Trends und Muster zu erkennen.",
+        "admin-export-scheduler": " ",
+        "admin-data-import": " ",
+        "user-overview": " ",
+        "role-overview": " ",
+        "user-create": " ",
+        "user-edit": " ",
+        "role-create": " ",
+        "role-edit": " ",
+        "tenant-overview": " ",
+        "tenant-create": " ",
+        "tenant-edit": " "
+      }
+    }
+  }
+}

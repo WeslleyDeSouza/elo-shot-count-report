@@ -12,26 +12,34 @@ export const VIEWS_ROUTES: Route[] = [
     },
     // Non  Modules
   {
-    path:'admin/areal',
-    loadChildren:()=> import('./admin/areal')
-      .then(mod => mod.AREAL_ROUTES),
-    data: { path: "areal" },
+    path:'admin',
+    data: { path: "admin" },
     resolve: LocaleResolver.default,
-  },
-  {
-    path:'admin/coordination-office',
-    loadChildren:()=> import('./admin/coordination-office')
-      .then(mod => mod.COORDINATION_OFFICE_ROUTES),
-    data: { path: "coordination-office" },
-    resolve: LocaleResolver.default,
-  },
-  {
-    path:'admin/weapon',
-    loadChildren:()=> import('./admin/weapon')
-      .then(mod => mod.WEAPON_ROUTES),
-    data: { path: "weapon" },
-    resolve: LocaleResolver.default,
-  },
+    children: [
+      {
+        path:'areal',
+        loadChildren:()=> import('./admin/areal')
+          .then(mod => mod.AREAL_ROUTES),
+        data: { path: "areal" },
+        resolve: LocaleResolver.default,
+      },
+      {
+        path:'coordination-office',
+        loadChildren:()=> import('./admin/coordination-office')
+          .then(mod => mod.COORDINATION_OFFICE_ROUTES),
+        data: { path: "coordination-office" },
+        resolve: LocaleResolver.default,
+      },
+      {
+        path:'weapon',
+        loadChildren:()=> import('./admin/weapon')
+          .then(mod => mod.WEAPON_ROUTES),
+        data: { path: "weapon" },
+        resolve: LocaleResolver.default,
+      },
+    ]
+  }
+,
     {
       path:'**',
       component:NxWelcome

@@ -41,23 +41,35 @@ export class CoordinationOfficeComponent implements OnInit, OnDestroy {
   searchText = signal('');
   loading = signal(false);
   error = signal<string | null>(null);
+  sortField = signal<keyof CoordinationOffice>('name');
+  sortDirection = signal<'asc' | 'desc'>('asc');
 
   title = "Coordination Office";
   subTitle = "Coordination Offices";
 
   filteredOffices: Signal<CoordinationOffice[]> = computed(() => {
-    const offices = this.allOffices();
+    let offices = this.allOffices();
     const search = this.searchText().toLowerCase();
+    const field = this.sortField();
+    const direction = this.sortDirection();
 
-    if (!search) {
-      return offices;
+    // Filter by search text
+    if (search) {
+      offices = offices.filter(office =>
+        office.name.toLowerCase().includes(search) ||
+        office.pin.toLowerCase().includes(search) ||
+        office.email.toLowerCase().includes(search)
+      );
     }
 
-    return offices.filter(office =>
-      office.name.toLowerCase().includes(search) ||
-      office.pin.toLowerCase().includes(search) ||
-      office.email.toLowerCase().includes(search)
-    );
+    // Sort offices
+    return offices.sort((a, b) => {
+      const aValue = a[field]?.toString().toLowerCase() ?? '';
+      const bValue = b[field]?.toString().toLowerCase() ?? '';
+      
+      const comparison = aValue.localeCompare(bValue);
+      return direction === 'asc' ? comparison : -comparison;
+    });
   });
 
   ngOnInit(): void {
@@ -130,5 +142,21 @@ export class CoordinationOfficeComponent implements OnInit, OnDestroy {
           this.loadOffices();
         }
       });
+  }
+
+  sortBy(field: keyof CoordinationOffice): void {
+    if (this.sortField() === field) {
+      this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.sortField.set(field);
+      this.sortDirection.set('asc');
+    }
+  }
+
+  getSortIcon(field: keyof CoordinationOffice): string {
+    if (this.sortField() !== field) {
+      return 'ri-arrow-up-down-line';
+    }
+    return this.sortDirection() === 'asc' ? 'ri-arrow-up-line' : 'ri-arrow-down-line';
   }
 }

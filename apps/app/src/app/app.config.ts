@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
         environment.mfe.shell +'/assets/locales/[LOCALE]/auth.locale.json',
         environment.mfe.shell +'/assets/locales/[LOCALE]/global.locale.json',
         environment.mfe.shell +'/assets/locales/[LOCALE]/setting.locale.json',
-        'global'
+        'common'
       ]
     }),
 

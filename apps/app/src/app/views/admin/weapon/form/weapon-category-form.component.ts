@@ -36,8 +36,8 @@ export class WeaponCategoryFormComponent extends ComponentFormBase<WeaponCategor
   error = signal<string | null>(null);
 
   isEditMode = computed(() => !!this.getId());
-  formTitle = computed(() => this.isEditMode() ? 'Edit Weapon Category' : 'Create New Weapon Category');
-  submitButtonText = computed(() => this.isEditMode() ? 'Update Category' : 'Create Category');
+  formTitle = computed(() => this.isEditMode() ? 'admin.weapon.form.edit_weapon_category' : 'admin.weapon.form.create_new_weapon_category');
+  submitButtonText = computed(() => this.isEditMode() ? 'admin.weapon.form.update_category' : 'admin.weapon.form.create_category');
 
   ngOnInit(): void {
     this.initializeForm();

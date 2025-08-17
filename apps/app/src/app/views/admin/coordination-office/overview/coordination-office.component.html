@@ -8,16 +8,16 @@
       <input
         type="text"
         class="form-control"
-        [placeholder]="'search_coordination_offices' | translate"
+        [placeholder]="'admin.common.search_coordination_offices' | translate"
         (input)="searchOffices($event)">
     </div>
   </div>
   <div class="col-md-6">
     <button type="button" class="btn btn-primary me-2" (click)="createCoordinationOffice()">
-      <i class="ri-add-line"></i> {{ 'add_coordination_office' | translate }}
+      <i class="ri-add-line"></i> {{ 'admin.common.add_coordination_office' | translate }}
     </button>
     <button type="button" class="btn btn-outline-secondary" (click)="refreshOffices()">
-      <i class="ri-refresh-line"></i> {{ 'refresh' | translate }}
+      <i class="ri-refresh-line"></i> {{ 'admin.common.refresh' | translate }}
     </button>
   </div>
 </div>
@@ -46,12 +46,27 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>{{ 'pin' | translate | titlecase }}</th>
-          <th>{{ 'name' | translate | titlecase }}</th>
-          <th>{{ 'email' | translate | titlecase }}</th>
-          <th>{{ 'allowed_areals' | translate | titlecase }}</th>
-          <th style="width: 120px;">{{ 'enabled' | translate | titlecase }}</th>
-          <th style="width: 140px;">{{ 'actions' | translate | titlecase }}</th>
+          <th>
+            <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-semibold" (click)="sortBy('pin')">
+              {{ 'admin.common.pin' | translate | titlecase }}
+              <i [class]="getSortIcon('pin')"></i>
+            </button>
+          </th>
+          <th>
+            <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-semibold" (click)="sortBy('name')">
+              {{ 'admin.common.name' | translate | titlecase }}
+              <i [class]="getSortIcon('name')"></i>
+            </button>
+          </th>
+          <th>
+            <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-semibold" (click)="sortBy('email')">
+              {{ 'admin.common.email' | translate | titlecase }}
+              <i [class]="getSortIcon('email')"></i>
+            </button>
+          </th>
+          <th>{{ 'admin.common.allowed_areals' | translate | titlecase }}</th>
+          <th style="width: 120px;">{{ 'admin.common.enabled' | translate | titlecase }}</th>
+          <th style="width: 140px;">{{ 'admin.common.actions' | translate | titlecase }}</th>
         </tr>
       </thead>
       <tbody>
@@ -64,7 +79,7 @@
             @if(office.allowedArealNames) {
               <small class="text-muted">{{ office.allowedArealNames }}</small>
             } @else {
-              <small class="text-muted">{{ 'no_restrictions' | translate }}</small>
+              <small class="text-muted">{{ 'admin.common.no_restrictions' | translate }}</small>
             }
           </td>
           <td>
@@ -99,11 +114,11 @@
 <!-- No data message -->
 @if(!loading() && filteredOffices().length === 0) {
   <app-empty-state 
-    [title]="'coordination_office.overview.no_entries' | translate"
-    [subtitle]="'coordination_office.overview.no_entries_subtitle' | translate"
+    [title]="'admin.coordination_office.overview.no_entries' | translate"
+    [subtitle]="'admin.coordination_office.overview.no_entries_subtitle' | translate"
     iconClass="ri-building-line">
     <button type="button" class="btn btn-primary" (click)="createCoordinationOffice()">
-      <i class="ri-add-line"></i> {{ 'create_first_coordination_office' | translate }}
+      <i class="ri-add-line"></i> {{ 'admin.coordination_office.create_first_coordination_office' | translate }}
     </button>
   </app-empty-state>
 }

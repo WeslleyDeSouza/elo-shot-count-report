@@ -3,7 +3,7 @@
   <div class="col-12 d-flex justify-content-between">
     <div>
       <button type="button" class="btn btn-primary me-2" (click)="createWeaponCategory()">
-        <i class="ri-add-line"></i> {{ 'add_category' | translate }}
+        <i class="ri-add-line"></i> {{ 'admin.common.add_category' | translate }}
       </button>
     </div>
     <div>
@@ -65,10 +65,10 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>{{ 'weapon' | translate | titlecase }}</th>
-              <th>{{ 'weight' | translate | titlecase }}</th>
-              <th style="width: 120px;">{{ 'enabled' | translate | titlecase }}</th>
-              <th style="width: 100px;">{{ 'actions' | translate | titlecase }}</th>
+              <th>{{ 'admin.common.weapon' | translate | titlecase }}</th>
+              <th>{{ 'admin.common.weight' | translate | titlecase }}</th>
+              <th style="width: 120px;">{{ 'admin.common.enabled' | translate | titlecase }}</th>
+              <th style="width: 100px;">{{ 'admin.common.actions' | translate | titlecase }}</th>
             </tr>
           </thead>
           <tbody>
@@ -77,7 +77,7 @@
               <td>{{ weapon.name }}</td>
               <td>
                 <span class="badge" [class]="weapon.inWeight ? 'bg-success' : 'bg-secondary'">
-                  {{ weapon.inWeight ? ('yes' | translate) : ('no' | translate) }}
+                  {{ weapon.inWeight ? ('admin.common.yes' | translate) : ('admin.common.no' | translate) }}
                 </span>
               </td>
               <td>
@@ -107,9 +107,9 @@
         </table>
         } @else {
         <div class="text-center py-3 text-muted">
-          <p>{{ 'no_weapons_in_category' | translate }}</p>
+          <p>{{ 'admin.weapon.overview.no_weapons_in_category' | translate }}</p>
           <button type="button" class="btn btn-primary btn-sm" (click)="createWeapon(category.id)">
-            <i class="ri-add-line"></i> {{ 'add_first_weapon' | translate }}
+            <i class="ri-add-line"></i> {{ 'admin.weapon.overview.add_first_weapon' | translate }}
           </button>
         </div>
         }
@@ -123,11 +123,11 @@
 <!-- No data message -->
 @if(!loading() && filteredCategories().length === 0) {
   <app-empty-state 
-    [title]="'weapon.overview.no_entries' | translate"
-    [subtitle]="'weapon.overview.no_entries_subtitle' | translate"
+    [title]="'admin.weapon.overview.no_entries' | translate"
+    [subtitle]="'admin.weapon.overview.no_entries_subtitle' | translate"
     iconClass="ri-sword-line">
     <button type="button" class="btn btn-primary" (click)="createWeaponCategory()">
-      <i class="ri-add-line"></i> {{ 'create_first_category' | translate }}
+      <i class="ri-add-line"></i> {{ 'admin.weapon.overview.create_first_category' | translate }}
     </button>
   </app-empty-state>
 }

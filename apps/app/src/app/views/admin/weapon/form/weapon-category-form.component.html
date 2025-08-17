@@ -17,14 +17,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="name" class="form-label">{{ 'Category Name' | translate }} *</label>
+                  <label for="name" class="form-label">{{ 'admin.weapon.form.category_name' | translate }} *</label>
                   <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
                     [class.is-invalid]="isFieldInvalid('name')"
-                    placeholder="{{ 'Enter category name' | translate }}"
+                    placeholder="{{ 'admin.weapon.form.enter_category_name' | translate }}"
                   />
                   @if (getFieldError('name'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
@@ -34,14 +34,14 @@
 
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="code" class="form-label">{{ 'Category Code' | translate }} *</label>
+                  <label for="code" class="form-label">{{ 'admin.weapon.form.category_code' | translate }} *</label>
                   <input
                     type="number"
                     class="form-control"
                     id="code"
                     formControlName="code"
                     [class.is-invalid]="isFieldInvalid('code')"
-                    placeholder="{{ 'Enter category code (e.g., 100, 200)' | translate }}"
+                    placeholder="{{ 'admin.weapon.form.enter_category_code_eg_100_200' | translate }}"
                   />
                   @if (getFieldError('code'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
@@ -59,7 +59,7 @@
                     (click)="onDelete()"
                     [disabled]="loading()"
                   >
-                    {{ 'Delete' | translate }}
+                    {{ 'admin.common.delete' | translate }}
                   </button>
                 }
               </div>
@@ -70,7 +70,7 @@
                   (click)="onCancel()"
                   [disabled]="loading()"
                 >
-                  {{ 'Cancel' | translate }}
+                  {{ 'admin.common.cancel' | translate }}
                 </button>
                 <button
                   type="submit"

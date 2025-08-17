@@ -60,7 +60,7 @@ export interface User {
                         </div>
                       </div>
                     </td>
-                    <td class="text-end">
+                    <td class="d-flex justify-content-end">
                       <div class="form-check form-switch">
                         <input
                           type="checkbox"

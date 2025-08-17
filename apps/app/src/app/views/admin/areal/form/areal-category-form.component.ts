@@ -32,8 +32,8 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   error = signal<string | null>(null);
 
   isEditMode = computed(() => !!this.getId());
-  formTitle = computed(() => this.isEditMode() ? 'Edit Areal Category' : 'Create New Areal Category');
-  submitButtonText = computed(() => this.isEditMode() ? 'Update Category' : 'Create Category');
+  formTitle = computed(() => this.isEditMode() ? 'admin.areal.form.edit_areal_category' : 'admin.areal.form.create_new_areal_category');
+  submitButtonText = computed(() => this.isEditMode() ? 'admin.areal.form.update_category' : 'admin.areal.form.create_category');
 
   ngOnInit(): void {
     this.initializeForm();

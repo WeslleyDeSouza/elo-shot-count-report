@@ -17,14 +17,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="name" class="form-label">{{ 'Office Name' | translate }} *</label>
+                  <label for="name" class="form-label">{{ 'admin.coordination_office.form.office_name' | translate }} *</label>
                   <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
                     [class.is-invalid]="isFieldInvalid('name')"
-                    placeholder="{{ 'Enter office name' | translate }}"
+                    placeholder="{{ 'admin.coordination_office.form.enter_office_name' | translate }}"
                   />
                   @if (getFieldError('name'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
@@ -34,14 +34,14 @@
 
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="pin" class="form-label">{{ 'PIN' | translate }} *</label>
+                  <label for="pin" class="form-label">{{ 'admin.coordination_office.form.pin' | translate }} *</label>
                   <input
                     type="text"
                     class="form-control"
                     id="pin"
                     formControlName="pin"
                     [class.is-invalid]="isFieldInvalid('pin')"
-                    placeholder="{{ 'Enter PIN' | translate }}"
+                    placeholder="{{ 'admin.coordination_office.form.enter_pin' | translate }}"
                   />
                   @if (getFieldError('pin'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
@@ -53,14 +53,14 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="mb-3">
-                  <label for="email" class="form-label">{{ 'Email Address' | translate }} *</label>
+                  <label for="email" class="form-label">{{ 'admin.coordination_office.form.email_address' | translate }} *</label>
                   <input
                     type="email"
                     class="form-control"
                     id="email"
                     formControlName="email"
                     [class.is-invalid]="isFieldInvalid('email')"
-                    placeholder="{{ 'Enter email address' | translate }}"
+                    placeholder="{{ 'admin.coordination_office.form.enter_email_address' | translate }}"
                   />
                   @if (getFieldError('email'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
@@ -72,19 +72,19 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="mb-3">
-                  <label for="allowedArealNames" class="form-label">{{ 'Allowed Areals' | translate }}</label>
+                  <label for="allowedArealNames" class="form-label">{{ 'admin.coordination_office.form.allowed_areals' | translate }}</label>
                   <input
                     type="text"
                     class="form-control"
                     id="allowedArealNames"
                     formControlName="allowedArealNames"
                     [class.is-invalid]="isFieldInvalid('allowedArealNames')"
-                    placeholder="{{ 'Enter comma-separated areal names (optional)' | translate }}"
+                    placeholder="{{ 'admin.coordination_office.form.enter_comma_separated_areal_names_optional' | translate }}"
                   />
                   @if (getFieldError('allowedArealNames'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
                   }
-                  <div class="form-text">{{ 'Leave empty to allow all areals' | translate }}</div>
+                  <div class="form-text">{{ 'admin.coordination_office.form.leave_empty_to_allow_all_areals' | translate }}</div>
                 </div>
               </div>
             </div>
@@ -100,7 +100,7 @@
                       formControlName="enabled"
                     />
                     <label class="form-check-label" for="enabled">
-                      {{ 'Enabled' | translate }}
+                      {{ 'admin.coordination_office.form.enabled' | translate }}
                     </label>
                   </div>
                 </div>
@@ -116,7 +116,7 @@
                     (click)="onDelete()"
                     [disabled]="loading()"
                   >
-                    {{ 'Delete' | translate }}
+                    {{ 'admin.common.delete' | translate }}
                   </button>
                 }
               </div>
@@ -127,7 +127,7 @@
                   (click)="onCancel()"
                   [disabled]="loading()"
                 >
-                  {{ 'Cancel' | translate }}
+                  {{ 'admin.common.cancel' | translate }}
                 </button>
                 <button
                   (click)="onSubmit()"

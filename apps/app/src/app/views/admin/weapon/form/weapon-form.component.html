@@ -17,14 +17,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="name" class="form-label">{{ 'Weapon Name' | translate }} *</label>
+                  <label for="name" class="form-label">{{ 'admin.weapon.form.weapon_name' | translate }} *</label>
                   <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
                     [class.is-invalid]="isFieldInvalid('name')"
-                    placeholder="{{ 'Enter weapon name' | translate }}"
+                    placeholder="{{ 'admin.weapon.form.enter_weapon_name' | translate }}"
                   />
                   @if (getFieldError('name'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
@@ -34,14 +34,14 @@
 
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="categoryId" class="form-label">{{ 'Category' | translate }} *</label>
+                  <label for="categoryId" class="form-label">{{ 'admin.weapon.form.category' | translate }} *</label>
                   <select
                     class="form-select"
                     id="categoryId"
                     formControlName="categoryId"
                     [class.is-invalid]="isFieldInvalid('categoryId')"
                   >
-                    <option value="">{{ 'Select a category' | translate }}</option>
+                    <option value="">{{ 'admin.weapon.form.select_a_category' | translate }}</option>
                     @for (category of categories(); track category.id) {
                       <option [value]="category.id">{{ category.name }}</option>
                     }
@@ -56,39 +56,39 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="mb-3">
-                  <label for="nameDe" class="form-label">{{ 'German Name' | translate }}</label>
+                  <label for="nameDe" class="form-label">{{ 'admin.weapon.form.german_name' | translate }}</label>
                   <input
                     type="text"
                     class="form-control"
                     id="nameDe"
                     formControlName="nameDe"
-                    placeholder="{{ 'Enter German name' | translate }}"
+                    placeholder="{{ 'admin.weapon.form.enter_german_name' | translate }}"
                   />
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="mb-3">
-                  <label for="nameFr" class="form-label">{{ 'French Name' | translate }}</label>
+                  <label for="nameFr" class="form-label">{{ 'admin.weapon.form.french_name' | translate }}</label>
                   <input
                     type="text"
                     class="form-control"
                     id="nameFr"
                     formControlName="nameFr"
-                    placeholder="{{ 'Enter French name' | translate }}"
+                    placeholder="{{ 'admin.weapon.form.enter_french_name' | translate }}"
                   />
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="mb-3">
-                  <label for="nameIt" class="form-label">{{ 'Italian Name' | translate }}</label>
+                  <label for="nameIt" class="form-label">{{ 'admin.weapon.form.italian_name' | translate }}</label>
                   <input
                     type="text"
                     class="form-control"
                     id="nameIt"
                     formControlName="nameIt"
-                    placeholder="{{ 'Enter Italian name' | translate }}"
+                    placeholder="{{ 'admin.weapon.form.enter_italian_name' | translate }}"
                   />
                 </div>
               </div>
@@ -105,7 +105,7 @@
                       formControlName="enabled"
                     />
                     <label class="form-check-label" for="enabled">
-                      {{ 'Enabled' | translate }}
+                      {{ 'admin.weapon.form.enabled' | translate }}
                     </label>
                   </div>
                 </div>
@@ -121,7 +121,7 @@
                       formControlName="inWeight"
                     />
                     <label class="form-check-label" for="inWeight">
-                      {{ 'Angaben in Gewicht' | translate }}
+                      {{ 'admin.weapon.form.angaben_in_gewicht' | translate }}
                     </label>
                   </div>
                 </div>
@@ -137,7 +137,7 @@
                     (click)="onDelete()"
                     [disabled]="loading()"
                   >
-                    {{ 'Delete' | translate }}
+                    {{ 'admin.common.delete' | translate }}
                   </button>
                 }
               </div>
@@ -148,7 +148,7 @@
                   (click)="onCancel()"
                   [disabled]="loading()"
                 >
-                  {{ 'Cancel' | translate }}
+                  {{ 'admin.common.cancel' | translate }}
                 </button>
                 <button
                   type="submit"

@@ -39,8 +39,8 @@ export class WeaponFormComponent extends ComponentFormBase<Weapon> implements On
   categories = signal<WeaponCategory[]>([]);
 
   isEditMode = computed(() => !!this.getId());
-  formTitle = computed(() => this.isEditMode() ? 'Edit Weapon' : 'Create New Weapon');
-  submitButtonText = computed(() => this.isEditMode() ? 'Update Weapon' : 'Create Weapon');
+  formTitle = computed(() => this.isEditMode() ? 'admin.weapon.form.edit_weapon' : 'admin.weapon.form.create_new_weapon');
+  submitButtonText = computed(() => this.isEditMode() ? 'admin.weapon.form.update_weapon' : 'admin.weapon.form.create_weapon');
 
   ngOnInit(): void {
     this.initializeForm();

@@ -3,13 +3,13 @@
 <div class="row mb-3">
   <div class="col-12">
     <button type="button" class="btn btn-primary me-2" (click)="createArealCategory()">
-      <i class="ri-add-line"></i> {{ 'add_category' | translate }}
+      <i class="ri-add-line"></i> {{ 'admin.common.add_category' | translate }}
     </button>
     <button type="button" class="btn btn-primary me-2" (click)="createAreal()">
-      <i class="ri-add-line"></i> {{ 'add_areal' | translate }}
+      <i class="ri-add-line"></i> {{ 'admin.common.add_areal' | translate }}
     </button>
     <button type="button" class="btn btn-outline-primary me-2" (click)="openBulkEditor()">
-      <i class="ri-table-line"></i> {{ 'bulk_edit' | translate }}
+      <i class="ri-table-line"></i> {{ 'admin.common.bulk_edit' | translate }}
     </button>
   </div>
 </div>
@@ -62,9 +62,9 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>{{ 'areal' | translate | titlecase }}</th>
-              <th style="width: 120px;">{{ 'enabled' | translate | titlecase }}</th>
-              <th style="width: 100px;">{{ 'actions' | translate | titlecase }}</th>
+              <th>{{ 'admin.common.areal' | translate | titlecase }}</th>
+              <th style="width: 120px;">{{ 'admin.common.enabled' | translate | titlecase }}</th>
+              <th style="width: 100px;">{{ 'admin.common.actions' | translate | titlecase }}</th>
             </tr>
           </thead>
           <tbody>
@@ -98,9 +98,9 @@
         </table>
         } @else {
         <div class="text-center py-3 text-muted">
-          <p>{{ 'no_areas_in_category' | translate }}</p>
+          <p>{{ 'admin.areal.overview.no_areas_in_category' | translate }}</p>
           <button type="button" class="btn btn-primary btn-sm" (click)="createAreal(category.id)">
-            <i class="ri-add-line"></i> {{ 'add_first_area' | translate }}
+            <i class="ri-add-line"></i> {{ 'admin.areal.overview.add_first_area' | translate }}
           </button>
         </div>
         }
@@ -114,11 +114,11 @@
 <!-- No data message -->
 @if(!loading() && filteredCategories().length === 0) {
   <app-empty-state 
-    [title]="'areal.overview.no_entries' | translate"
-    [subtitle]="'areal.overview.no_entries_subtitle' | translate"
+    [title]="'admin.areal.overview.no_entries' | translate"
+    [subtitle]="'admin.areal.overview.no_entries_subtitle' | translate"
     iconClass="ri-map-pin-line">
     <button type="button" class="btn btn-primary" (click)="createArealCategory()">
-      <i class="ri-add-line"></i> {{ 'create_first_category' | translate }}
+      <i class="ri-add-line"></i> {{ 'admin.areal.overview.create_first_category' | translate }}
     </button>
   </app-empty-state>
 }

@@ -34,8 +34,8 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
   error = signal<string | null>(null);
 
   isEditMode = computed(() => !!this.getId());
-  formTitle = computed(() => this.isEditMode() ? 'Edit Coordination Office' : 'Create New Coordination Office');
-  submitButtonText = computed(() => this.isEditMode() ? 'Update Office' : 'Create Office');
+  formTitle = computed(() => this.isEditMode() ? 'admin.coordination_office.form.edit_coordination_office' : 'admin.coordination_office.form.create_new_coordination_office');
+  submitButtonText = computed(() => this.isEditMode() ? 'admin.coordination_office.form.update_office' : 'admin.coordination_office.form.create_office');
 
   ngOnInit(): void {
     this.initializeForm();
