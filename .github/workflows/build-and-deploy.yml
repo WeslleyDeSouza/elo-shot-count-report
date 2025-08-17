@@ -120,17 +120,12 @@ jobs:
     runs-on: ubuntu-latest
     # Remove matrix strategy to avoid artifact issues
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
+      - uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
-
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
@@ -139,70 +134,10 @@ jobs:
             ~/.npm
           key: ${{ needs.install.outputs.cache-key }}
           fail-on-cache-miss: true
-
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v4
-
-      - name: Cache Nx
-        uses: actions/cache@v4
-        with:
-          path: node_modules/.cache/nx
-          key: nx-${{ runner.os }}-${{ hashFiles('**/nx.json', '**/project.json', '**/package.json') }}
-          restore-keys: |
-            nx-${{ runner.os }}-
-
-      # Build only affected projects instead of all
-      - name: Build affected projects
-        run: |
-          echo "Building projects..."
-          npm i --legacy-peer-deps
-          # On main branch, always build something to ensure deployment works
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            if [ "${{ needs.install.outputs.has-affected }}" = "0" ]; then
-              echo "No affected projects on main branch - building all projects to ensure deployment"
-              npx nx run-many --target=build --all --configuration=production --parallel=3
-            else
-              echo "Building affected projects on main branch"
-              # Build API first if affected (dependency)
-              if echo "${{ needs.install.outputs.affected-apps }}" | grep -q "api"; then
-                echo "Building API..."
-                npx nx build api
-                npm run ng-swagger
-              fi
-              # Build other affected projects
-              npx nx affected --target=build --configuration=production --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
-            fi
-          else
-            # Feature branches - only build affected
-            if [ "${{ needs.install.outputs.has-affected }}" = "0" ]; then
-              echo "No affected projects found, skipping build"
-              exit 0
-            fi
-            # Build API first if affected (dependency)
-            if echo "${{ needs.install.outputs.affected-apps }}" | grep -q "api"; then
-              echo "Building API..."
-              npx nx build api
-              npm run ng-swagger
-            fi
-            # Build other affected projects
-            npx nx affected --target=build --configuration=production --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
-          fi
-
-          # Only run ngsw if we have Angular apps that were built
-          if ls dist/*/ngsw-worker.js 1> /dev/null 2>&1; then
-            echo "Running ngsw..."
-            npm run ngsw
-          fi
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: List build outputs
-        run: |
-          echo "Build outputs:"
-          ls -la dist/ || echo "No dist directory found"
-          if [ -d "dist" ]; then
-            find dist/ -type f -name "*.js" | head -10 || echo "No JS files found"
-          fi
+      - run: npx nx run-many --parallel --target=build --projects="api*" && npm run ng-swagger
+      - run: npx nx run-many --target=build --all --prod
+      - run: npm run ngsw
+      - run: ls dist
 
       - name: Archive production artifacts
         if: github.ref == 'refs/heads/main'
@@ -212,6 +147,7 @@ jobs:
           path: |
             ./dist
           if-no-files-found: error
+
 
   deploy:
     needs: build
