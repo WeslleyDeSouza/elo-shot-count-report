@@ -1,0 +1,20 @@
+{
+  "monitoring": {
+    "overview": {
+      "title": "Sustav nadzora",
+      "online_systems": "Online sustav",
+      "offline_systems": "Isključeni sustavi",
+      "degraded_systems": "Oštećeni sustavi",
+      "overall_uptime": "Ukupno vrijeme dostupnosti",
+      "all_systems": "Svi sustavi",
+      "online": "Online",
+      "issues": "Problemi",
+      "degraded": "Oštećen",
+      "loading_message": "Učitavanje nadzornih usluga...",
+      "no_services": "Nema pronađenih nadzornih usluga",
+      "no_match_filters": "Pokušajte prilagoditi svoje kriterije pretrage ili filtra.",
+      "no_services_message": "Još nisu konfigurirane nadzorne usluge.",
+      "clear_filters": "Očisti filtre"
+    }
+  }
+}

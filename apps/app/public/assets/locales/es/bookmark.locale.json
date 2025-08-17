@@ -1,0 +1,25 @@
+{
+  "bookmark": {
+    "overview": {
+      "title": "Lesezeichen",
+      "total_bookmarks": "Gesamtanzahl Lesezeichen",
+      "private": "Privado",
+      "public": "Público",
+      "categorized": "Categorizado",
+      "search_placeholder": "Buscar marcadores...",
+      "all_categories": "Todas las categorías",
+      "filter_privacy_all": "Todos",
+      "filter_privacy_private": "Privado",
+      "filter_privacy_public": "Público",
+      "sort_name": "Nombre",
+      "sort_created": "Creado",
+      "sort_updated": "Actualizado",
+      "sort_category": "Categoría",
+      "loading_message": "Cargando marcadores...",
+      "no_bookmarks": "No se encontraron marcadores",
+      "no_match_filters": "No hay marcadores que coincidan con sus filtros actuales. Intente ajustar sus criterios de búsqueda.",
+      "no_bookmarks_message": "Comience agregando su primer marcador.",
+      "add_button": "Agregar marcador"
+    }
+  }
+}

@@ -1,0 +1,184 @@
+<!-- Statistics Cards -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0">
+            <div class="bg-primary bg-opacity-10 rounded p-2">
+              <i class="ri-bookmark-line text-primary"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <h6 class="mb-0">Total Bookmarks</h6>
+            <h4 class="mb-0">{{ totalBookmarks() }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0">
+            <div class="bg-warning bg-opacity-10 rounded p-2">
+              <i class="ri-lock-line text-warning"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <h6 class="mb-0">Private</h6>
+            <h4 class="mb-0">{{ privateBookmarks() }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0">
+            <div class="bg-success bg-opacity-10 rounded p-2">
+              <i class="ri-global-line text-success"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <h6 class="mb-0">Public</h6>
+            <h4 class="mb-0">{{ publicBookmarks() }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0">
+            <div class="bg-info bg-opacity-10 rounded p-2">
+              <i class="ri-folder-line text-info"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <h6 class="mb-0">Categorized</h6>
+            <h4 class="mb-0">{{ categorizedBookmarks() }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <div class="row g-3">
+      <!-- Search -->
+      <div class="col-12 col-md-3 col-lg-3">
+        <div class="position-relative">
+          <input type="text" class="form-control ps-3 rounded " placeholder="Search Bookmarks..." [value]="searchText()"
+            (input)="searchName($event)">
+          <i class="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-1 text-muted"></i>
+        </div>
+      </div>
+      <div class="col-12 col-md-9 col-lg-9">
+        <div class="row">
+          <!-- Category Filter -->
+          <div class="col-12 col-md-3 col-lg-3">
+            <select id="category" class="form-select" [value]="categoryFilter()"
+              (change)="onCategoryFilterChange($event)">
+              <option value="">All Categories</option>
+              @for (category of categories(); track category) {
+              <option [value]="category">{{ category }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Privacy Filter -->
+          <div class="col-12 col-md-3 col-lg-3">
+            <select id="privacy" class="form-select" [value]="privacyFilter()" (change)="onPrivacyFilterChange($event)">
+              <option value="all">All</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+
+          <!-- Sort -->
+          <div class="col-12 col-md-3 col-lg-3">
+            <select id="sort" class="form-select" [value]="sortBy()" (change)="onSortChange($event)">
+              <option value="">Default</option>
+              <option value="title">Title</option>
+              <option value="createdAt">Created Date</option>
+              <option value="updatedAt">Updated Date</option>
+              <option value="category">Category</option>
+            </select>
+          </div>
+
+          <!-- Items per page -->
+          <div class="col-12 col-md-3 col-lg-3">
+            <select id="itemsPerPage" class="form-select" [value]="itemsPerPage()" (change)="onRowsChange($event)">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Message -->
+@if (error()) {
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <i class="ri-error-warning-line me-2"></i>
+  {{ error() }}
+  <button type="button" class="btn-close" (click)="clearError()"></button>
+</div>
+}
+
+<!-- Loading State -->
+@if (loading()) {
+<div class="text-center p-4">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p class="mt-2 text-muted">Loading bookmarks...</p>
+</div>
+} @else {
+<!-- Bookmarks List -->
+@if (bookmarks().length > 0) {
+<app-bookmarks-list [bookmarks]="bookmarks()" [sortBy]="sortBy()" [sortOrder]="'DESC'" [currentPage]="currentPage()"
+  [pageSize]="itemsPerPage()" [totalPages]="totalPages" [totalCount]="totalItems()" (edit)="editBookmark($event)"
+  (delete)="deleteBookmark($event)" (sort)="onSort($event)" (pageChange)="onPageChange($event)"></app-bookmarks-list>
+} @else {
+<!-- Empty State -->
+<div class="card border-0 shadow-sm">
+  <div class="card-body text-center p-5">
+    <div class="mb-4">
+      <i class="ri-bookmark-line display-1 text-muted"></i>
+    </div>
+    <h4 class="mb-2">No bookmarks found</h4>
+    @if (searchText() || categoryFilter() || privacyFilter() !== 'all') {
+    <p class="text-muted mb-3">
+      No bookmarks match your current filters. Try adjusting your search criteria.
+    </p>
+    <button class="btn btn-outline-secondary me-2"
+      (click)="searchText.set(''); categoryFilter.set(''); privacyFilter.set('all'); loadBookmarks()">
+      Clear Filters
+    </button>
+    } @else {
+    <p class="text-muted mb-3">
+      Get started by adding your first bookmark.
+    </p>
+    }
+    <button class="btn btn-primary" (click)="createBookmark()">
+      <i class="ri-add-line me-2"></i>
+      Add Bookmark
+    </button>
+  </div>
+</div>
+}
+}

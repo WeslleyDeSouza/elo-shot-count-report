@@ -1,0 +1,54 @@
+{
+  "$schema": "../../node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "mfe-remotes",
+      "urls": [
+        "https://apps.app-galaxy.io/**",
+        "https://website.app.app-galaxy.io/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "1d",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "mfe-assets",
+      "urls": [
+        "https://apps.app-galaxy.io/remoteEntry.json",
+        "https://apps.app-galaxy.io/*.js",
+        "https://website.app.app-galaxy.io/remoteEntry.json",
+        "https://website.app.app-galaxy.io/*.js"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 50,
+        "maxAge": "1h"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**"
+  ]
+}

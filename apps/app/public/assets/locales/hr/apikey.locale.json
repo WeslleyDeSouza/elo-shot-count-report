@@ -1,0 +1,24 @@
+{
+  "apikey": {
+    "overview": {
+      "title": "API ključ",
+      "search_placeholder": "Traži API ključ...",
+      "filter_status_all": "Svi statusi",
+      "filter_status_active": "Aktivan",
+      "filter_status_inactive": "Neaktivan",
+      "filter_status_revoked": "Povučen",
+      "sort_name": "Ime",
+      "sort_created": "Stvoren",
+      "sort_expiry": "Istek",
+      "add_button": "Dodaj API ključ",
+      "stats_total": "Ukupno",
+      "stats_active": "Aktivni",
+      "stats_inactive": "Neaktivni",
+      "stats_revoked": "Povučeni",
+      "stats_near_expiry": "Gotovo isteklo",
+      "no_keys": "Nisu pronađeni API ključevi",
+      "no_match_filters": "Nijedan API ključ ne odgovara vašim trenutnim filterima. Pokušajte prilagoditi svoju pretragu ili filtere.",
+      "no_keys_message": "Započnite stvaranjem svog prvog API ključa."
+    }
+  }
+}

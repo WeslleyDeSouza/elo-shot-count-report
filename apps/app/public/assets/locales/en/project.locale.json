@@ -1,0 +1,32 @@
+{
+  "project": {
+    "overview": {
+      "title": "Projects",
+      "no_entries": "No entries found"
+    },
+    "form": {
+      "tab_info": "Info",
+      "tab_notes": "Notes",
+      "label_name": "Project Name",
+      "placeholder_name": "Enter project name",
+      "label_code": "Project Code",
+      "placeholder_code": "Enter project code (e.g., PROJ-001)",
+      "help_code_format": "Use only uppercase letters, numbers, hyphens, and underscores",
+      "help_code_readonly": "Project code cannot be changed after creation",
+      "label_cover": "Project Cover",
+      "label_website": "Website",
+      "label_domain": "Domain",
+      "placeholder_domain": "Select domain",
+      "label_status": "Status",
+      "placeholder_status": "Select status",
+      "label_description": "Description",
+      "placeholder_description": "Enter project description (optional)",
+      "delete_button": "delete",
+      "cancel_button": "Cancel",
+      "submit_create": "Create Project",
+      "submit_update": "Update Project",
+      "title_create": "Create New Project",
+      "title_edit": "Edit Project"
+    }
+  }
+}

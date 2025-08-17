@@ -1,0 +1,35 @@
+{
+  "domain": {
+    "overview": {
+      "title": "Domains",
+      "stats_total": "Total",
+      "stats_active": "Active",
+      "stats_draft": "Draft",
+      "stats_inactive": "Inactive",
+      "stats_archived": "Archived",
+      "search_placeholder": "Search domains...",
+      "filter_status_all": "All Status",
+      "filter_status_active": "Active",
+      "filter_status_draft": "Draft",
+      "filter_status_inactive": "Inactive",
+      "filter_status_archived": "Archived",
+      "sort_name": "Name",
+      "sort_created": "Created",
+      "sort_updated": "Updated",
+      "add_button": "Add Domain",
+      "no_domains": "No domains found",
+      "no_match_filters": "No domains match your current filters. Try adjusting your search or filters.",
+      "no_domains_message": "Get started by creating your first domain."
+    },
+    "form": {
+      "section_basic": "Basic Information",
+      "label_name": "Name",
+      "placeholder_name": "Enter the domain name",
+      "label_code": "Domain Code",
+      "help_code": "Use only uppercase letters, numbers, and hyphens (e.g., DOM-001, MAIN-SITE)",
+      "submit_create": "Create Domain",
+      "submit_update": "Update Domain",
+      "validation_errors": "Please fix the following errors:"
+    }
+  }
+}

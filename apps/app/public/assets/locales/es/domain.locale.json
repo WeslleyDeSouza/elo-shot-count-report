@@ -1,0 +1,35 @@
+{
+  "domain": {
+    "overview": {
+      "title": "Domänen",
+      "stats_total": "Total",
+      "stats_active": "Activo",
+      "stats_draft": "Borrador",
+      "stats_inactive": "Inactivo",
+      "stats_archived": "Archivado",
+      "search_placeholder": "Buscar domínios...",
+      "filter_status_all": "Todos los estados",
+      "filter_status_active": "Activo",
+      "filter_status_draft": "Borrador",
+      "filter_status_inactive": "Inactivo",
+      "filter_status_archived": "Archivado",
+      "sort_name": "Nombre",
+      "sort_created": "Creado",
+      "sort_updated": "Actualizado",
+      "add_button": "Agregar dominio",
+      "no_domains": "No se encontraron dominios",
+      "no_match_filters": "No hay dominios que coincidan con sus filtros actuales. Intente ajustar su búsqueda o filtros.",
+      "no_domains_message": "Comience creando su primer dominio."
+    },
+    "form": {
+      "section_basic": "Información básica",
+      "label_name": "Nombre",
+      "placeholder_name": "Ingrese el nombre del dominio",
+      "label_code": "Código de dominio",
+      "help_code": "Utilice solo mayúsculas, números y guiones (por ejemplo, DOM-001, MAIN-SITE)",
+      "submit_create": "Crear dominio",
+      "submit_update": "Actualizar dominio",
+      "validation_errors": "Por favor, corrija los siguientes errores:"
+    }
+  }
+}

@@ -1,0 +1,90 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "@app-galaxy/sdk-ui/scss/icons";
+
+// Core files
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+@import "@app-galaxy/sdk-ui/scss/variables";
+@import "@app-galaxy/sdk-ui/scss/variables-dark";
+
+@import "@app-galaxy/sdk-ui/scss/variables-custom";
+@import "@app-galaxy/sdk-ui/scss/theme-mode";
+
+@import "bootstrap/scss/bootstrap";
+
+// Structure
+@import "@app-galaxy/sdk-ui/scss/structure/topbar";
+@import "@app-galaxy/sdk-ui/scss/structure/sidenav";
+@import "@app-galaxy/sdk-ui/scss/structure/horizontal";
+@import "@app-galaxy/sdk-ui/scss/structure/layout";
+@import "@app-galaxy/sdk-ui/scss/structure/footer";
+@import "@app-galaxy/sdk-ui/scss/structure/customizer";
+
+
+// Components
+@import "@app-galaxy/sdk-ui/scss/components/utilities";
+@import "@app-galaxy/sdk-ui/scss/components/background";
+@import "@app-galaxy/sdk-ui/scss/components/accordions";
+@import "@app-galaxy/sdk-ui/scss/components/alert";
+@import "@app-galaxy/sdk-ui/scss/components/avatar";
+@import "@app-galaxy/sdk-ui/scss/components/breadcrumb";
+@import "@app-galaxy/sdk-ui/scss/components/buttons";
+@import "@app-galaxy/sdk-ui/scss/components/badge";
+@import "@app-galaxy/sdk-ui/scss/components/card";
+@import "@app-galaxy/sdk-ui/scss/components/dropdown";
+@import "@app-galaxy/sdk-ui/scss/components/forms";
+@import "@app-galaxy/sdk-ui/scss/components/modal";
+@import "@app-galaxy/sdk-ui/scss/components/nav";
+@import "@app-galaxy/sdk-ui/scss/components/pagination";
+@import "@app-galaxy/sdk-ui/scss/components/popover";
+@import "@app-galaxy/sdk-ui/scss/components/print";
+@import "@app-galaxy/sdk-ui/scss/components/progress";
+@import "@app-galaxy/sdk-ui/scss/components/reboot";
+@import "@app-galaxy/sdk-ui/scss/components/ribbons";
+@import "@app-galaxy/sdk-ui/scss/components/switch";
+@import "@app-galaxy/sdk-ui/scss/components/tables";
+@import "@app-galaxy/sdk-ui/scss/components/tooltip";
+@import "@app-galaxy/sdk-ui/scss/components/steps";
+@import "@app-galaxy/sdk-ui/scss/components/preloader";
+@import "@app-galaxy/sdk-ui/scss/components/widgets";
+
+// Pages
+@import "@app-galaxy/sdk-ui/scss/pages/file-manager";
+@import "@app-galaxy/sdk-ui/scss/pages/kanban";
+@import "@app-galaxy/sdk-ui/scss/pages/authentication";
+@import "@app-galaxy/sdk-ui/scss/pages/error";
+@import "@app-galaxy/sdk-ui/scss/pages/faq";
+@import "@app-galaxy/sdk-ui/scss/pages/maintenance";
+@import "@app-galaxy/sdk-ui/scss/pages/email";
+@import "@app-galaxy/sdk-ui/scss/pages/timeline";
+@import "@app-galaxy/sdk-ui/scss/pages/components-demo";
+@import "@app-galaxy/sdk-ui/scss/pages/search-results";
+
+// Plugins
+/*
+@import "plugins/apexcharts";
+@import "plugins/datatable";
+@import "plugins/calendar";
+@import "plugins/choice";
+@import "plugins/gridjs";
+@import "plugins/daterange";
+@import "plugins/flatpickr";
+@import "plugins/dragula";
+@import "plugins/dropzone";
+@import "plugins/form-wizard";
+@import "plugins/maps";
+@import "plugins/quill-editor";
+@import "plugins/select2";
+@import "plugins/simplebar";
+@import "plugins/leaflet-maps";
+@import "plugins/sweetalert2";
+@import "plugins/rangeslider";
+ */
+@import "@app-galaxy/sdk-ui/scss/plugins/dropzone";
+@import "@app-galaxy/sdk-ui/scss/custom_ng";
+
+@import "quill/dist/quill.snow.css";
+@import "quill/dist/quill.bubble.css";
+

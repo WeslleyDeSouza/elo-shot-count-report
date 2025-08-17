@@ -1,0 +1,25 @@
+{
+  "bookmark": {
+    "overview": {
+      "title": "Segnalibri",
+      "total_bookmarks": "Totale Segnalibri",
+      "private": "Privato",
+      "public": "Pubblico",
+      "categorized": "Categorizzato",
+      "search_placeholder": "Cerca tra i segnalibri...",
+      "all_categories": "Tutte le categorie",
+      "filter_privacy_all": "Tutti",
+      "filter_privacy_private": "Privati",
+      "filter_privacy_public": "Pubblici",
+      "sort_name": "Nome",
+      "sort_created": "Creato",
+      "sort_updated": "Aggiornato",
+      "sort_category": "Categoria",
+      "loading_message": "Caricamento dei segnalibri in corso...",
+      "no_bookmarks": "Nessun segnalibro trovato",
+      "no_match_filters": "Nessun segnalibro corrisponde ai filtri attuali. Prova a modificare i criteri di ricerca.",
+      "no_bookmarks_message": "Inizia aggiungendo il tuo primo segnalibro.",
+      "add_button": "Aggiungi segnalibro"
+    }
+  }
+}

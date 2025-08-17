@@ -1,0 +1,20 @@
+{
+  "monitoring": {
+    "overview": {
+      "title": "Supervisión del sistema",
+      "online_systems": "Sistema en línea",
+      "offline_systems": "Sistemas fuera de línea",
+      "degraded_systems": "Sistemas degradados",
+      "overall_uptime": "Tiempo de actividad total",
+      "all_systems": "Todos los sistemas",
+      "online": "En línea",
+      "issues": "Problemas",
+      "degraded": "Degradado",
+      "loading_message": "Cargando servicios de supervisión...",
+      "no_services": "No se encontraron servicios de supervisión",
+      "no_match_filters": "Intente ajustar sus criterios de búsqueda o filtro.",
+      "no_services_message": "Todavía no se han configurado servicios de supervisión.",
+      "clear_filters": "Borrar filtros"
+    }
+  }
+}

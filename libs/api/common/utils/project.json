@@ -1,0 +1,13 @@
+{
+  "name": "api-common-utils",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api/common/utils",
+  "projectType": "library",
+  "prefix": "utils",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

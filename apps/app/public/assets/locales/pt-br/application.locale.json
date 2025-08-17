@@ -1,0 +1,54 @@
+{
+  "application": {
+    "overview": {
+      "title": "Aplicações",
+      "no_entries": "Nenhuma aplicação encontrada"
+    },
+    "form": {
+      "title_create": "Criar Nova Aplicação",
+      "title_edit": "Editar Aplicação",
+      "section_basic": "Informações Básicas",
+      "label_name": "Nome da Aplicação",
+      "placeholder_name": "Insira o nome da aplicação",
+      "label_code": "Código da Aplicação",
+      "help_code": "Apenas letras maiúsculas, números e hífens são permitidos",
+      "label_description": "Descrição",
+      "placeholder_description": "Descreva sua aplicação",
+      "section_deployment": "Configurações de Implantação",
+      "label_environment": "Ambiente",
+      "environment_development": "Desenvolvimento",
+      "environment_staging": "Teste",
+      "environment_production": "Produção",
+      "label_state": "Estado Inicial",
+      "state_stopped": "Parado",
+      "state_started": "Iniciado",
+      "label_repo": "URL do Repositório",
+      "label_deploy_url": "URL de Implantação",
+      "cancel": "Cancelar",
+      "submit_create": "Criar Aplicação",
+      "submit_update": "Atualizar Aplicação"
+    },
+    "monitoring": {
+      "resource_usage": "Uso de Recursos",
+      "refresh": "Atualizar",
+      "cpu_usage": "Uso da CPU",
+      "memory_usage": "Uso de Memória",
+      "disk_usage": "Uso de Disco",
+      "performance": "Métricas de Desempenho",
+      "requests_per_min": "Requisições/min",
+      "avg_response_time": "Tempo Médio de Resposta",
+      "uptime": "Tempo de Atividade",
+      "last_updated": "Última Atualização",
+      "app_info": "Informações da Aplicação",
+      "instances": "Instâncias",
+      "memory_limit": "Limite de Memória",
+      "disk_quota": "Cota de Disco",
+      "buildpack": "Buildpack",
+      "last_deployed": "Última Implantação",
+      "routes": "Rotas",
+      "recent_logs": "Logs Recentes",
+      "no_logs": "Nenhum log disponível",
+      "loading_message": "Carregando dados de monitoramento da aplicação..."
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "menu": {
+    "ad": "AD",
+    "admin_user": "Benutzerverwaltung",
+    "admin_role": "Rollenverwaltung",
+    "admin_tenant": "Mandatenverwaltung",
+    "app-config": "Applikationverwaltung",
+    "settings": "Einstellungen"
+  },
+  "error": {
+    "404": {
+      "title": "Seite nicht gefunden",
+      "message": "Diese Seite ist veraltet, gelöscht oder existiert überhaupt nicht",
+      "go_back": "Zurück gehen"
+    }
+  },
+  "common": {
+    "loading": "Laden...",
+    "refresh": "Aktualisieren",
+    "page_size_10": "10 pro Seite",
+    "page_size_25": "25 pro Seite",
+    "page_size_50": "50 pro Seite",
+    "page_size_100": "100 pro Seite",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "search": "Suche",
+    "filter": "Filter",
+    "sort": "Sortieren",
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "draft": "Entwurf",
+      "published": "Veröffentlicht",
+      "online": "Online",
+      "offline": "Offline",
+      "degraded": "Degraded",
+      "created": "Erstellt",
+      "updated": "Aktualisiert",
+      "loading": "Laden",
+      "error": "Fehler",
+      "success": "Erfolg",
+      "warning": "Warnung"
+    }
+  }
+}

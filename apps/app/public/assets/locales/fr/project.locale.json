@@ -1,0 +1,32 @@
+{
+  "project": {
+    "overview": {
+      "title": "Projekte",
+      "no_entries": "Keine Einträge gefunden"
+    },
+    "form": {
+      "tab_info": "Infos",
+      "tab_notes": "Notizen",
+      "label_name": "Nom du projet",
+      "placeholder_name": "Entrez le nom du projet",
+      "label_code": "Code du projet",
+      "placeholder_code": "Entrez le code du projet (par ex. PROJ-001)",
+      "help_code_format": "Utilisez uniquement des majuscules, des chiffres, des tirets et des traits de soulignement",
+      "help_code_readonly": "Le code du projet ne peut pas être modifié après sa création",
+      "label_cover": "Couverture du projet",
+      "label_website": "Site web",
+      "label_domain": "Domaine",
+      "placeholder_domain": "Sélectionnez un domaine",
+      "label_status": "Statut",
+      "placeholder_status": "Sélectionnez un statut",
+      "label_description": "Description",
+      "placeholder_description": "Entrez la description du projet (facultatif)",
+      "delete_button": "supprimer",
+      "cancel_button": "Annuler",
+      "submit_create": "Créer le projet",
+      "submit_update": "Mettre à jour le projet",
+      "title_create": "Créer un nouveau projet",
+      "title_edit": "Modifier le projet"
+    }
+  }
+}

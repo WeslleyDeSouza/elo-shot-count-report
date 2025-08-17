@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@api-elo/common": ["libs/api/common/index.ts"],
+      "@api-elo/models": ["libs/api/models/index.ts"],
+      "@ui-elo/apiClient": ["libs/app/generated/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp", "libs/app/generated/**/*"]
+}

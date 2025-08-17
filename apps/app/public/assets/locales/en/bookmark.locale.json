@@ -1,0 +1,25 @@
+{
+  "bookmark": {
+    "overview": {
+      "title": "Bookmarks",
+      "total_bookmarks": "Total Bookmarks",
+      "private": "Private",
+      "public": "Public",
+      "categorized": "Categorized",
+      "search_placeholder": "Search bookmarks...",
+      "all_categories": "All Categories",
+      "filter_privacy_all": "All",
+      "filter_privacy_private": "Private",
+      "filter_privacy_public": "Public",
+      "sort_name": "Name",
+      "sort_created": "Created",
+      "sort_updated": "Updated",
+      "sort_category": "Category",
+      "loading_message": "Loading bookmarks...",
+      "no_bookmarks": "No bookmarks found",
+      "no_match_filters": "No bookmarks match your current filters. Try adjusting your search criteria.",
+      "no_bookmarks_message": "Get started by adding your first bookmark.",
+      "add_button": "Add Bookmark"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "menu": {
+    "ad": "AD",
+    "admin_user": "Gerenciamento de Usuários",
+    "admin_role": "Gerenciamento de Funções",
+    "admin_tenant": "Gerenciamento de Inquilinos",
+    "app-config": "Configuração do Aplicativo",
+    "settings": "Configurações"
+  },
+  "error": {
+    "404": {
+      "title": "Página não encontrada",
+      "message": "Esta página está desatualizada, foi excluída ou não existe de fato",
+      "go_back": "Voltar"
+    }
+  },
+  "common": {
+    "loading": "Carregando...",
+    "refresh": "Atualizar",
+    "page_size_10": "10 por página",
+    "page_size_25": "25 por página",
+    "page_size_50": "50 por página",
+    "page_size_100": "100 por página",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "create": "Criar",
+    "update": "Atualizar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "draft": "Rascunho",
+      "published": "Publicado",
+      "online": "Online",
+      "offline": "Offline",
+      "degraded": "Degradado",
+      "created": "Criado",
+      "updated": "Atualizado",
+      "loading": "Carregando",
+      "error": "Erro",
+      "success": "Sucesso",
+      "warning": "Aviso"
+    }
+  }
+}

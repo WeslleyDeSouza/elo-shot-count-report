@@ -1,0 +1,35 @@
+{
+  "domain": {
+    "overview": {
+      "title": "Domenet",
+      "stats_total": "Gjithsej",
+      "stats_active": "Aktiv",
+      "stats_draft": "Skicë",
+      "stats_inactive": "Joaktiv",
+      "stats_archived": "Arkivuar",
+      "search_placeholder": "Kërko nëpër domene...",
+      "filter_status_all": "Të gjitha gjendjet",
+      "filter_status_active": "Aktiv",
+      "filter_status_draft": "Skicë",
+      "filter_status_inactive": "Joaktiv",
+      "filter_status_archived": "Arkivuar",
+      "sort_name": "Emri",
+      "sort_created": "Krijuar",
+      "sort_updated": "Përditësuar",
+      "add_button": "Shto domenë",
+      "no_domains": "Nuk u gjetën domene",
+      "no_match_filters": "Nuk ka domene që përputhen me filtrat tuaja aktualë. Provoni të ndryshoni kërkimin ose filtrat tuaja.",
+      "no_domains_message": "Filloni duke krijuar domenën tuaj të parë."
+    },
+    "form": {
+      "section_basic": "Informacione themelore",
+      "label_name": "Emri",
+      "placeholder_name": "Vendos emrin e domenës",
+      "label_code": "Kodi i Domenës",
+      "help_code": "Përdorni vetëm shkronja të mëdha, numra dhe viza të ndara (p.sh. DOM-001, FAQJA-KRYESORE)",
+      "submit_create": "Krijo domenë",
+      "submit_update": "Përditëso domenën",
+      "validation_errors": "Ju lutemi korrigjoni gabimet e mëposhtme:"
+    }
+  }
+}

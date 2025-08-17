@@ -1,0 +1,25 @@
+{
+  "bookmark": {
+    "overview": {
+      "title": "Lesezeichen",
+      "total_bookmarks": "Total de Lesezeichen",
+      "private": "Privado",
+      "public": "Público",
+      "categorized": "Categorizado",
+      "search_placeholder": "Pesquisar Lesezeichen...",
+      "all_categories": "Todas as Categorias",
+      "filter_privacy_all": "Todos",
+      "filter_privacy_private": "Privado",
+      "filter_privacy_public": "Público",
+      "sort_name": "Nome",
+      "sort_created": "Criado",
+      "sort_updated": "Atualizado",
+      "sort_category": "Categoria",
+      "loading_message": "Carregando Lesezeichen...",
+      "no_bookmarks": "Nenhum Lesezeichen encontrado",
+      "no_match_filters": "Nenhum Lesezeichen corresponde aos filtros atuais. Tente ajustar seus critérios de pesquisa.",
+      "no_bookmarks_message": "Comece adicionando seu primeiro Lesezeichen.",
+      "add_button": "Adicionar Lesezeichen"
+    }
+  }
+}

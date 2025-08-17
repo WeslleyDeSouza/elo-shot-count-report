@@ -1,0 +1,49 @@
+{
+  "menu": {
+    "ad": "AD",
+    "admin_user": "Gestion des utilisateurs",
+    "admin_role": "Gestion des rôles",
+    "admin_tenant": "Gestion des locataires",
+    "app-config": "Configuration de l'application",
+    "settings": "Paramètres"
+  },
+  "error": {
+    "404": {
+      "title": "Page non trouvée",
+      "message": "Cette page est obsolète, supprimée ou n'existe pas du tout",
+      "go_back": "Retourner"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "refresh": "Actualiser",
+    "page_size_10": "10 par page",
+    "page_size_25": "25 par page",
+    "page_size_50": "50 par page",
+    "page_size_100": "100 par page",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Éditer",
+    "delete": "Supprimer",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "draft": "Brouillon",
+      "published": "Publié",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "degraded": "Dégradé",
+      "created": "Créé",
+      "updated": "Mis à jour",
+      "loading": "Chargement",
+      "error": "Erreur",
+      "success": "Succès",
+      "warning": "Avertissement"
+    }
+  }
+}

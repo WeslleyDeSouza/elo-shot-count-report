@@ -1,0 +1,32 @@
+{
+  "project": {
+    "overview": {
+      "title": "Projekti",
+      "no_entries": "Nema pronađenih unosa"
+    },
+    "form": {
+      "tab_info": "Informacije",
+      "tab_notes": "Bilješke",
+      "label_name": "Naziv projekta",
+      "placeholder_name": "Unesite naziv projekta",
+      "label_code": "Šifra projekta",
+      "placeholder_code": "Unesite šifru projekta (npr. PROJ-001)",
+      "help_code_format": "Koristite samo velika slova, brojeve, crtice i donje crte",
+      "help_code_readonly": "Šifra projekta ne može se mijenjati nakon stvaranja",
+      "label_cover": "Naslovnica projekta",
+      "label_website": "Web stranica",
+      "label_domain": "Domena",
+      "placeholder_domain": "Odaberite domenu",
+      "label_status": "Status",
+      "placeholder_status": "Odaberite status",
+      "label_description": "Opis",
+      "placeholder_description": "Unesite opis projekta (opcionalno)",
+      "delete_button": "izbriši",
+      "cancel_button": "Odustani",
+      "submit_create": "Stvori projekt",
+      "submit_update": "Ažuriraj projekt",
+      "title_create": "Stvori novi projekt",
+      "title_edit": "Uredi projekt"
+    }
+  }
+}

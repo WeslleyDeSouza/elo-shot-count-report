@@ -1,0 +1,32 @@
+{
+  "project": {
+    "overview": {
+      "title": "Projetos",
+      "no_entries": "Nenhum item encontrado"
+    },
+    "form": {
+      "tab_info": "Informações",
+      "tab_notes": "Notas",
+      "label_name": "Nome do projeto",
+      "placeholder_name": "Insira o nome do projeto",
+      "label_code": "Código do projeto",
+      "placeholder_code": "Insira o código do projeto (por exemplo, PROJ-001)",
+      "help_code_format": "Usar apenas letras maiúsculas, números, hífens e sublinhados",
+      "help_code_readonly": "O código do projeto não pode ser alterado após a criação",
+      "label_cover": "Capa do projeto",
+      "label_website": "Website",
+      "label_domain": "Domínio",
+      "placeholder_domain": "Selecione um domínio",
+      "label_status": "Status",
+      "placeholder_status": "Selecione um status",
+      "label_description": "Descrição",
+      "placeholder_description": "Insira a descrição do projeto (opcional)",
+      "delete_button": "excluir",
+      "cancel_button": "Cancelar",
+      "submit_create": "Criar projeto",
+      "submit_update": "Atualizar projeto",
+      "title_create": "Criar novo projeto",
+      "title_edit": "Editar projeto"
+    }
+  }
+}

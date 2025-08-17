@@ -1,0 +1,20 @@
+{
+  "monitoring": {
+    "overview": {
+      "title": "Monitoramento do Sistema",
+      "online_systems": "Sistema Online",
+      "offline_systems": "Sistemas Offline",
+      "degraded_systems": "Sistemas Degradados",
+      "overall_uptime": "Tempo de Funcionamento Total",
+      "all_systems": "Todos os Sistemas",
+      "online": "Online",
+      "issues": "Problemas",
+      "degraded": "Degradado",
+      "loading_message": "Carregando serviços de monitoramento...",
+      "no_services": "Nenhum serviço de monitoramento encontrado",
+      "no_match_filters": "Tente ajustar seus critérios de busca ou filtro.",
+      "no_services_message": "Nenhum serviço de monitoramento foi configurado ainda.",
+      "clear_filters": "Limpar Filtros"
+    }
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "booking": {
+    "settings": {
+      "overview": {
+        "title": "Buchungseinstellungen",
+        "description": "Verwalten Sie alle Ihre Buchungseinstellungen",
+        "create": "Neue Einstellungen erstellen",
+        "create_new_settings": "Neue Einstellungen erstellen",
+        "create_settings": "Einstellungen erstellen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "actions": "Aktionen",
+        "enabled": "Aktiviert",
+        "disabled": "Deaktiviert",
+        "no_settings": "Keine Buchungseinstellungen gefunden",
+        "no_settings_description": "Erstellen Sie Ihre erste Buchungskonfiguration, um zu beginnen.",
+        "search_placeholder": "Einstellungen suchen...",
+        "loading": "Wird geladen...",
+        "showing_results": "Zeige {{count}} von {{total}} Einstellungen"
+      },
+      
+      "form": {
+        "title": "Buchungseinstellungen",
+        "create": "Buchungseinstellungen erstellen",
+        "edit": "Buchungseinstellungen bearbeiten",
+        "delete": "Buchungseinstellungen löschen",
+        "description": "Konfigurieren Sie Ihre Veranstaltungsort-Einstellungen für das Buchungssystem",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "create_button": "Erstellen",
+        "update_button": "Aktualisieren",
+        "delete_button": "Löschen",
+        
+        "languages": {
+          "label": "Sprachen:",
+          "manage": "Sprachen verwalten",
+          "available": "Verfügbare Sprachen",
+          "remove": "Sprachen entfernen",
+          "add": "Sprache hinzufügen",
+          "all_added": "Alle Sprachen hinzugefügt"
+        },
+
+        "basic_info": {
+          "title": "Grundinformationen",
+          "description": "Legen Sie den Haupttitel und Untertitel für Ihren Veranstaltungsort fest",
+          "venue_title": "Titel",
+          "venue_subtitle": "Untertitel",
+          "venue_description": "Beschreibung",
+          "title_placeholder": "z.B. Erlibacherhof Saal",
+          "subtitle_placeholder": "z.B. Elegante Veranstaltungshalle für besondere Anlässe",
+          "description_placeholder": "z.B. Unser wunderschön restaurierter Saal bietet die perfekte Atmosphäre für Ihre besonderen Momente.",
+          "title_required": "Titel ist erforderlich"
+        },
+
+        "attributes": {
+          "title": "Veranstaltungsort-Eigenschaften",
+          "description": "Geben Sie die wichtigsten Eigenschaften Ihres Veranstaltungsortes an",
+          "max_person": "Maximale Personenanzahl",
+          "max_person_placeholder": "e.g. 150 persons",
+          "support": "Unterstützung",
+          "support_placeholder": "e.g. Event coordination, Catering support",
+          "room_area": "Raumfläche (m²)",
+          "room_area_placeholder": "e.g. 250 m²",
+          "rating": "Bewertung",
+          "rating_placeholder": "4.8"
+        },
+
+        "features": {
+          "title": "Ausstattung",
+          "description": "Heben Sie die besonderen Merkmale und Annehmlichkeiten Ihres Veranstaltungsortes hervor",
+          "features_title": "Ausstattungstitel",
+          "features_subtitle": "Ausstattungsuntertitel",
+          "title_placeholder": "z.B. Ausstattung & Besonderheiten",
+          "subtitle_placeholder": "z.B. Moderne Technik und erstklassige Ausstattung",
+          "feature_items": "Ausstattungsmerkmale",
+          "add_feature": "Merkmal hinzufügen",
+          "remove_feature": "Merkmal entfernen",
+          "remove_feature_tooltip": "Merkmal entfernen",
+          "feature_placeholder": "z.B. Soundanlage",
+          "examples_label": "Beispiele:",
+          "examples": "Soundanlage, Projektor, WLAN, Klimaanlage, Parkplatz, Kücheneinrichtung"
+        },
+
+        "services": {
+          "title": "Dienstleistungen",
+          "description": "Listen Sie die Dienstleistungen auf, die Sie anbieten (z.B. Catering, Fotografie, Veranstaltungsplanung)",
+          "service_title": "Dienstleistungstitel",
+          "service_description": "Dienstleistungsbeschreibung",
+          "add_service": "Dienstleistung hinzufügen",
+          "remove_service": "Dienstleistung entfernen",
+          "remove_service_tooltip": "Dienstleistung entfernen",
+          "remove_button": "Entfernen",
+          "title_placeholder": "z.B. Catering Service",
+          "description_placeholder": "z.B. Vollservice Catering für alle Veranstaltungen",
+          "service_number": "Dienstleistung {{number}}",
+          "examples_label": "Beispiele:",
+          "examples": "Catering Service, Veranstaltungskoordination, Fotografie, DJ Service, Dekoration"
+        },
+
+        "price_options": {
+          "title": "Preisoptionen",
+          "description": "Definieren Sie verschiedene Preisstufen für Ihren Veranstaltungsort (z.B. Halbtags-, Ganztags-, Wochenendtarife)",
+          "price": "Preis (€)",
+          "price_title": "Preis Titel",
+          "price_description": "Preis Beschreibung",
+          "add_price": "Preisoption hinzufügen",
+          "remove_price": "Preisoption entfernen",
+          "remove_price_tooltip": "Preisoption entfernen",
+          "price_placeholder": "750",
+          "title_placeholder": "z.B. Ganztags-Miete",
+          "description_placeholder": "z.B. 8 Stunden Nutzung, inkl. Grundausstattung",
+          "price_number": "Preisoption {{number}}",
+          "examples_label": "Beispiele:",
+          "examples": "Halbtags-Miete (€450), Ganztags-Miete (€750), Wochenendpaket (€1.200)"
+        },
+
+        "contact": {
+          "title": "Kontaktinformationen",
+          "description": "Geben Sie Kontaktdaten für Buchungsanfragen an",
+          "contact_text": "Kontakttext",
+          "phone": "Telefon",
+          "email": "E-Mail",
+          "additional_info": "Zusätzliche Kontaktinformationen",
+          "add_contact": "Kontakt hinzufügen",
+          "remove_contact": "Kontakt entfernen",
+          "remove_contact_tooltip": "Kontakt entfernen",
+          "contact_type": "Typ",
+          "contact_value": "Wert",
+          "text_placeholder": "z.B. Kontaktieren Sie uns für eine persönliche Beratung und Besichtigung unserer Räumlichkeiten.",
+          "phone_placeholder": "+49 123 456 789",
+          "email_placeholder": "bookings@erlibacherhof.de",
+          "type_placeholder": "Website",
+          "value_placeholder": "www.erlibacherhof.de",
+          "examples_label": "Beispiele:",
+          "examples": "Website (www.saal.ok), Social Media ([AT]erlibacherhof), WhatsApp (+49 123 456 7890)"
+        },
+
+        "validation": {
+          "required": "{{field}} ist erforderlich",
+          "email_invalid": "{{field}} muss eine gültige E-Mail-Adresse sein",
+          "phone_invalid": "{{field}} hat ein ungültiges Format",
+          "pattern_invalid": "{{field}} hat ein ungültiges Format",
+          "number_min": "{{field}} muss mindestens {{min}} sein",
+          "number_max": "{{field}} darf maximal {{max}} sein",
+          "invalid": "{{field}} ist ungültig"
+        },
+
+        "field_names": {
+          "title": "Venue Titel",
+          "subTitle": "Venue Untertitel",
+          "description": "Venue Beschreibung", 
+          "attributes.maxPerson": "Max. Personen",
+          "attributes.support": "Support",
+          "attributes.roomArea": "Raumfläche",
+          "attributes.rating": "Bewertung",
+          "features.title": "Features Titel",
+          "features.subTitle": "Features Untertitel",
+          "features.list": "Feature",
+          "services": "Service",
+          "priceOptions": "Preisoption",
+          "contact.text": "Kontakttext",
+          "contact.phone": "Telefon",
+          "contact.email": "E-Mail",
+          "contact.list": "Kontaktinfo",
+          "type": "Typ",
+          "value": "Wert",
+          "price": "Preis"
+        },
+
+        "hints": {
+          "not_editable": "Bearbeitung nicht möglich",
+          "no_changes": "Keine Änderungen vorgenommen",
+          "invalid_form_header": "Fehlende oder ungültige Felder:"
+        },
+
+        "messages": {
+          "save_success": "Einstellungen erfolgreich gespeichert",
+          "save_error": "Fehler beim Speichern der Einstellungen",
+          "delete_success": "Einstellungen erfolgreich gelöscht",
+          "delete_error": "Fehler beim Löschen der Einstellungen",
+          "load_error": "Fehler beim Laden der Einstellungen"
+        },
+
+        "placeholders": {
+          "de": {
+            "title": "z.B. Erlibacherhof Saal",
+            "subtitle": "z.B. Elegante Veranstaltungshalle für besondere Anlässe",
+            "description": "z.B. Unser wunderschön restaurierter Saal bietet die perfekte Atmosphäre für Ihre besonderen Momente.",
+            "features_title": "z.B. Ausstattung & Besonderheiten",
+            "features_subtitle": "z.B. Moderne Technik und erstklassige Ausstattung",
+            "feature_name": "z.B. Soundanlage",
+            "service_title": "z.B. Catering Service",
+            "service_description": "z.B. Vollservice Catering für alle Veranstaltungen",
+            "price_title": "z.B. Ganztags-Miete",
+            "price_description": "z.B. 8 Stunden Nutzung, inkl. Grundausstattung",
+            "contact_text": "z.B. Kontaktieren Sie uns für eine persönliche Beratung und Besichtigung unserer Räumlichkeiten.",
+            "enter_title": "Enter {{lang}} title",
+            "enter_subtitle": "Enter {{lang}} subtitle"
+          },
+          "en": {
+            "title": "e.g. Erlibacherhof Hall",
+            "subtitle": "e.g. Elegant event hall for special occasions",
+            "description": "e.g. Our beautifully restored hall offers the perfect atmosphere for your special moments.",
+            "features_title": "e.g. Equipment & Special Features",
+            "features_subtitle": "e.g. Modern technology and first-class equipment",
+            "feature_name": "e.g. Sound system",
+            "service_title": "e.g. Catering Service",
+            "service_description": "e.g. Full-service catering for all events",
+            "price_title": "e.g. Full-day rental",
+            "price_description": "e.g. 8 hours usage, incl. basic equipment",
+            "contact_text": "e.g. Contact us for personal consultation and viewing of our facilities.",
+            "enter_title": "Enter {{lang}} title",
+            "enter_subtitle": "Enter {{lang}} subtitle"
+          },
+          "default": {
+            "enter_title": "Enter {{lang}} title",
+            "enter_subtitle": "Enter {{lang}} subtitle",
+            "enter_description": "Enter {{lang}} description",
+            "enter_features_title": "Enter {{lang}} features title",
+            "enter_features_subtitle": "Enter {{lang}} features subtitle",
+            "feature_name": "Feature name",
+            "enter_service_title": "Enter service title",
+            "enter_service_description": "Enter service description",
+            "enter_price_title": "Enter price title",
+            "enter_price_description": "Enter price description",
+            "enter_contact_text": "Enter contact text"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "application": {
+    "overview": {
+      "title": "Aplikacionet",
+      "no_entries": "Nuk u gjetën aplikacione"
+    },
+    "form": {
+      "title_create": "Krijo Aplikacion të Re",
+      "title_edit": "Redakto Aplikacionin",
+      "section_basic": "Informacione Themelore",
+      "label_name": "Emri i Aplikacionit",
+      "placeholder_name": "Jepni emrin e aplikacionit",
+      "label_code": "Kodi i Aplikacionit",
+      "help_code": "Lejohen vetëm shkronjat e mëdha, numrat dhe vijat e ndarjes",
+      "label_description": "Përshkrim",
+      "placeholder_description": "Përshkruani aplikacionin tuaj",
+      "section_deployment": "Cilësimet e Ngritjes",
+      "label_environment": "Mjedisi",
+      "environment_development": "Zhvillimi",
+      "environment_staging": "Staging",
+      "environment_production": "Prodhimi",
+      "label_state": "Gjendja fillestare",
+      "state_stopped": "Ndaluar",
+      "state_started": "Nisur",
+      "label_repo": "URL i Depozitës",
+      "label_deploy_url": "URL i Ngritjes",
+      "cancel": "Anulo",
+      "submit_create": "Krijo Aplikacion",
+      "submit_update": "Përditëso Aplikacionin"
+    },
+    "monitoring": {
+      "resource_usage": "Përdorimi i Burimeve",
+      "refresh": "Rifresko",
+      "cpu_usage": "Përdorimi i CPU-së",
+      "memory_usage": "Përdorimi i Memorisë",
+      "disk_usage": "Përdorimi i Diskut",
+      "performance": "Metrikat e Performancës",
+      "requests_per_min": "Kërkesa/min",
+      "avg_response_time": "Koha mesatare e përgjigjes",
+      "uptime": "Koha e Aktivizimit",
+      "last_updated": "E përditësuar për herë të fundit",
+      "app_info": "Informacioni i Aplikacionit",
+      "instances": "Instancat",
+      "memory_limit": "Kufiri i Memorisë",
+      "disk_quota": "Kuota e Diskut",
+      "buildpack": "Paketa e Ndërtimit",
+      "last_deployed": "E ngritur për herë të fundit",
+      "routes": "Rrugët",
+      "recent_logs": "Regjistrimet e Fundit",
+      "no_logs": "Nuk ka regjistrime të disponueshme",
+      "loading_message": "Ngarkimi i të dhënave të monitorimit të aplikacionit..."
+    }
+  }
+}
