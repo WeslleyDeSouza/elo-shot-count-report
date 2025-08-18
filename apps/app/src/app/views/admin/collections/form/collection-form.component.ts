@@ -1,7 +1,8 @@
-import {Component, signal, inject, OnInit, OnDestroy, ChangeDetectionStrategy, input, output} from '@angular/core';
+import {Component, signal, inject, OnInit, OnDestroy, ChangeDetectionStrategy, computed} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, switchMap } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Collection } from '../collection.model';
 import { CollectionFacade } from '../collection.facade';
@@ -19,13 +20,36 @@ import { EmptyStateComponent } from "../../../../components";
   ],
   template: `
     <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h1 class="h3">{{ pageTitle() | translate }}</h1>
+              <p class="text-muted">{{ pageSubtitle() | translate }}</p>
+            </div>
+            <button type="button" class="btn btn-outline-secondary" (click)="goBack()">
+              <i class="ri-arrow-left-line"></i> {{ 'admin.common.back' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if(loading()) {
+        <div class="text-center py-4">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+
       @if(error()) {
         <div class="alert alert-danger" role="alert">
           {{ error() }}
         </div>
       }
 
-      <form [formGroup]="form" (ngSubmit)="onSave()">
+      @if(!loading() && isFormReady()) {
+        <form [formGroup]="form" (ngSubmit)="onSave()">
         <!-- Person Information -->
         <div class="card mb-4">
           <div class="card-header">
@@ -287,30 +311,24 @@ import { EmptyStateComponent } from "../../../../components";
             </button>
           </div>
         </div>
-      </form>
+        </form>
+      }
     </div>
   `,
-  styles: `
-    .btn-group .btn-check:checked + .btn {
-      background-color: var(--bs-primary);
-      border-color: var(--bs-primary);
-      color: white;
-    }
-
-    .form-label.small {
-      font-size: 0.875rem;
-      margin-bottom: 0.25rem;
-    }
-  `
+  styles: ``
 })
 export class CollectionFormComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private formBuilder = inject(FormBuilder);
   private facade = inject(CollectionFacade);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  collection = input<Collection | null>(null);
-  cancel = output<void>();
-  save = output<Collection>();
+  collection = signal<Collection | null>(null);
+  isEditMode = computed(() => !!this.collection()?.id);
+  pageTitle = computed(() => this.isEditMode() ? 'admin.collection.edit.title' : 'admin.collection.create.title');
+  pageSubtitle = computed(() => this.isEditMode() ? 'admin.collection.edit.subtitle' : 'admin.collection.create.subtitle');
+  isFormReady = computed(() => this.isEditMode() ? !!this.collection() : true);
 
   selectedWeaponId = signal<string>('');
   selectedWeaponCount = signal<number>(1);
@@ -324,9 +342,9 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
   arealCategories = signal<any[]>([]);
 
   ngOnInit(): void {
-    this.getData()
-    this.initializeForm();
+    this.getData();
     this.setupFacadeSubscriptions();
+    this.loadCollectionIfEdit();
   }
 
   getData(){
@@ -348,6 +366,31 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
     this.facade.error$
       .pipe(takeUntil(this.destroy$))
       .subscribe(error => this.error.set(error));
+  }
+
+  private loadCollectionIfEdit(): void {
+    this.route.params.pipe(
+      switchMap(params => {
+        const id = params['id'];
+        if (id) {
+          return this.facade.getCollection(id);
+        } else {
+          this.collection.set(null);
+          this.initializeForm();
+          return [];
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(collection => {
+      if (collection) {
+        this.collection.set(collection);
+        this.initializeForm();
+      }
+    });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin/collections']);
   }
 
   private loadAvailableWeapons(): void {
@@ -505,7 +548,7 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe(result => {
             if (result) {
-              this.save.emit(result);
+              this.goBack();
             }
           });
       } else {
@@ -513,7 +556,7 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe(result => {
             if (result) {
-              this.save.emit(result);
+              this.goBack();
             }
           });
       }
@@ -521,7 +564,7 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.goBack();
   }
 
   onDelete(): void {
@@ -531,7 +574,7 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(success => {
           if (success) {
-            this.cancel.emit();
+            this.goBack();
           }
         });
     }
