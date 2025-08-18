@@ -22,12 +22,12 @@
   </div>
   <div class="col-md-3">
     <label class="form-label">{{ 'admin.collection.year' | translate }}</label>
-    <input type="text" class="form-control" [(ngModel)]="filterYear" (input)="applyFilters()" 
+    <input type="text" class="form-control" [(ngModel)]="filterYear" (input)="applyFilters()"
            [placeholder]="'admin.collection.enter_year' | translate">
   </div>
   <div class="col-md-3">
     <label class="form-label">{{ 'admin.common.pin' | translate }}</label>
-    <input type="text" class="form-control" [(ngModel)]="filterPin" (input)="applyFilters()" 
+    <input type="text" class="form-control" [(ngModel)]="filterPin" (input)="applyFilters()"
            [placeholder]="'admin.collection.enter_pin' | translate">
   </div>
   <div class="col-md-3">
@@ -44,9 +44,9 @@
       <span class="input-group-text">
         <i class="ri-search-line"></i>
       </span>
-      <input 
-        type="text" 
-        class="form-control" 
+      <input
+        type="text"
+        class="form-control"
         [placeholder]="'admin.common.search' | translate"
         [value]="searchText()"
         (input)="searchCollections($event)">
@@ -112,15 +112,7 @@
           }
         </td>
         <td>
-          <div class="form-check form-switch">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              [id]="'switch-' + collection.id"
-              [checked]="collection.enabled"
-              (change)="toggleCollectionEnabled(collection)">
-            <label class="form-check-label" [for]="'switch-' + collection.id"></label>
-          </div>
+
         </td>
         <td>
           <div class="d-flex gap-2">
@@ -141,7 +133,7 @@
 
 <!-- No data message -->
 @if(!loading() && filteredCollections().length === 0) {
-  <app-empty-state 
+  <app-empty-state
     [title]="'admin.collection.overview.no_entries' | translate"
     [subtitle]="'admin.collection.overview.no_entries_subtitle' | translate"
     iconClass="ri-database-2-line">

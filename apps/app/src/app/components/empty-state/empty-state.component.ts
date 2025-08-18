@@ -5,13 +5,13 @@ import { CommonModule } from '@angular/common';
   selector: 'app-empty-state',
   imports: [CommonModule],
   template: `
-    <div class="empty-state text-center py-5">
-      <div class="empty-state-icon mb-3">
-        <i [class]="iconClass()" class="empty-icon"></i>
+    <div [class]="compact() ? 'empty-state text-center py-3' : 'empty-state text-center py-5'">
+      <div [class]="compact() ? 'empty-state-icon mb-2' : 'empty-state-icon mb-3'">
+        <i [class]="iconClass()" [class.empty-icon]="!compact()" [class.empty-icon-compact]="compact()"></i>
       </div>
-      <h5 class="empty-state-title text-muted">{{ title() }}</h5>
+      <h5 [class]="compact() ? 'empty-state-title text-muted mb-1' : 'empty-state-title text-muted'">{{ title() }}</h5>
       @if(subtitle()) {
-        <p class="empty-state-subtitle text-muted mb-3">{{ subtitle() }}</p>
+        <p [class]="compact() ? 'empty-state-subtitle text-muted mb-2' : 'empty-state-subtitle text-muted mb-3'">{{ subtitle() }}</p>
       }
       @if(showAction()) {
         <ng-content></ng-content>
@@ -32,6 +32,11 @@ import { CommonModule } from '@angular/common';
       color: #6c757d;
     }
     
+    .empty-icon-compact {
+      font-size: 2rem;
+      color: #6c757d;
+    }
+    
     .empty-state-title {
       font-size: 1.25rem;
       font-weight: 500;
@@ -49,4 +54,5 @@ export class EmptyStateComponent {
   subtitle = input<string>('');
   iconClass = input<string>('ri-inbox-line');
   showAction = input<boolean>(true);
+  compact = input<boolean>(false);
 }

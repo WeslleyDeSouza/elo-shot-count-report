@@ -140,9 +140,6 @@ export class CollectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleCollectionEnabled(collection: Collection): void {
-
-  }
 
   openBulkEditor(): void {
     this.router.navigate([PATHS.COLLECTION_BULK_EDIT]);

@@ -1,6 +1,6 @@
 import {
-  BaseEntity, BeforeInsert,
-  Column,
+  BeforeInsert,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -60,6 +60,12 @@ export class CollectionEntity extends TenantBaseEntity {
     { name: 'arealId', referencedColumnName: 'id' },
   ])
   areal: AreaEntity;
+
+  @CreateDateColumn()
+  createdAt: Date | string;
+
+  @CreateDateColumn()
+  deletedAt: Date | string;
 
   @BeforeInsert()
   protected async beforeInsert(): Promise<any> {

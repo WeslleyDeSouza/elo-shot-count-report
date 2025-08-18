@@ -2,6 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, of, tap, map, finalize } from 'rxjs';
 import { Collection } from './collection.model';
 import { AdminCollectionService } from '@ui-elo/apiClient';
+import { CollectionWeaponService } from './services/collection.weapon.service';
+import { CollectionArealService } from './services/collection.areal.service';
 
 @Injectable()
 export class CollectionFacade {
@@ -12,6 +14,8 @@ export class CollectionFacade {
   public readonly error$ = this._error.asObservable();
 
   protected api = inject(AdminCollectionService);
+  protected weaponService = inject(CollectionWeaponService);
+  protected arealService = inject(CollectionArealService);
 
   loadCollections(filterParams?: {
     enabled?: boolean;
@@ -112,5 +116,17 @@ export class CollectionFacade {
 
   clearError(): void {
     this._error.next(null);
+  }
+
+  loadWeapons(): Observable<any[]> {
+    return this.weaponService.loadWeapons();
+  }
+
+  loadAreal(): Observable<any[]> {
+    return this.arealService.loadAreal();
+  }
+
+  loadArealCategories(): Observable<any[]> {
+    return this.arealService.loadCategories();
   }
 }
