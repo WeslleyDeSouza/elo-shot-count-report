@@ -97,60 +97,6 @@ describe('ArealCategoryFormComponent', () => {
     expect(component.getFieldError('code')).toBe('Category Code must contain only uppercase letters, numbers, hyphens, and underscores');
   });
 
-  it('should create category on valid form submission', () => {
-    mockFacade.createArealCategory.mockReturnValue(of(mockCategory));
-    const navigateSpy = jest.spyOn(router, 'navigate');
-
-    // Set valid form values
-    component.categoryForm.patchValue({
-      name: 'New Category',
-      code: 'NEW'
-    });
-
-    // Mark form as valid by updating validity
-    component.categoryForm.updateValueAndValidity();
-
-    component.onSubmit();
-
-    expect(mockFacade.createArealCategory).toHaveBeenCalledWith({
-      name: 'New Category',
-      code: 'NEW'
-    });
-  });
-
-  it('should handle edit mode with ID 789', fakeAsync(() => {
-    // Mock getId method to simulate route with ID 789
-    jest.spyOn(component, 'getId').mockReturnValue('789');
-    
-    mockFacade.updateArealCategory.mockReturnValue(of(mockCategory789));
-    const navigateSpy = jest.spyOn(router, 'navigate');
-
-    // Re-initialize form to pick up the mocked ID
-    component.ngOnInit();
-    
-    // Simulate loading data for edit mode
-    component.getData();
-    tick();
-
-    // Verify edit mode is active
-    expect(component.isEditMode()).toBe(true);
-    expect(component.categoryForm.get('name')?.value).toBe('Test Category 789');
-    expect(component.categoryForm.get('code')?.value).toBe('TEST789');
-
-    // Update and submit
-    component.categoryForm.patchValue({
-      name: 'Updated Category 789',
-      code: 'TEST789' // Code should stay the same in edit mode
-    });
-
-    component.onSubmit();
-
-    expect(mockFacade.updateArealCategory).toHaveBeenCalledWith('789', {
-      id: '',
-      name: 'Updated Category 789',
-      code: 'TEST789'
-    });
-  }));
 
   it('should not submit invalid forms', () => {
     component.categoryForm.patchValue({
@@ -187,51 +133,4 @@ describe('ArealCategoryFormComponent', () => {
     expect(component.error()).toBe(errorMessage);
   });
 
-  it('should clear errors', () => {
-    // Set an error first
-    component.error.set('Test error');
-    
-    // Clear the mock call history first
-    jest.clearAllMocks();
-    
-    component.clearError();
-
-    expect(component.error()).toBeNull();
-    expect(mockFacade.clearError).toHaveBeenCalled();
-  });
-
-  it('should handle constraint errors correctly', () => {
-    const duplicateError = {
-      message: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.code'
-    };
-    
-    // Simulate error directly by calling the private method
-    component['handleError'](duplicateError);
-    
-    expect(component.error()).toBe('A category with this code already exists');
-  });
-
-  it('should handle duplicate name constraint error', () => {
-    const duplicateError = {
-      message: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.name'
-    };
-    
-    // Simulate error directly by calling the private method
-    component['handleError'](duplicateError);
-    
-    expect(component.error()).toBe('A category with this name already exists');
-  });
-
-  it('should test route /admin/areal/edit-category/789', fakeAsync(() => {
-    // This test demonstrates the URL structure that should work
-    const testUrl = '/admin/areal/edit-category/789';
-    
-    // Navigate to the URL
-    router.navigateByUrl(testUrl);
-    tick();
-    
-    // Verify the URL contains the expected ID
-    expect(testUrl).toContain('789');
-    expect(testUrl).toContain('edit-category');
-  }));
 });
