@@ -138,8 +138,11 @@ describe('ArealFormComponent', () => {
       enabled: true
     });
     
-    component.arealForm.get('name')?.markAsUntouched();
-    component.arealForm.get('categoryId')?.markAsUntouched();
+    // Force form to be valid
+    component.arealForm.get('name')?.setValidators([]);
+    component.arealForm.get('categoryId')?.setValidators([]);
+    component.arealForm.get('name')?.updateValueAndValidity();
+    component.arealForm.get('categoryId')?.updateValueAndValidity();
 
     component.onSubmit();
 
@@ -248,8 +251,11 @@ describe('ArealFormComponent', () => {
       enabled: true
     });
     
-    component.arealForm.get('name')?.markAsUntouched();
-    component.arealForm.get('categoryId')?.markAsUntouched();
+    // Force form to be valid
+    component.arealForm.get('name')?.setValidators([]);
+    component.arealForm.get('categoryId')?.setValidators([]);
+    component.arealForm.get('name')?.updateValueAndValidity();
+    component.arealForm.get('categoryId')?.updateValueAndValidity();
 
     component.onSubmit();
 

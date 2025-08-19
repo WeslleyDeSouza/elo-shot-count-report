@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -108,7 +108,7 @@ describe('ArealCategoryFormComponent', () => {
     expect(component.getFieldError('code')).toBe('Category Code must contain only uppercase letters, numbers, hyphens, and underscores');
   });
 
-  it('should create category on valid form submission', () => {
+  it('should create category on valid form submission', fakeAsync(() => {
     mockFacade.createArealCategory.mockReturnValue(of(mockCategory));
     
     component.categoryForm.patchValue({
@@ -123,12 +123,13 @@ describe('ArealCategoryFormComponent', () => {
     component.categoryForm.get('code')?.updateValueAndValidity();
 
     component.onSubmit();
+    tick();
 
     expect(mockFacade.createArealCategory).toHaveBeenCalledWith({
       name: 'New Category',
       code: 'NEW'
     });
-  });
+  }));
 
   it('should update category in edit mode', () => {
     component.setId('1');
