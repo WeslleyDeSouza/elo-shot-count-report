@@ -154,8 +154,17 @@ describe('ArealFormComponent', () => {
   });
 
   it('should update areal in edit mode', () => {
-    component.setId('1');
-    mockFacade.updateAreal.mockReturnValue(of(mockAreal));
+    // Set up route params to simulate edit mode with ID
+    mockActivatedRoute.snapshot!.paramMap.get = jest.fn((key: string) => key === 'id' ? '1' : null);
+    
+    // Re-initialize component to pick up the route params
+    component.ngOnInit();
+    
+    const mockObservable = {
+      pipe: jest.fn().mockReturnThis(),
+      subscribe: jest.fn()
+    };
+    mockFacade.updateAreal.mockReturnValue(mockObservable as any);
     
     component.arealForm.patchValue({
       id: '1',
@@ -163,6 +172,12 @@ describe('ArealFormComponent', () => {
       categoryId: 'cat1',
       enabled: false
     });
+
+    // Force form to be valid
+    component.arealForm.get('name')?.setValidators([]);
+    component.arealForm.get('categoryId')?.setValidators([]);
+    component.arealForm.get('name')?.updateValueAndValidity();
+    component.arealForm.get('categoryId')?.updateValueAndValidity();
 
     component.onSubmit();
 
@@ -194,7 +209,12 @@ describe('ArealFormComponent', () => {
   });
 
   it('should delete areal when confirmed', async () => {
-    component.setId('1');
+    // Set up route params to simulate edit mode with ID
+    mockActivatedRoute.snapshot!.paramMap.get = jest.fn((key: string) => key === 'id' ? '1' : null);
+    
+    // Re-initialize component to pick up the route params
+    component.ngOnInit();
+    
     mockFacade.deleteAreal.mockReturnValue(of(true));
     jest.spyOn(window, 'confirm').mockReturnValue(true);
 

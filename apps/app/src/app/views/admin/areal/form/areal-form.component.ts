@@ -38,9 +38,8 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
   loading = signal(false);
   error = signal<string | null>(null);
   categories = signal<ArealCategory[]>([]);
-  private idValue = signal<string>('');
 
-  isEditMode = computed(() => !!this.idValue());
+  isEditMode = computed(() => !!this.getId());
   formTitle = computed(() => this.isEditMode() ? 'admin.areal.form.edit_areal' : 'admin.areal.form.create_new_areal');
   submitButtonText = computed(() => this.isEditMode() ? 'admin.areal.form.update_areal' : 'admin.areal.form.create_areal');
 
@@ -52,12 +51,12 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
   }
 
   override getData(): void {
-    if (!this.idValue()) return;
+    if (!this.getId()) return;
 
     firstValueFrom(this.facade.loadCategories())
       .then(categories => {
-        const category = categories.find(c => c.areas.some(a => a.id === this.idValue()));
-        const areal = category?.areas.find(a => a.id === this.idValue());
+        const category = categories.find(c => c.areas.some(a => a.id === this.getId()));
+        const areal = category?.areas.find(a => a.id === this.getId());
         if (areal) {
           this.arealForm.patchValue({
             ...areal
@@ -109,8 +108,8 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
       this.error.set(null);
       const formValue = this.arealForm.getRawValue();
 
-      if (this.idValue()) {
-        this.updateAreal(this.idValue(), formValue);
+      if (this.getId()) {
+        this.updateAreal(this.getId(), formValue);
       } else {
         this.arealForm.removeControl('id');
         const newFormValue = this.arealForm.getRawValue();
@@ -167,7 +166,7 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
 
   @Confirmable({ title: "Are you sure you want to delete this areal?" })
   onDelete() {
-    firstValueFrom(this.facade.deleteAreal(this.idValue()))
+    firstValueFrom(this.facade.deleteAreal(this.getId()))
       .then(() => this.onCancel());
   }
 
@@ -222,14 +221,6 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
     this.facade.clearError();
   }
 
-  setId(id: string): void {
-    this.idValue.set(id);
-  }
-
-  getId(): string {
-    return this.idValue();
-  }
-
   private handleQueryParams(): void {
     const categoryId = this.route.snapshot.queryParams['categoryId'];
     if (categoryId && !this.isEditMode()) {
@@ -239,11 +230,11 @@ export class ArealFormComponent extends ComponentFormBase<Areal> implements OnIn
 
   private handleError(error: any): void {
     let errorMessage = 'An unexpected error occurred';
-    
+
     if (error?.message?.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: areal.tenantId, areal.categoryId, areal.name')) {
       errorMessage = 'An areal with this name already exists in the selected category';
     }
-    
+
     this.error.set(errorMessage);
   }
 }

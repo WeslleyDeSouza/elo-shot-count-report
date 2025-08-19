@@ -30,9 +30,8 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   categoryForm!: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
-  private idValue = signal<string>('');
 
-  isEditMode = computed(() => !!this.idValue());
+  isEditMode = computed(() => !!this.getId());
   formTitle = computed(() => this.isEditMode() ? 'admin.areal.form.edit_areal_category' : 'admin.areal.form.create_new_areal_category');
   submitButtonText = computed(() => this.isEditMode() ? 'admin.areal.form.update_category' : 'admin.areal.form.create_category');
 
@@ -42,11 +41,11 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   }
 
   override getData(): void {
-    if (!this.idValue()) return;
+
 
     firstValueFrom(this.facade.loadCategories())
       .then(categories => {
-        const category = categories.find(c => c.id === this.idValue());
+        const category = categories.find(c => c.id === this.getId());
         if (category) {
           this.categoryForm.patchValue({
             ...category
@@ -93,8 +92,8 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
       this.error.set(null);
       const formValue = this.categoryForm.getRawValue();
 
-      if (this.idValue()) {
-        this.updateCategory(this.idValue(), formValue);
+      if (this.getId()) {
+        this.updateCategory(this.getId(), formValue);
       } else {
         const createData = {
           name: formValue.name,
@@ -148,7 +147,7 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
 
   @Confirmable({ title: "Are you sure you want to delete this category?" })
   onDelete() {
-    firstValueFrom(this.facade.deleteArealCategory(this.idValue()))
+    firstValueFrom(this.facade.deleteArealCategory(this.getId()))
       .then(() => this.onCancel());
   }
 
@@ -205,23 +204,15 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
     this.facade.clearError();
   }
 
-  setId(id: string): void {
-    this.idValue.set(id);
-  }
-
-  getId(): string {
-    return this.idValue();
-  }
-
   private handleError(error: any): void {
     let errorMessage = 'An unexpected error occurred';
-    
+
     if (error?.message?.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.code')) {
       errorMessage = 'A category with this code already exists';
     } else if (error?.message?.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.name')) {
       errorMessage = 'A category with this name already exists';
     }
-    
+
     this.error.set(errorMessage);
   }
 }
