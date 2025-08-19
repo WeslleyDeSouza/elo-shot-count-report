@@ -35,6 +35,7 @@ module.exports = withNativeFederation({
     'rxjs/webSocket',
     '@api-elo/common',
     '@api-elo/models',
+    '@api-elo/tests',
 
     // Add further packages you don't need at runtime
   ],

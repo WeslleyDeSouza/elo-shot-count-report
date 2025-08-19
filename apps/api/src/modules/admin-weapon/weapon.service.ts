@@ -111,8 +111,8 @@ export class WeaponService {
   async findOrCreateCategory(tenantId: string, fullName: string) {
     const [codeStr, name] = fullName?.trim().split(' ');
     const code = parseInt(codeStr);
-    const category =
-      (await this.weaponCatRepo.findOne({
+
+    const category = (await this.weaponCatRepo.findOne({
         where: {
           tenantId,
           name: name,
@@ -124,7 +124,10 @@ export class WeaponService {
     category.name = fullName;
     category.tenantId = tenantId;
 
-    return category.save().catch(() => null);
+    return category.save().catch((e) => {
+      console.error(e);
+      return null;
+    });
   }
 
   async findOrCreate(tenantId: string, name: string, categoryId: string) {
@@ -196,11 +199,11 @@ export class WeaponService {
     const weapon = await this.weaponRepo.findOne({
       where: { tenantId, id }
     });
-    
+
     if (!weapon) {
       throw new Error('Weapon not found');
     }
-    
+
     weapon.enabled = !weapon.enabled;
     return weapon.save();
   }
