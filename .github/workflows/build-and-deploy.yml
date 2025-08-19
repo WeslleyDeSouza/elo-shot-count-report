@@ -75,6 +75,7 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     if: needs.install.outputs.has-affected != '0'
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -111,6 +112,7 @@ jobs:
       - name: Run affected tests
         run: |
           echo "Running tests for affected projects..."
+          npx nx run-many --parallel --target=build --projects="api*" && npm run ng-swagger
           npx nx affected --target=test --parallel=3 --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

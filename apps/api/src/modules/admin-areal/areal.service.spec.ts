@@ -28,9 +28,29 @@ describe('ArealService', () => {
 
   afterEach(async () => {
     // Clean up test data
-    await areaRepo.delete({});
-    await areaCatRepo.delete({});
+    await areaRepo.delete({tenantId: mockTenantId});
+    await areaCatRepo.delete({tenantId: mockTenantId});
   });
+
+  // Helper functions
+  const createTestCategory = async (name = 'Test Category', code = 'TEST_001') => {
+    const testCategory = areaCatRepo.create({
+      name,
+      code,
+      tenantId: mockTenantId,
+    });
+    return await areaCatRepo.save(testCategory);
+  };
+
+  const createTestArea = async (name = 'Test Area', categoryId: string, enabled = true) => {
+    const testArea = areaRepo.create({
+      name,
+      categoryId,
+      enabled,
+      tenantId: mockTenantId,
+    });
+    return await areaRepo.save(testArea);
+  };
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -169,13 +189,23 @@ describe('ArealService', () => {
   describe('createAreal', () => {
     it('should create area with tenant ID', async () => {
       const tenantId = mockTenantId;
-      const areaData = { name: 'New Area', categoryId: 'cat-1', enabled: true };
+
+      // Create test category first
+      const testCategory = areaCatRepo.create({
+        name: 'Test Category',
+        code: 'TEST_001',
+        tenantId,
+      });
+      const savedCategory = await areaCatRepo.save(testCategory);
+
+      const areaData = { name: 'New Area', categoryId: savedCategory.id, enabled: true };
 
       const result = await service.createAreal(tenantId, areaData) as AreaEntity;
 
       expect(result).toBeDefined();
       expect(result.name).toBe('New Area');
       expect(result.tenantId).toBe(tenantId);
+      expect(result.categoryId).toBe(savedCategory.id);
       expect(result.id).toBeDefined();
     });
   });
@@ -184,10 +214,18 @@ describe('ArealService', () => {
     it('should delete area by ID', async () => {
       const tenantId = mockTenantId;
 
+      // Create test category first
+      const testCategory = areaCatRepo.create({
+        name: 'Test Category',
+        code: 'TEST_001',
+        tenantId,
+      });
+      const savedCategory = await areaCatRepo.save(testCategory);
+
       // Create test area first
       const testArea = areaRepo.create({
         name: 'Test Area',
-        categoryId: 'test-cat-id',
+        categoryId: savedCategory.id,
         enabled: true,
         tenantId,
       });
@@ -203,10 +241,18 @@ describe('ArealService', () => {
     it('should update area successfully', async () => {
       const tenantId = mockTenantId;
 
+      // Create test category first
+      const testCategory = areaCatRepo.create({
+        name: 'Test Category',
+        code: 'TEST_001',
+        tenantId,
+      });
+      const savedCategory = await areaCatRepo.save(testCategory);
+
       // Create test area first
       const testArea = areaRepo.create({
         name: 'Test Area',
-        categoryId: 'test-cat-id',
+        categoryId: savedCategory.id,
         enabled: true,
         tenantId,
       });
