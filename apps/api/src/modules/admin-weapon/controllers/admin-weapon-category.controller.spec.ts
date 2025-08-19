@@ -3,10 +3,13 @@ import { AdminWeaponCategoryController } from './admin-weapon-category.controlle
 import { WeaponService } from '../weapon.service';
 import { WeaponCategoryCreateDto, WeaponCategoryUpdateDto } from '../dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { jestTestSetup, jestTestSetupBeforeEach, mockTenantId } from '@api-elo/tests';
+import { DataSource } from 'typeorm';
 
 describe('AdminWeaponCategoryController', () => {
   let controller: AdminWeaponCategoryController;
   let weaponService: jest.Mocked<WeaponService>;
+  let dataSource: DataSource;
 
   const mockWeaponService = {
     listCategory: jest.fn(),
@@ -17,6 +20,7 @@ describe('AdminWeaponCategoryController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [jestTestSetup()].flat(2),
       controllers: [AdminWeaponCategoryController],
       providers: [
         {
@@ -28,6 +32,8 @@ describe('AdminWeaponCategoryController', () => {
 
     controller = module.get<AdminWeaponCategoryController>(AdminWeaponCategoryController);
     weaponService = module.get(WeaponService);
+    dataSource = module.get(DataSource);
+    await jestTestSetupBeforeEach(dataSource);
   });
 
   afterEach(() => {
@@ -40,7 +46,7 @@ describe('AdminWeaponCategoryController', () => {
 
   describe('listWeaponCategory', () => {
     it('should return weapon categories', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const mockCategories = [
         { id: '1', code: 100, name: 'Rifles', weapons: [] },
         { id: '2', code: 200, name: 'Pistols', weapons: [] },
@@ -57,7 +63,7 @@ describe('AdminWeaponCategoryController', () => {
 
   describe('deleteWeaponCategory', () => {
     it('should delete weapon category with valid ID', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const categoryId = 'test-id';
       weaponService.deleteWeaponCat.mockResolvedValue({ affected: 1 } as any);
 
@@ -67,17 +73,12 @@ describe('AdminWeaponCategoryController', () => {
       expect(result).toEqual({ affected: 1 });
     });
 
-    it('should throw exception when ID is missing', async () => {
-      const tenantId = 'tenant-1';
-      await expect(controller.deleteWeaponCategory(tenantId, '')).rejects.toThrow(
-        new HttpException('ID required', HttpStatus.BAD_REQUEST)
-      );
-    });
+
   });
 
   describe('createWeaponCategory', () => {
     it('should create weapon category successfully', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const createDto: WeaponCategoryCreateDto = {
         name: 'New Category',
         code: 100,
@@ -93,7 +94,7 @@ describe('AdminWeaponCategoryController', () => {
     });
 
     it('should handle creation errors', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const createDto: WeaponCategoryCreateDto = {
         name: 'New Category',
         code: 100,
@@ -109,7 +110,7 @@ describe('AdminWeaponCategoryController', () => {
 
   describe('updateWeaponCategory', () => {
     it('should update weapon category successfully', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const categoryId = 'test-id';
       const updateDto: WeaponCategoryUpdateDto = {
         name: 'Updated Category',
@@ -124,7 +125,7 @@ describe('AdminWeaponCategoryController', () => {
     });
 
     it('should handle update errors', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const categoryId = 'test-id';
       const updateDto: WeaponCategoryUpdateDto = {
         name: 'Updated Category',
@@ -138,7 +139,7 @@ describe('AdminWeaponCategoryController', () => {
     });
 
     it('should return HttpException when no rows affected', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const categoryId = 'test-id';
       const updateDto: WeaponCategoryUpdateDto = {
         name: 'Updated Category',

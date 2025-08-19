@@ -293,22 +293,24 @@ import { EmptyStateComponent } from "../../../../components";
         </div>
 
         <!-- Action buttons -->
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading()">
-            <i class="ri-close-line"></i> {{ 'admin.common.cancel' | translate }}
-          </button>
-          <div class="d-flex gap-2">
-            @if(collection()?.id) {
-              <button type="button" class="btn btn-danger" (click)="onDelete()" [disabled]="loading()">
-                <i class="ri-delete-bin-line"></i> {{ 'admin.common.delete' | translate }}
-              </button>
-            }
-            <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading()">
-              @if(loading()) {
-                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-              }
-              <i class="ri-save-line"></i> {{ 'admin.common.save' | translate }}
+        <div class="footer sticky-bottom card m-0 p-0 w-100">
+          <div class="d-flex justify-content-end w-100 gap-2 p-2">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading()">
+              <i class="ri-close-line"></i> {{ 'admin.common.cancel' | translate }}
             </button>
+            <div class="d-flex gap-2">
+              @if(collection()?.id) {
+                <button type="button" class="btn btn-danger" (click)="onDelete()" [disabled]="loading()">
+                  <i class="ri-delete-bin-line"></i> {{ 'admin.common.delete' | translate }}
+                </button>
+              }
+              <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading()">
+                @if(loading()) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                }
+                <i class="ri-save-line"></i> {{ 'admin.common.save' | translate }}
+              </button>
+            </div>
           </div>
         </div>
         </form>

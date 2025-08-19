@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { WeaponEntity } from './weapon.entity';
 import { DbPlatformColumn, TenantBaseEntity } from '@app-galaxy/core-api';
 

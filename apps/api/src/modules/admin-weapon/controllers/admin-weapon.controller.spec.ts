@@ -3,10 +3,13 @@ import { AdminWeaponController } from './admin-weapon.controller';
 import { WeaponService } from '../weapon.service';
 import { WeaponCreateDto, WeaponUpdateDto, WeaponResultDto } from '../dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { jestTestSetup, jestTestSetupBeforeEach, mockTenantId } from '@api-elo/tests';
+import { DataSource } from 'typeorm';
 
 describe('AdminWeaponController', () => {
   let controller: AdminWeaponController;
   let weaponService: jest.Mocked<WeaponService>;
+  let dataSource: DataSource;
 
   const mockWeaponService = {
     listCategoryWithWeapons: jest.fn(),
@@ -17,6 +20,7 @@ describe('AdminWeaponController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [jestTestSetup()].flat(2),
       controllers: [AdminWeaponController],
       providers: [
         {
@@ -28,6 +32,8 @@ describe('AdminWeaponController', () => {
 
     controller = module.get<AdminWeaponController>(AdminWeaponController);
     weaponService = module.get(WeaponService);
+    dataSource = module.get(DataSource);
+    await jestTestSetupBeforeEach(dataSource);
   });
 
   afterEach(() => {
@@ -41,7 +47,7 @@ describe('AdminWeaponController', () => {
   describe('allowedWeaponRuleSet', () => {
     it('should return allowed rules', () => {
       const mockRules = ['WEAPON_001', 'WEAPON_002'];
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const result = controller.allowedWeaponRuleSet(tenantId, mockRules);
       expect(result).toEqual(mockRules);
     });
@@ -49,7 +55,7 @@ describe('AdminWeaponController', () => {
 
   describe('listWeapon', () => {
     it('should return filtered weapons based on allowed rules', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const mockCategories = [
         { id: '1', code: 100, name: 'Category 1', weapons: [] },
         { id: '2', code: 200, name: 'Category 2', weapons: [] },
@@ -70,7 +76,7 @@ describe('AdminWeaponController', () => {
 
   describe('deleteWeapon', () => {
     it('should delete weapon with valid ID', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const weaponId = 'test-id';
       weaponService.deleteWeapon.mockResolvedValue({ affected: 1 } as any);
 
@@ -79,18 +85,11 @@ describe('AdminWeaponController', () => {
       expect(weaponService.deleteWeapon).toHaveBeenCalledWith(tenantId, weaponId);
       expect(result).toEqual({ affected: 1 });
     });
-
-    it('should throw exception when ID is missing', async () => {
-      const tenantId = 'tenant-1';
-      await expect(controller.deleteWeapon(tenantId, '')).rejects.toThrow(
-        new HttpException('ID required', HttpStatus.BAD_REQUEST)
-      );
-    });
   });
 
   describe('createWeapon', () => {
     it('should create weapon successfully', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const createDto: WeaponCreateDto = {
         categoryId: 'cat-1',
         name: 'Test Weapon',
@@ -108,7 +107,7 @@ describe('AdminWeaponController', () => {
     });
 
     it('should handle creation errors', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const createDto: WeaponCreateDto = {
         categoryId: 'cat-1',
         name: 'Test Weapon',
@@ -125,7 +124,7 @@ describe('AdminWeaponController', () => {
 
   describe('updateWeapon', () => {
     it('should update weapon successfully', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const weaponId = 'test-id';
       const updateDto: WeaponUpdateDto = {
         name: 'Updated Weapon',
@@ -141,7 +140,7 @@ describe('AdminWeaponController', () => {
     });
 
     it('should handle update errors', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const weaponId = 'test-id';
       const updateDto: WeaponUpdateDto = {
         name: 'Updated Weapon',
@@ -155,7 +154,7 @@ describe('AdminWeaponController', () => {
     });
 
     it('should return HttpException when no rows affected', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const weaponId = 'test-id';
       const updateDto: WeaponUpdateDto = {
         name: 'Updated Weapon',

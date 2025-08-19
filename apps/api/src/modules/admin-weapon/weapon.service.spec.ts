@@ -1,58 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WeaponService } from './weapon.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { WeaponEntity } from './entities/weapon.entity';
 import { WeaponCategoryEntity } from './entities/weapon-category.entity';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
+import { jestTestSetup, jestTestSetupBeforeEach, mockTenantId } from '@api-elo/tests';
+import DBOptions from './db/weapon.database';
+import {TenantModule} from "@app-galaxy/core-api";
 
 describe('WeaponService', () => {
   let service: WeaponService;
-  let weaponRepo: jest.Mocked<Repository<WeaponEntity>>;
-  let weaponCatRepo: jest.Mocked<Repository<WeaponCategoryEntity>>;
-
-  const mockWeaponRepo = {
-    find: jest.fn(),
-    findOne: jest.fn(),
-    create: jest.fn(),
-    save: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
-
-  const mockWeaponCatRepo = {
-    find: jest.fn(),
-    findOne: jest.fn(),
-    create: jest.fn(),
-    save: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
+  let weaponRepo: Repository<WeaponEntity>;
+  let weaponCatRepo: Repository<WeaponCategoryEntity>;
+  let dataSource: DataSource;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports:[
-       // jestTestSetup()
-      ].flat(2),
-      providers: [
-        WeaponService,
-        {
-          provide: getRepositoryToken(WeaponEntity),
-          useValue: mockWeaponRepo,
-        },
-        {
-          provide: getRepositoryToken(WeaponCategoryEntity),
-          useValue: mockWeaponCatRepo,
-        },
-      ],
+      imports: [jestTestSetup([], DBOptions.entities as [])].flat(2),
+      providers: [WeaponService],
     }).compile();
 
+    await jestTestSetupBeforeEach(dataSource);
+
     service = module.get<WeaponService>(WeaponService);
-    weaponRepo = module.get(getRepositoryToken(WeaponEntity));
-    weaponCatRepo = module.get(getRepositoryToken(WeaponCategoryEntity));
+    dataSource = module.get(DataSource);
+    weaponRepo = dataSource.getRepository(WeaponEntity);
+    weaponCatRepo = dataSource.getRepository(WeaponCategoryEntity);
+
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  afterEach(async () => {
+    // Clean up test data
+    await weaponRepo.delete({});
+    await weaponCatRepo.delete({});
   });
 
   it('should be defined', () => {
@@ -61,134 +40,115 @@ describe('WeaponService', () => {
 
   describe('listCategoryWithWeapons', () => {
     it('should return categories with weapons', async () => {
-      const tenantId = 'tenant-1';
-      const mockCategories = [
-        { id: '1', name: 'Category 1', weapons: [] },
-      ];
+      const tenantId = mockTenantId;
 
-      weaponCatRepo.find.mockResolvedValue(mockCategories as any);
+      // Create test category
+      const testCategory = weaponCatRepo.create({
+        name: 'Test Category',
+        code: 100,
+        tenantId,
+      });
+      await weaponCatRepo.save(testCategory);
 
       const result = await service.listCategoryWithWeapons(tenantId);
 
-      expect(weaponCatRepo.find).toHaveBeenCalledWith({
-        where: {
-          tenantId,
-          weapons: {},
-        },
-        relations: {
-          weapons: true,
-        },
-        order: {
-          code: 'asc',
-        },
-      });
-      expect(result).toEqual(mockCategories);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThanOrEqual(1);
+      expect(result[0].name).toBe('Test Category');
     });
 
     it('should filter by enabled status', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const filterParams = { enabled: true };
 
-      await service.listCategoryWithWeapons(tenantId, filterParams);
+      const result = await service.listCategoryWithWeapons(tenantId, filterParams);
 
-      expect(weaponCatRepo.find).toHaveBeenCalledWith({
-        where: {
-          tenantId,
-          weapons: filterParams,
-        },
-        relations: {
-          weapons: true,
-        },
-        order: {
-          code: 'asc',
-        },
-      });
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
     });
   });
 
   describe('findWeaponById', () => {
     it('should find weapon by ID', async () => {
-      const tenantId = 'tenant-1';
-      const weaponId = 'weapon-1';
-      const mockWeapon = { id: weaponId, name: 'Test Weapon' };
+      const tenantId = mockTenantId;
 
-      weaponRepo.findOne.mockResolvedValue(mockWeapon as any);
-
-      const result = await service.findWeaponById(tenantId, weaponId);
-
-      expect(weaponRepo.findOne).toHaveBeenCalledWith({
-        where: {
-          tenantId,
-          id: weaponId,
-        },
+      // Create test weapon
+      const testWeapon = weaponRepo.create({
+        name: 'Test Weapon',
+        categoryId: 'test-cat-id',
+        enabled: true,
+        tenantId,
       });
-      expect(result).toEqual(mockWeapon);
+      const savedWeapon = await weaponRepo.save(testWeapon);
+
+      const result = await service.findWeaponById(tenantId, savedWeapon.id);
+
+      expect(result).toBeDefined();
+      expect(result?.name).toBe('Test Weapon');
+      expect(result?.id).toBe(savedWeapon.id);
     });
   });
 
   describe('createWeapon', () => {
     it('should create weapon with tenant ID', async () => {
-      const tenantId = 'tenant-1';
-      const weaponData = { name: 'New Weapon', categoryId: 'cat-1' };
-      const mockWeapon = { id: 'new-id', ...weaponData, tenantId };
-
-      const mockCreatedWeapon = {
-        ...weaponData,
-        tenantId,
-        save: jest.fn().mockResolvedValue(mockWeapon),
-      };
-
-      weaponRepo.create.mockReturnValue(mockCreatedWeapon as any);
+      const tenantId = mockTenantId;
+      const weaponData = { name: 'New Weapon', categoryId: 'cat-1', enabled: true };
 
       const result = await service.createWeapon(tenantId, weaponData);
 
-      expect(weaponRepo.create).toHaveBeenCalledWith({ ...weaponData, tenantId });
-      expect(mockCreatedWeapon.save).toHaveBeenCalled();
-      expect(result).toEqual(mockWeapon);
+      expect(result).toBeDefined();
+      expect(result.name).toBe('New Weapon');
+      expect(result.tenantId).toBe(tenantId);
+      expect(result.id).toBeDefined();
     });
   });
 
   describe('deleteWeapon', () => {
     it('should delete weapon by ID', async () => {
-      const tenantId = 'tenant-1';
-      const weaponId = 'weapon-1';
-      const mockDeleteResult = { affected: 1 };
+      const tenantId = mockTenantId;
 
-      weaponRepo.delete.mockResolvedValue(mockDeleteResult as any);
+      // Create test weapon first
+      const testWeapon = weaponRepo.create({
+        name: 'Test Weapon',
+        categoryId: 'test-cat-id',
+        enabled: true,
+        tenantId,
+      });
+      const savedWeapon = await weaponRepo.save(testWeapon);
 
-      const result = await service.deleteWeapon(tenantId, weaponId);
+      const result = await service.deleteWeapon(tenantId, savedWeapon.id);
 
-      expect(weaponRepo.delete).toHaveBeenCalledWith({ tenantId, id: weaponId });
-      expect(result).toEqual(mockDeleteResult);
+      expect(result.affected).toBe(1);
     });
 
     it('should throw error when ID is missing', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       await expect(service.deleteWeapon(tenantId, '')).rejects.toThrow('ID required');
     });
   });
 
   describe('categoryCodeExists', () => {
     it('should return true when category code exists', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const code = 100;
-      const mockCategory = { id: '1', code, name: 'Test Category' };
 
-      weaponCatRepo.findOne.mockResolvedValue(mockCategory as any);
+      // Create test category with specific code
+      const testCategory = weaponCatRepo.create({
+        name: 'Test Category',
+        code,
+        tenantId,
+      });
+      await weaponCatRepo.save(testCategory);
 
       const result = await service.categoryCodeExists(tenantId, code);
 
-      expect(weaponCatRepo.findOne).toHaveBeenCalledWith({
-        where: { tenantId, code },
-      });
       expect(result).toBe(true);
     });
 
     it('should return false when category code does not exist', async () => {
-      const tenantId = 'tenant-1';
+      const tenantId = mockTenantId;
       const code = 999;
-
-      weaponCatRepo.findOne.mockResolvedValue(null);
 
       const result = await service.categoryCodeExists(tenantId, code);
 

@@ -17,6 +17,7 @@
     "paths": {
       "@api-elo/common": ["libs/api/common/index.ts"],
       "@api-elo/models": ["libs/api/models/index.ts"],
+      "@api-elo/tests": ["libs/api/tests/index.ts"],
       "@ui-elo/apiClient": ["libs/app/generated/src/index.ts"]
     }
   },

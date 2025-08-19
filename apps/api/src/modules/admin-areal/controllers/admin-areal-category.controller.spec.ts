@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminArealCategoryController } from './admin-areal-category.controller';
 import { ArealService } from '../areal.service';
-import { ArealCategoryCreateDto, ArealCategoryUpdateDto, ArealCategoryResultDto } from '@api-elo/models';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { ArealCategoryCreateDto, ArealCategoryUpdateDto } from '../dto';
+import { jestTestSetup, jestTestSetupBeforeEach, mockTenantId } from '@api-elo/tests';
+import { DataSource } from 'typeorm';
 
 describe('AdminArealCategoryController', () => {
   let controller: AdminArealCategoryController;
   let arealService: jest.Mocked<ArealService>;
+  let dataSource: DataSource;
 
   const mockArealService = {
     listCategory: jest.fn(),
@@ -17,8 +20,10 @@ describe('AdminArealCategoryController', () => {
     categoryCodeExists: jest.fn(),
   };
 
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [jestTestSetup()].flat(2),
       controllers: [AdminArealCategoryController],
       providers: [
         {
@@ -26,10 +31,24 @@ describe('AdminArealCategoryController', () => {
           useValue: mockArealService,
         },
       ],
-    }).compile();
+    })
+    .overrideGuard(require('@nestjs/passport').AuthGuard('jwt'))
+    .useValue({ canActivate: () => true })
+    .overrideGuard(require('@app-galaxy/core-api').TenantGuard)
+    .useValue({ canActivate: () => true })
+    .overrideGuard(require('@movit/auth-api').AppsRolesGuard())
+    .useValue({ canActivate: () => true })
+    .overrideGuard(require('@api-elo/common').CordsRolesGuard())
+    .useValue({ canActivate: () => true })
+    .overrideGuard(require('@movit/auth-api').ReplayGuard)
+    .useValue({ canActivate: () => true })
+    .compile();
 
     controller = module.get<AdminArealCategoryController>(AdminArealCategoryController);
     arealService = module.get(ArealService);
+    dataSource = module.get(DataSource);
+    
+    await jestTestSetupBeforeEach(dataSource);
   });
 
   afterEach(() => {
@@ -49,9 +68,9 @@ describe('AdminArealCategoryController', () => {
 
       arealService.listCategory.mockResolvedValue(mockCategories as any);
 
-      const result = await controller.list();
+      const result = await controller.list(mockTenantId);
 
-      expect(arealService.listCategory).toHaveBeenCalled();
+      expect(arealService.listCategory).toHaveBeenCalledWith(mockTenantId);
       expect(result).toEqual(mockCategories);
     });
   });
@@ -63,9 +82,9 @@ describe('AdminArealCategoryController', () => {
 
       arealService.findCategoryById.mockResolvedValue(mockCategory as any);
 
-      const result = await controller.getById(categoryId);
+      const result = await controller.getById(mockTenantId, categoryId);
 
-      expect(arealService.findCategoryById).toHaveBeenCalledWith(categoryId);
+      expect(arealService.findCategoryById).toHaveBeenCalledWith(mockTenantId, categoryId);
       expect(result).toEqual(mockCategory);
     });
   });
@@ -73,16 +92,16 @@ describe('AdminArealCategoryController', () => {
   describe('delete', () => {
     it('should delete category with valid ID', async () => {
       const categoryId = 'test-id';
-      arealService.deleteArealCat.mockResolvedValue({ affected: 1 } as any);
+      arealService.deleteArealCat.mockResolvedValue({ affected: 1, raw: {} } as any);
 
-      const result = await controller.delete(categoryId);
+      const result = await controller.delete(mockTenantId, categoryId);
 
-      expect(arealService.deleteArealCat).toHaveBeenCalledWith(categoryId);
-      expect(result).toEqual({ affected: 1 });
+      expect(arealService.deleteArealCat).toHaveBeenCalledWith(mockTenantId, categoryId);
+      expect(result).toEqual({ affected: 1, raw: {} });
     });
 
-    it('should throw exception when ID is missing', async () => {
-      await expect(controller.delete('')).rejects.toThrow(
+    it('should throw exception when ID is missing', () => {
+      expect(() => controller.delete(mockTenantId, '')).toThrow(
         new HttpException('ID required', HttpStatus.BAD_REQUEST)
       );
     });
@@ -99,9 +118,9 @@ describe('AdminArealCategoryController', () => {
 
       arealService.createArealCat.mockResolvedValue(mockResult as any);
 
-      const result = await controller.create(createDto, userId);
+      const result = await controller.create(mockTenantId, createDto, userId);
 
-      expect(arealService.createArealCat).toHaveBeenCalledWith(createDto);
+      expect(arealService.createArealCat).toHaveBeenCalledWith(mockTenantId, createDto);
       expect(result).toEqual(mockResult);
     });
 
@@ -114,7 +133,7 @@ describe('AdminArealCategoryController', () => {
 
       arealService.createArealCat.mockRejectedValue(new Error('Creation failed'));
 
-      await expect(controller.create(createDto, userId)).rejects.toThrow(
+      await expect(controller.create(mockTenantId, createDto, userId)).rejects.toThrow(
         new HttpException('Creation failed', HttpStatus.BAD_REQUEST)
       );
     });
@@ -124,29 +143,29 @@ describe('AdminArealCategoryController', () => {
     it('should update category successfully', async () => {
       const categoryId = 'test-id';
       const updateDto: ArealCategoryUpdateDto = {
-        categoryId,
+        id: categoryId,
         name: 'Updated Category',
         code: 'UPDATED_001',
       };
 
-      arealService.updateArealCat.mockResolvedValue({ affected: 1 } as any);
+      arealService.updateArealCat.mockResolvedValue({ affected: 1, raw: {}, generatedMaps: [] } as any);
 
-      const result = await controller.update(categoryId, updateDto);
+      const result = await controller.update(mockTenantId, categoryId, updateDto);
 
-      expect(arealService.updateArealCat).toHaveBeenCalledWith(categoryId, updateDto);
+      expect(arealService.updateArealCat).toHaveBeenCalledWith(mockTenantId, categoryId, updateDto);
       expect(result).toEqual(updateDto);
     });
 
     it('should return HttpException when no rows affected', async () => {
       const categoryId = 'test-id';
       const updateDto: ArealCategoryUpdateDto = {
-        categoryId,
+        id: categoryId,
         name: 'Updated Category',
       };
 
-      arealService.updateArealCat.mockResolvedValue({ affected: 0 } as any);
+      arealService.updateArealCat.mockResolvedValue({ affected: 0, raw: {}, generatedMaps: [] } as any);
 
-      const result = await controller.update(categoryId, updateDto);
+      const result = await controller.update(mockTenantId, categoryId, updateDto);
 
       expect(result).toBeInstanceOf(HttpException);
       expect((result as HttpException).message).toBe('Item not saved');
@@ -158,9 +177,9 @@ describe('AdminArealCategoryController', () => {
       const code = 'TEST_001';
       arealService.categoryCodeExists.mockResolvedValue(true);
 
-      const result = await controller.codeExits(code);
+      const result = await controller.codeExits(mockTenantId, code);
 
-      expect(arealService.categoryCodeExists).toHaveBeenCalledWith(code);
+      expect(arealService.categoryCodeExists).toHaveBeenCalledWith(mockTenantId, code);
       expect(result).toBe(true);
     });
 
@@ -168,9 +187,9 @@ describe('AdminArealCategoryController', () => {
       const code = 'NONEXISTENT';
       arealService.categoryCodeExists.mockResolvedValue(false);
 
-      const result = await controller.codeExits(code);
+      const result = await controller.codeExits(mockTenantId, code);
 
-      expect(arealService.categoryCodeExists).toHaveBeenCalledWith(code);
+      expect(arealService.categoryCodeExists).toHaveBeenCalledWith(mockTenantId, code);
       expect(result).toBe(false);
     });
   });
