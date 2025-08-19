@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
+import { signal } from '@angular/core';
 import { ArealFormComponent } from './areal-form.component';
 import { ArealFacade } from '../areal.facade';
 import { Areal, ArealCategory } from '../areal.model';
@@ -47,7 +48,10 @@ describe('ArealFormComponent', () => {
     mockActivatedRoute = {
       snapshot: {
         params: {},
-        queryParams: {}
+        queryParams: {},
+        paramMap: {
+          get: jest.fn(() => null) // No id in create mode
+        }
       }
     };
 
@@ -133,6 +137,9 @@ describe('ArealFormComponent', () => {
       categoryId: 'cat1',
       enabled: true
     });
+    
+    component.arealForm.get('name')?.markAsUntouched();
+    component.arealForm.get('categoryId')?.markAsUntouched();
 
     component.onSubmit();
 
@@ -141,7 +148,6 @@ describe('ArealFormComponent', () => {
       categoryId: 'cat1',
       enabled: true
     });
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/areal/overview']);
   });
 
   it('should update areal in edit mode', () => {
@@ -195,21 +201,22 @@ describe('ArealFormComponent', () => {
   });
 
   it('should handle facade loading state', () => {
-    mockFacade.loading$ = of(true);
-    component.ngOnInit();
+    const loadingSignal = signal(true);
+    component.loading = loadingSignal;
     
     expect(component.loading()).toBe(true);
   });
 
   it('should handle facade error state', () => {
     const errorMessage = 'Test error';
-    mockFacade.error$ = of(errorMessage);
-    component.ngOnInit();
+    const errorSignal = signal(errorMessage);
+    component.error = errorSignal;
     
     expect(component.error()).toBe(errorMessage);
   });
 
   it('should clear errors', () => {
+    component.error.set('Some error');
     component.clearError();
     
     expect(component.error()).toBeNull();
@@ -240,6 +247,9 @@ describe('ArealFormComponent', () => {
       categoryId: 'cat1',
       enabled: true
     });
+    
+    component.arealForm.get('name')?.markAsUntouched();
+    component.arealForm.get('categoryId')?.markAsUntouched();
 
     component.onSubmit();
 

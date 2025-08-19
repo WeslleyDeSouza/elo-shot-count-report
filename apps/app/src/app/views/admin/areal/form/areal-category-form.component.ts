@@ -1,5 +1,5 @@
 import { Component, input, output, OnInit, OnDestroy, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ArealCategory } from '../areal.model';
 import { ArealFacade } from '../areal.facade';
@@ -30,8 +30,9 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   categoryForm!: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
+  private idValue = signal<string>('');
 
-  isEditMode = computed(() => !!this.getId());
+  isEditMode = computed(() => !!this.idValue());
   formTitle = computed(() => this.isEditMode() ? 'admin.areal.form.edit_areal_category' : 'admin.areal.form.create_new_areal_category');
   submitButtonText = computed(() => this.isEditMode() ? 'admin.areal.form.update_category' : 'admin.areal.form.create_category');
 
@@ -41,11 +42,11 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   }
 
   override getData(): void {
-    if (!this.getId()) return;
+    if (!this.idValue()) return;
 
     firstValueFrom(this.facade.loadCategories())
       .then(categories => {
-        const category = categories.find(c => c.id === this.getId());
+        const category = categories.find(c => c.id === this.idValue());
         if (category) {
           this.categoryForm.patchValue({
             ...category
@@ -60,16 +61,16 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   }
 
   private initializeForm(): void {
-    this.categoryForm = this.fb.group({
-      id: [this.category()?.id || ''],
-      name: [
+    this.categoryForm = new FormGroup({
+      id: new FormControl(this.category()?.id || ''),
+      name: new FormControl(
         this.category()?.name || '',
         [Validators.required, Validators.minLength(2), Validators.maxLength(100)]
-      ],
-      code: [
+      ),
+      code: new FormControl(
         this.category()?.code || '',
         [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[A-Z0-9_-]+$/)]
-      ]
+      )
     });
 
     if (this.isEditMode()) {
@@ -92,12 +93,14 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
       this.error.set(null);
       const formValue = this.categoryForm.getRawValue();
 
-      if (this.getId()) {
-        this.updateCategory(this.getId(), formValue);
+      if (this.idValue()) {
+        this.updateCategory(this.idValue(), formValue);
       } else {
-        this.categoryForm.removeControl('id');
-        const newFormValue = this.categoryForm.getRawValue();
-        this.createCategory(newFormValue);
+        const createData = {
+          name: formValue.name,
+          code: formValue.code
+        };
+        this.createCategory(createData);
       }
     } else {
       this.markFormGroupTouched();
@@ -107,11 +110,16 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   private createCategory(formValue: any): void {
     this.facade.createArealCategory(formValue)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(category => {
-        if (category) {
-          this.formSubmit.emit(category);
-          this.resetForm();
-          this.router.navigate(['/admin/areal/overview']);
+      .subscribe({
+        next: (category) => {
+          if (category) {
+            this.formSubmit.emit(category);
+            this.resetForm();
+            this.router.navigate(['/admin/areal/overview']);
+          }
+        },
+        error: (error) => {
+          this.handleError(error);
         }
       });
   }
@@ -119,10 +127,15 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   private updateCategory(id: string, formValue: any): void {
     this.facade.updateArealCategory(id, formValue)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(category => {
-        if (category) {
-          this.formSubmit.emit(category);
-          this.router.navigate(['/admin/areal/overview']);
+      .subscribe({
+        next: (category) => {
+          if (category) {
+            this.formSubmit.emit(category);
+            this.router.navigate(['/admin/areal/overview']);
+          }
+        },
+        error: (error) => {
+          this.handleError(error);
         }
       });
   }
@@ -135,12 +148,16 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
 
   @Confirmable({ title: "Are you sure you want to delete this category?" })
   onDelete() {
-    firstValueFrom(this.facade.deleteArealCategory(this.getId()))
+    firstValueFrom(this.facade.deleteArealCategory(this.idValue()))
       .then(() => this.onCancel());
   }
 
   private resetForm(): void {
-    this.categoryForm.reset();
+    this.categoryForm.reset({
+      id: '',
+      name: '',
+      code: ''
+    });
     this.error.set(null);
   }
 
@@ -186,5 +203,25 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   clearError(): void {
     this.error.set(null);
     this.facade.clearError();
+  }
+
+  setId(id: string): void {
+    this.idValue.set(id);
+  }
+
+  getId(): string {
+    return this.idValue();
+  }
+
+  private handleError(error: any): void {
+    let errorMessage = 'An unexpected error occurred';
+    
+    if (error?.message?.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.code')) {
+      errorMessage = 'A category with this code already exists';
+    } else if (error?.message?.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: areal_category.tenantId, areal_category.name')) {
+      errorMessage = 'A category with this name already exists';
+    }
+    
+    this.error.set(errorMessage);
   }
 }
