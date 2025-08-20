@@ -5,9 +5,11 @@ import {
   TenantUserRoleStructureEntity,
   TestMockTenantMock
 } from '@app-galaxy/core-api'
+
 import { AuthUserEntity,
   AuthLoginEntity,
   } from '@movit/auth-api'
+
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
 import { DataSourceOptions } from 'typeorm'

@@ -7,20 +7,28 @@ import { WeaponEntity } from './entities/weapon.entity';
 import { AdminWeaponController } from './controllers/admin-weapon.controller';
 import { AdminWeaponCategoryController } from './controllers/admin-weapon-category.controller';
 
-@Module({
+const MOD = {
   imports: [
     TypeOrmModule.forFeature([
       WeaponEntity,
       WeaponCategoryEntity,
     ]),
   ],
-  controllers: [
-    AdminWeaponController,
-    AdminWeaponCategoryController,
-  ],
   providers: [WeaponService],
   exports: [WeaponService],
-})
+}
+
+@Module(Object.assign(MOD, {
+    controllers: [
+      AdminWeaponController,
+      AdminWeaponCategoryController,
+    ]
+  }))
 export class WeaponModule {
+  static DBOptions = DBOptions;
+}
+
+@Module(MOD)
+export class WeaponModuleSimple {
   static DBOptions = DBOptions;
 }

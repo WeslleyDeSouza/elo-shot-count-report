@@ -31,7 +31,7 @@ export class ArealCategoryCreateDto {
 
 export class ArealCategoryUpdateDto {
   @ApiProperty({ type: String, required: false })
-  id?: string;
+  categoryId?: string;
 
   @ApiProperty({ type: String, required: false })
   name?: string;
@@ -64,10 +64,4 @@ export class ArealCategoryResultDto {
 
   @ApiProperty({ type: String })
   tenantId: string;
-
-  @ApiProperty({ type: String, required: false })
-  deletedAt?: string;
-
-  @ApiProperty({ type: String, required: false })
-  deletedBy?: string;
 }

@@ -16,19 +16,19 @@ describe('ArealCategoryFormComponent', () => {
   let mockFacade: jest.Mocked<ArealFacade>;
   let router: Router;
 
-  const mockCategory: ArealCategory = {
+  const mockCategory: ArealCategory =  {
     id: '1',
     name: 'Test Category',
     code: 'TEST',
     areas: []
-  } as ArealCategory;
+  } as any;
 
   const mockCategory789: ArealCategory = {
     id: '789',
     name: 'Test Category 789',
     code: 'TEST789',
     areas: []
-  } as ArealCategory;
+  } as any;
 
   beforeEach(async () => {
     mockFacade = {

@@ -20,19 +20,18 @@ export class AreaCategoryEntity extends TenantBaseEntity {
 
   protected readonly self = AreaCategoryEntity
 
-  @ApiProperty({ type: String })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ type: String })
   @DbPlatformColumn({ length: 70, nullable: false })
   name: string;
 
-  @ApiProperty({ type: String })
   @DbPlatformColumn({ type: 'double', nullable: false })
   code: string;
 
-  @ApiProperty({ type: AreaEntity, isArray: true })
+  @DbPlatformColumn({ type: 'boolean', nullable: true, default:true })
+  enabled: boolean;
+
   @OneToMany(() => AreaEntity, (aE) => aE.category)
   areas: AreaEntity[];
 

@@ -171,7 +171,15 @@
       "overview": {
         "no_entries": "Keine Einträge",
         "no_entries_subtitle": "Erstellen Sie Ihre erste Sammlung",
-        "create_first_collection": "Erste Sammlung erstellen"
+        "create_first_collection": "Erste Sammlung erstellen",
+        "name": "Name",
+        "responsible": "Verantwortlicher",
+        "unit": "Einheit",
+        "shooting_range": "Schiessplatz",
+        "areal": "Areal",
+        "date": "Datum",
+        "shot_count": "Schusszahl (Total)",
+        "created_at": "Erstellt Am"
       }
     },
     "route": {

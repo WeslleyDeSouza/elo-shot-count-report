@@ -76,7 +76,7 @@ describe('AdminArealController', () => {
 
       arealService.listCategoryWithAreas.mockResolvedValue(mockCategories as any);
 
-      const result = await controller.listAreal(mockTenantId, allowedRules);
+      const result = await controller.listArealGroupedByCategories(mockTenantId, allowedRules);
 
       expect(arealService.listCategoryWithAreas).toHaveBeenCalledWith(mockTenantId);
       expect(result).toHaveLength(2);

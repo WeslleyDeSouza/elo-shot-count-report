@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { AppsRolesGuard, ReplayGuard } from '@movit/auth-api';
+import {AppsRolesGuard, GetUserId, ReplayGuard} from '@movit/auth-api';
 import { GetTenantId, TenantGuard } from '@app-galaxy/core-api';
 import { API_APPS_MAPPING } from "../../../main.mock-data";
 import { CollectionService } from '../collection.service';
@@ -11,6 +11,7 @@ import {
   CollectionResultDto
 } from '../dto';
 import { CordsRolesGuard, GetCordsRules } from "@api-elo/common";
+import {CollectionDataExportService, CollectionExportDto} from "../collection-data.service";
 
 @ApiTags('Admin - Collection')
 @Controller('admin/collection')
@@ -25,7 +26,10 @@ import { CordsRolesGuard, GetCordsRules } from "@api-elo/common";
   ReplayGuard
 )
 export class AdminCollectionController {
-  constructor(private readonly collectionService: CollectionService) {}
+  constructor(
+    private readonly collectionService: CollectionService,
+    private readonly collectionDataService: CollectionDataExportService,
+  ) {}
 
   @Get('list')
   @ApiQuery({ name: 'enabled', required: false, type: Boolean })
@@ -42,14 +46,39 @@ export class AdminCollectionController {
   listCollections(
     @GetTenantId() tenantId: string,
     @GetCordsRules() allowedRules: string[],
-    @Query('enabled') enabled?: boolean,
     @Query('year') year?: string,
     @Query('pin') pin?: string,
     @Query('arealCategoryId') arealCategoryId?: string,
     @Query('arealId') arealId?: string
   ) {
     return this.collectionService.listCollections(tenantId, {
-      enabled,
+      year,
+      pin,
+      arealCategoryId,
+      arealId
+    });
+  }
+
+  @Get('table')
+  @ApiQuery({ name: 'enabled', required: false, type: Boolean })
+  @ApiQuery({ name: 'year', required: false, type: String })
+  @ApiQuery({ name: 'pin', required: false, type: String })
+  @ApiQuery({ name: 'arealCategoryId', required: false, type: String })
+  @ApiQuery({ name: 'arealId', required: false, type: String })
+  @ApiResponse({
+    status: 200,
+    type: CollectionExportDto.TableResult,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  listTableCollections(
+    @GetTenantId() tenantId: string,
+    @GetCordsRules() allowedRules: string[],
+    @Query('year') year?: string,
+    @Query('pin') pin?: string,
+    @Query('arealCategoryId') arealCategoryId?: string,
+    @Query('arealId') arealId?: string
+  ) {
+    return this.collectionDataService.generateCollectionTableByFilter(tenantId, {
       year,
       pin,
       arealCategoryId,
@@ -69,8 +98,11 @@ export class AdminCollectionController {
   @ApiBody({ type: CollectionCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: CollectionResultDto })
   @UseGuards(AppsRolesGuard(API_APPS_MAPPING.ADMIN_REPORT_ENTRIES))
-  createCollection(@GetTenantId() tenantId: string, @Body() body: CollectionCreateDto) {
-    return this.collectionService.createCollection(tenantId, body).catch((e) => {
+  createCollection(
+    @GetUserId() userId: string,
+    @GetTenantId() tenantId: string,
+    @Body() body: CollectionCreateDto) {
+    return this.collectionService.createCollection(tenantId, {...body, createdBy:userId}).catch((e) => {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
   }
@@ -85,9 +117,9 @@ export class AdminCollectionController {
     @Param('id') id: string,
     @Body() body: CollectionUpdateDto
   ) {
+
     return this.collectionService
       .updateCollection(tenantId, id, body)
-      .then((data) => (data.affected ? body : new HttpException('Item not updated', 500)))
       .catch((e) => {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       });

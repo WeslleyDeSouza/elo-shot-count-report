@@ -84,7 +84,7 @@ export class ArealService {
     return this.areaCatRepo.findOne({
       where: {
         tenantId,
-        id,
+        id: id,
       },
     });
   }
@@ -169,7 +169,7 @@ export class ArealService {
         });
       });
 
-    return this.areaCatRepo.delete({ tenantId, id });
+    return this.areaCatRepo.delete({ tenantId, id: id });
   }
 
   createArealCat(tenantId: string, createValues: Partial<ArealCategoryModel>) {

@@ -96,10 +96,6 @@ export class CollectionCreateDto {
   @IsObject()
   weapons: { [key: string]: number };
 
-  @ApiProperty({ type: Boolean, required: false, default: true })
-  @IsOptional()
-  @IsBoolean()
-  enabled?: boolean;
 }
 
 export class CollectionUpdateDto {
@@ -142,10 +138,74 @@ export class CollectionUpdateDto {
   @IsObject()
   weapons?: { [key: string]: number };
 
-  @ApiProperty({ type: Boolean, required: false })
+
+}
+
+export class CollectionFilterParamsDto {
+
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by year' })
   @IsOptional()
-  @IsBoolean()
-  enabled?: boolean;
+  @IsString()
+  year?: string | number;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by PIN' })
+  @IsOptional()
+  @IsString()
+  pin?: string;
+
+  @ApiProperty({ type: String, required: false, format: 'uuid', description: 'Filter by areal category ID' })
+  @IsOptional()
+  @IsUUID()
+  arealCategoryId?: string;
+
+  @ApiProperty({ type: String, required: false, format: 'uuid', description: 'Filter by areal ID' })
+  @IsOptional()
+  @IsUUID()
+  arealId?: string;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by specific date (YYYY-MM-DD)' })
+  @IsOptional()
+  @IsString()
+  date?: string;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by date from (YYYY-MM-DD)' })
+  @IsOptional()
+  @IsString()
+  dateFrom?: string;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by date until (YYYY-MM-DD)' })
+  @IsOptional()
+  @IsString()
+  dateTill?: string;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by person name' })
+  @IsOptional()
+  @IsString()
+  person?: string;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by responsible person' })
+  @IsOptional()
+  @IsString()
+  verantwortlicher?: string;
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by unit' })
+  @IsOptional()
+  @IsString()
+  unit?: string;
+
+  @ApiProperty({ type: [String], required: false, description: 'Filter by areal IDs' })
+  @IsOptional()
+  areal?: string[];
+
+  @ApiProperty({ type: [String], required: false, description: 'Filter by areal category IDs' })
+  @IsOptional()
+  arealCategories?: string[];
+
+  @ApiProperty({ type: String, required: false, description: 'Filter by user type' })
+  @IsOptional()
+  @IsString()
+  userType?: string;
 }
 
 export class CollectionResultDto {
@@ -172,9 +232,6 @@ export class CollectionResultDto {
 
   @ApiProperty()
   date: string;
-
-  @ApiProperty()
-  enabled: boolean;
 
   @ApiProperty()
   createdAt: string;

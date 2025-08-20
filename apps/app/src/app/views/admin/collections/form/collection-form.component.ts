@@ -1,12 +1,14 @@
 import {Component, signal, inject, OnInit, OnDestroy, ChangeDetectionStrategy, computed} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil, switchMap } from 'rxjs';
+import {Subject, takeUntil, switchMap, firstValueFrom} from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Collection } from '../collection.model';
 import { CollectionFacade } from '../collection.facade';
 import { EmptyStateComponent } from "../../../../components";
+import {ArealCategoryResultDto, ArealResultDto, CollectionResultDto} from "@ui-elo/apiClient";
+import {ComponentFormBase} from "@app-galaxy/sdk-ui";
 
 @Component({
   selector: 'app-collection-form',
@@ -136,9 +138,13 @@ import { EmptyStateComponent } from "../../../../components";
                   <select class="form-select" formControlName="arealId" (change)="onArealChange()"
                           [class.is-invalid]="form.get('arealId')?.invalid && form.get('arealId')?.touched">
                     <option value="">{{ 'admin.collection.form.select_areal' | translate }}</option>
-                    @for(areal of availableAreals(); track areal.id) {
-                      <option [value]="areal.id">{{ areal.name }}</option>
-                    }
+                      @for(category of availableAreals(); track category.id) {
+                        <optgroup label="{{category?.name}}">
+                          @for(areal of category?.areas; track areal.id) {
+                            <option [value]="areal.id">{{ areal.name }}</option>
+                          }
+                        </optgroup>
+                      }
                   </select>
                   @if(form.get('arealId')?.invalid && form.get('arealId')?.touched) {
                     <div class="invalid-feedback">{{ 'admin.collection.form.areal_required' | translate }}</div>
@@ -319,14 +325,13 @@ import { EmptyStateComponent } from "../../../../components";
   `,
   styles: ``
 })
-export class CollectionFormComponent implements OnInit, OnDestroy {
+export class CollectionFormComponent extends ComponentFormBase implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private formBuilder = inject(FormBuilder);
   private facade = inject(CollectionFacade);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
-  collection = signal<Collection | null>(null);
+  collection = signal<CollectionResultDto | null>(null);
   isEditMode = computed(() => !!this.collection()?.id);
   pageTitle = computed(() => this.isEditMode() ? 'admin.collection.edit.title' : 'admin.collection.create.title');
   pageSubtitle = computed(() => this.isEditMode() ? 'admin.collection.edit.subtitle' : 'admin.collection.create.subtitle');
@@ -340,19 +345,17 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
   loading = signal(false);
   error = signal<string | null>(null);
   availableWeapons = signal<any[]>([]);
-  availableAreals = signal<any[]>([]);
-  arealCategories = signal<any[]>([]);
+  availableAreals = signal<ArealCategoryResultDto[]>([]);
 
   ngOnInit(): void {
-    this.getData();
     this.setupFacadeSubscriptions();
-    this.loadCollectionIfEdit();
+    if(!this.getId())this.initializeForm()
   }
 
   getData(){
     this.loadAvailableWeapons();
     this.loadAvailableAreals();
-    this.loadArealCategories();
+    this.loadCollectionById(this.getId());
   }
 
   ngOnDestroy(): void {
@@ -370,25 +373,19 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
       .subscribe(error => this.error.set(error));
   }
 
-  private loadCollectionIfEdit(): void {
-    this.route.params.pipe(
-      switchMap(params => {
-        const id = params['id'];
-        if (id) {
-          return this.facade.getCollection(id);
-        } else {
-          this.collection.set(null);
-          this.initializeForm();
-          return [];
-        }
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe(collection => {
-      if (collection) {
+  private loadCollectionById(id:string) {
+    if(!id){
+      this.collection.set(null);
+      return
+    }
+
+    return firstValueFrom( this.facade.getCollection(id))
+      .then(collection => {
         this.collection.set(collection);
         this.initializeForm();
-      }
-    });
+      }).catch(error => {
+        this.error.set(error);
+      })
   }
 
   goBack(): void {
@@ -410,26 +407,19 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
   }
 
   private loadAvailableAreals(): void {
-    this.facade.loadAreal()
+    this.facade.loadArealGroupedByCategory()
       .pipe(takeUntil(this.destroy$))
       .subscribe(areals => {
         this.availableAreals.set(areals);
       });
   }
 
-  private loadArealCategories(): void {
-    this.facade.loadArealCategories()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(categories => {
-        this.arealCategories.set(categories);
-      });
-  }
-
   private initializeForm(): void {
     const coll = this.collection();
-    const personData = coll?.personData;
-    const weaponsData = coll?.weaponsData || {};
-    const dateData = coll?.dateData;
+
+    const personData:any = coll?.person;
+    const weaponsData:any = coll?.weapons || {};
+    const dateData:any = coll?.date;
 
     const weaponsArray = Object.entries(weaponsData).map(([weaponId, count]) => {
       return this.formBuilder.group({
@@ -445,6 +435,7 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
       pin: [coll?.pin || '', [Validators.required]],
       userType: [coll?.userType || 'M', [Validators.required]],
       arealId: [coll?.arealId || '', [Validators.required]],
+      arealCategoryId: [coll?.arealCategoryId || '', [Validators.required]],
       date: [dateData?.date || '', [Validators.required]],
       morningFrom: [dateData?.morning?.from || ''],
       morningTill: [dateData?.morning?.till || ''],
@@ -474,10 +465,12 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
 
   onArealChange(): void {
     const selectedArealId = this.form.get('arealId')?.value;
-    const selectedAreal = this.availableAreals().find(areal => areal.id === selectedArealId);
+    const selectedAreal = this.availableAreals().map(category => category.areas).flat(2)
+      .find(areal => areal.id === selectedArealId);
+
     if (selectedAreal) {
       this.form.patchValue({
-        arealCategoryId: selectedAreal.arealCategoryId
+        arealCategoryId: selectedAreal.categoryId
       });
     }
   }
@@ -508,21 +501,22 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
       const formValue = this.form.value;
       const collection = this.collection();
 
-      const selectedAreal = this.availableAreals().find(areal => areal.id === formValue.arealId);
-
       const data = {
         ...collection,
         pin: formValue.pin,
         userType: formValue.userType,
-        arealCategoryId: selectedAreal?.arealCategoryId,
+
+        arealCategoryId: formValue?.arealCategoryId ,
         arealId: formValue.arealId,
-        person: JSON.stringify({
+        //arealName: selectedAreal?.name,
+
+        person: ({
           name: formValue.name,
           responsible: formValue.responsible,
           unit: formValue.unit,
           pin: formValue.pin
         }),
-        date: JSON.stringify({
+        date: ({
           date: formValue.date,
           morning: {
             from: formValue.morningFrom || null,
@@ -537,7 +531,7 @@ export class CollectionFormComponent implements OnInit, OnDestroy {
             till: formValue.eveningTill || null
           }
         }),
-        weapons: JSON.stringify(
+        weapons: (
           formValue.weapons.reduce((acc: any, weapon: any) => {
             acc[weapon.id] = weapon.count;
             return acc;

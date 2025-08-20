@@ -54,6 +54,7 @@ export class ArealCategory implements ArealCategoryModel {
     }
   }
 
+
   get areasCount(): number {
     return this.areas?.length || 0;
   }

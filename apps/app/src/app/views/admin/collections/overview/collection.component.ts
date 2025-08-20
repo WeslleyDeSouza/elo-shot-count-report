@@ -1,12 +1,14 @@
 import {Component, signal, computed, OnInit, OnDestroy, inject, Signal, ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CollectionFacade } from '../collection.facade';
 import { Collection } from '../collection.model';
-import { Subject, takeUntil } from 'rxjs';
+import {firstValueFrom, Subject, takeUntil} from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import { EmptyStateComponent } from "../../../../components";
+import {ComponentBase} from "@app-galaxy/sdk-ui";
+import {EnrichedCollection, TableResult} from "@ui-elo/apiClient";
 
 const PATHS = {
   COLLECTION_CREATE: '/admin/collections/create',
@@ -19,6 +21,7 @@ const PATHS = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    DatePipe,
     FormsModule,
     TranslatePipe,
     EmptyStateComponent
@@ -34,12 +37,12 @@ const PATHS = {
     }
   `
 })
-export class CollectionComponent implements OnInit, OnDestroy {
+export class CollectionComponent extends ComponentBase implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private facade = inject(CollectionFacade);
   private router = inject(Router);
 
-  allCollections = signal<Collection[]>([]);
+  allCollections = signal<EnrichedCollection[]>([]);
   searchText = signal('');
   loading = signal(false);
   error = signal<string | null>(null);
@@ -52,7 +55,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
   title = "Collection";
   subTitle = "Collections";
 
-  filteredCollections: Signal<Collection[]> = computed(() => {
+  filteredCollections: Signal<EnrichedCollection[]> = computed(() => {
     const collections = this.allCollections();
     const search = this.searchText().toLowerCase();
 
@@ -75,6 +78,9 @@ export class CollectionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupFacadeSubscriptions();
+  }
+
+  override getData() {
     this.loadCollections();
   }
 
@@ -94,16 +100,39 @@ export class CollectionComponent implements OnInit, OnDestroy {
       .subscribe(error => this.error.set(error));
   }
 
-  private loadCollections(): void {
-    this.facade.loadCollections({
-      enabled: this.filterEnabled(),
-      year: this.filterYear() || undefined,
-      pin: this.filterPin() || undefined
-    })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(collections => {
-        this.allCollections.set(collections.map(c => new Collection(c)));
-      });
+  private async loadCollections(): Promise<void> {
+    try {
+      const { collections, weaponCategories } = await firstValueFrom(
+        this.facade.loadCollectionTable({
+          enabled: this.filterEnabled(),
+          year: this.filterYear() || undefined,
+          pin: this.filterPin() || undefined
+        })
+      );
+
+      console.log(collections,weaponCategories);
+
+      // Process collections similar to your old implementation
+      const processedCollections = collections
+        .sort((a: any, b: any) => +new Date(b.createdAt) - +new Date(a.createdAt))
+
+
+      // Set the processed collections
+      this.allCollections.set(processedCollections );
+
+      // You can also store weapon categories if needed
+      // this.weaponCategories = weaponCategories.map((wC: any) => {
+      //   wC.children = wC?.children?.map((child: any) => {
+      //     child.name = child.name?.slice(0, 20);
+      //     return child;
+      //   });
+      //   return wC;
+      // });
+
+    } catch (error) {
+      console.error('Error loading collections:', error);
+      this.allCollections.set([]);
+    }
   }
 
   searchCollections(event: any): void {
@@ -124,11 +153,13 @@ export class CollectionComponent implements OnInit, OnDestroy {
     this.router.navigate([PATHS.COLLECTION_CREATE]);
   }
 
-  editCollection(collection: Collection): void {
+  editCollection(collection: EnrichedCollection): void {
+    console.log(collection);
+
     this.router.navigate([PATHS.COLLECTION_EDIT, collection.id]);
   }
 
-  deleteCollection(collection: Collection): void {
+  deleteCollection(collection: EnrichedCollection): void {
     if (confirm(`Are you sure you want to delete collection ${collection.pin}?`)) {
       this.facade.deleteCollection(collection.id)
         .pipe(takeUntil(this.destroy$))

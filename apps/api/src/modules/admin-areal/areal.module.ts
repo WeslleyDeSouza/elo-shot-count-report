@@ -27,3 +27,18 @@ import {AdminArealCategoryController} from "./controllers/admin-areal-category.c
 export class AreaModule {
   static DBOptions = DBOptions;
 }
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      AreaEntity,
+      AreaCategoryEntity,
+      AreaCategoryWeaponLinkEntity,
+    ]),
+  ],
+  providers: [ArealService, AreaWeaponLinkService],
+  exports: [ArealService, AreaWeaponLinkService],
+})
+export class AreaModuleSimple {
+  static DBOptions = DBOptions;
+}

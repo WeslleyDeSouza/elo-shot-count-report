@@ -12,6 +12,7 @@ import { AreaCategoryEntity } from './areal-category.entity';
 import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 
 @Entity('areal')
+@Unique(['tenantId', 'id'])
 @Unique(['tenantId', 'categoryId', 'name'])
 export class AreaEntity extends TenantBaseEntity {
   protected self = AreaEntity;

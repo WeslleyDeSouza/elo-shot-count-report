@@ -5,6 +5,7 @@ import { WeaponCategoryEntity } from './entities/weapon-category.entity';
 import { Repository, DataSource } from 'typeorm';
 import { jestTestSetup, jestTestSetupBeforeEach, mockTenantId } from '@api-elo/tests';
 import DBOptions from './db/weapon.database';
+import {WeaponModuleSimple} from "./weapon.module";
 
 describe('WeaponService', () => {
   let service: WeaponService;
@@ -14,7 +15,10 @@ describe('WeaponService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [jestTestSetup([], DBOptions.entities as [])].flat(2),
+      imports: [
+        jestTestSetup([], DBOptions.entities as []),
+      ].flat(2),
+
       providers: [WeaponService],
     }).compile();
 

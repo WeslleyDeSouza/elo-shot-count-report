@@ -73,61 +73,72 @@
 
 <!-- Collections table -->
 @if(!loading() && filteredCollections().length > 0) {
-<div class="table-responsive">
-  <table class="table table-striped">
-    <thead>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
       <tr>
-        <th>{{ 'admin.common.pin' | translate }}</th>
-        <th>{{ 'admin.collection.person' | translate }}</th>
-        <th>{{ 'admin.collection.user_type' | translate }}</th>
-        <th>{{ 'admin.collection.date' | translate }}</th>
-        <th>{{ 'admin.collection.weapons_count' | translate }}</th>
-        <th style="width: 120px;">{{ 'admin.common.enabled' | translate }}</th>
+        <th>{{ 'admin.collection.overview.name' | translate }}</th>
+        <th>{{ 'admin.collection.overview.responsible' | translate }}</th>
+        <th>{{ 'admin.collection.overview.unit' | translate }}</th>
+        <th>{{ 'admin.collection.overview.shooting_range' | translate }}</th>
+        <th>{{ 'admin.collection.overview.areal' | translate }}</th>
+        <th>{{ 'admin.collection.overview.date' | translate }}</th>
+        <th>{{ 'admin.collection.overview.shot_count' | translate }}</th>
+        <th>{{ 'admin.collection.overview.created_at' | translate }}</th>
         <th style="width: 100px;">{{ 'admin.common.actions' | translate }}</th>
       </tr>
-    </thead>
-    <tbody>
-      @for(collection of filteredCollections(); track collection.id) {
-      <tr class="collection-row">
-        <td>{{ collection.pin }}</td>
-        <td>
-          @if(collection.personData) {
-            <div>
-              <strong>{{ collection.personData.name }}</strong>
-              @if(collection.personData.responsible) {
-                <br><small class="text-muted">{{ collection.personData.responsible }}</small>
+      </thead>
+      <tbody>
+        @for(collection of filteredCollections(); track collection.id) {
+          <tr class="collection-row">
+            <td>
+              @if(collection.personData) {
+                {{ collection.personData.name }}
               }
-            </div>
-          }
-        </td>
-        <td>{{ collection.userType }}</td>
-        <td>
-          @if(collection.dateData) {
-            {{ collection.dateData.date }}
-          }
-        </td>
-        <td>
-          @if(collection.weaponsData) {
-            <span class="badge bg-info">{{ getWeaponsCount(collection.weaponsData) }}</span>
-          }
-        </td>
-        <td>
-
-        </td>
-        <td>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-sm btn-primary" (click)="editCollection(collection)">
-              <i class="ri-edit-line"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-danger" (click)="deleteCollection(collection)">
-              <i class="ri-delete-bin-line"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+            </td>
+            <td>
+              @if(collection.personData) {
+                {{ collection.personData.responsible }}
+              }
+            </td>
+            <td>
+              @if(collection.personData) {
+                {{ collection.personData.unit }}
+              }
+            </td>
+            <td>
+              {{collection.arealCategoryName}}
+            </td>
+            <td>
+              {{collection.arealName}}
+            </td>
+            <td>
+              @if(collection.dateData) {
+                {{ collection.dateData.date }}
+              }
+            </td>
+            <td [align]="true? 'right' : 'left'">
+              {{collection.weaponSum | number:'1.0-0'}}
+            </td>
+            <td>
+              {{ collection.createdAt | date:'short' }}
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-primary" (click)="editCollection(collection)">
+                  <i class="ri-edit-line"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" (click)="deleteCollection(collection)">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
 }
 

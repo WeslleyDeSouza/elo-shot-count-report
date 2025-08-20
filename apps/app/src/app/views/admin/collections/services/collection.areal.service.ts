@@ -7,8 +7,8 @@ export class CollectionArealService {
   protected api = inject(AdminArealService);
   protected apiCat = inject(AdminArealCategoryService);
 
-  loadAreal(){
-    return this.api.adminArealListAreal()
+  loadArealGroupedByCategories(){
+    return this.api.adminArealListArealGroupedByCategories()
   }
 
   loadCategories(){

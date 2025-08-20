@@ -14,7 +14,7 @@ export class ArealFacade {
 
   private parseConstraintError(error: any): string {
     const errorMessage = error?.message || error?.error?.message || '';
-    
+
     if (errorMessage.includes('UNIQUE constraint failed')) {
       if (errorMessage.includes('areal.tenantId, areal.categoryId, areal.name')) {
         return 'An areal with this name already exists in the selected category';
@@ -30,7 +30,7 @@ export class ArealFacade {
       }
       return 'This item already exists';
     }
-    
+
     return errorMessage || 'An unexpected error occurred';
   }
 
@@ -47,7 +47,7 @@ export class ArealFacade {
     this._loading.next(true);
     this._error.next(null);
 
-    return this.adminArealService.adminArealListAreal().pipe(
+    return this.adminArealService.adminArealListArealGroupedByCategories().pipe(
       map((categories: any[]) =>
         categories.map(c => new ArealCategory(c)).sort((a, b) => (a.code + '').localeCompare(b.code + ''))
       ),

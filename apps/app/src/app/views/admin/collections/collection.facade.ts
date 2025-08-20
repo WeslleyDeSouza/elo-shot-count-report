@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, of, tap, map, finalize } from 'rxjs';
 import { Collection } from './collection.model';
-import { AdminCollectionService } from '@ui-elo/apiClient';
+import {AdminCollectionService, ArealCategoryResultDto, TableResult} from '@ui-elo/apiClient';
 import { CollectionWeaponService } from './services/collection.weapon.service';
 import { CollectionArealService } from './services/collection.areal.service';
 
@@ -17,28 +17,27 @@ export class CollectionFacade {
   protected weaponService = inject(CollectionWeaponService);
   protected arealService = inject(CollectionArealService);
 
-  loadCollections(filterParams?: {
+  loadCollectionTable(filterParams?: {
     enabled?: boolean;
     year?: string;
     pin?: string;
     arealCategoryId?: string;
     arealId?: string;
-  }): Observable<Collection[]> {
+  }): Observable<TableResult> {
     this._loading.next(true);
     this._error.next(null);
 
-    return this.api.adminCollectionListCollections({
+    return this.api.adminCollectionListTableCollections({
       enabled: filterParams?.enabled,
       year: filterParams?.year,
       pin: filterParams?.pin,
       arealCategoryId: filterParams?.arealCategoryId,
       arealId: filterParams?.arealId
     }).pipe(
-      map((collections: any[]) => collections.map(c => new Collection(c))),
       catchError((error) => {
         this._error.next('Failed to load collections');
         console.error('Error loading collections:', error);
-        return of([]);
+        return of();
       }),
       finalize(() => this._loading.next(false))
     );
@@ -122,8 +121,8 @@ export class CollectionFacade {
     return this.weaponService.loadWeapons();
   }
 
-  loadAreal(): Observable<any[]> {
-    return this.arealService.loadAreal();
+  loadArealGroupedByCategory(): Observable<ArealCategoryResultDto[]> {
+    return this.arealService.loadArealGroupedByCategories();
   }
 
   loadArealCategories(): Observable<any[]> {

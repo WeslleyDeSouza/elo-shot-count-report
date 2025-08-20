@@ -1,15 +1,17 @@
 import {
+  AfterLoad,
   BeforeInsert,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn,BeforeUpdate
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { AreaCategoryEntity } from '../../admin-areal/entities/areal-category.entity';
 import { AreaEntity } from '../../admin-areal/entities/areal.entity';
 import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
+import { EncryptionService } from '@api-elo/common';
 
 @Entity('collection')
 export class CollectionEntity extends TenantBaseEntity {
@@ -19,10 +21,10 @@ export class CollectionEntity extends TenantBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @DbPlatformColumn({ type: 'uuid', nullable: false })
+  @DbPlatformColumn({ type: 'uuid', nullable: true })
   arealCategoryId: string;
 
-  @DbPlatformColumn({ type: 'uuid', nullable: false })
+  @DbPlatformColumn({ type: 'uuid', nullable: true })
   arealId: string;
 
   @DbPlatformColumn({ type: 'varchar', length: 3, nullable: false })
@@ -44,7 +46,7 @@ export class CollectionEntity extends TenantBaseEntity {
   enabled: boolean;
 
   @ManyToOne(() => AreaCategoryEntity, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn([
     { name: 'tenantId', referencedColumnName: 'tenantId' },
@@ -53,7 +55,7 @@ export class CollectionEntity extends TenantBaseEntity {
   arealCategory: AreaCategoryEntity;
 
   @ManyToOne(() => AreaEntity, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn([
     { name: 'tenantId', referencedColumnName: 'tenantId' },
@@ -67,8 +69,47 @@ export class CollectionEntity extends TenantBaseEntity {
   @CreateDateColumn()
   deletedAt: Date | string;
 
-  @BeforeInsert()
-  protected async beforeInsert(): Promise<any> {
-    // Any pre-insert logic if needed
+  initialise(data: Partial<CollectionEntity>): CollectionEntity {
+    Object.assign(this,data)
+    return  this;
   }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  protected async beforeInsert(): Promise<any> {
+
+    if (typeof this.person!== 'string' &&  !!this.person) {
+      this.person = JSON.stringify(this.person);
+    }
+
+    if (typeof this.date!== 'string' &&  !!this.date) {
+      this.date = JSON.stringify(this.date);
+    }
+
+    if (typeof this.weapons !== 'string' &&  !!this.weapons) {
+      this.weapons = JSON.stringify(this.weapons);
+    }
+
+    this.encryptDataBeforeSaving();
+  }
+
+  private encryptDataBeforeSaving(): void {
+    this.person = EncryptionService.encrypt(this.person);
+  }
+
+  @AfterLoad()
+  private decryptDataAfterLoad() {
+    this.person = EncryptionService.decrypt(this.person);
+    try {
+
+      this.weapons = typeof this.weapons === 'string' && this.weapons?.length ? JSON.parse(this.weapons) : this.weapons;
+
+      this.person = typeof this.person === 'string' && this.person?.length ? JSON.parse(this.person) : this.person;
+
+      this.date = typeof this.date === 'string' && this.date?.length ? JSON.parse(this.date) : this.date;
+
+    }catch (e){
+      console.error('Error decrypting CollectionData: ', this.id,e);
+    }
+ }
 }

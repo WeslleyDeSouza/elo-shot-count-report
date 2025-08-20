@@ -50,7 +50,7 @@ export class AdminArealController {
     isArray: true,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  listAreal(@GetTenantId() tenantId: string, @GetCordsRules() allowedRules: string[]) {
+  listArealGroupedByCategories(@GetTenantId() tenantId: string, @GetCordsRules() allowedRules: string[]) {
     return this.arealService.listCategoryWithAreas(tenantId).then((cateogires) => {
       return cateogires.filter((category) =>
         allowedRules.find((allowedCode) => (category.code + '')?.startsWith(allowedCode))
