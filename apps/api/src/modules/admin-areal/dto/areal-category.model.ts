@@ -31,7 +31,7 @@ export class ArealCategoryCreateDto {
 
 export class ArealCategoryUpdateDto {
   @ApiProperty({ type: String, required: false })
-  categoryId?: string;
+  id?: string;
 
   @ApiProperty({ type: String, required: false })
   name?: string;
