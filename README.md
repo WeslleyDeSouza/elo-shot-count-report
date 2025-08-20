@@ -4,6 +4,33 @@ The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range m
 
 ![Banner](https://desouza.ch/wp-content/uploads/2025/02/Mockup.png)
 
+### User Story
+
+```mermaid
+journey
+  title Collection Entry Wizard (Public)
+  section Tenant Selection
+    Choose tenant: 5: User
+  section Login / Personal Info
+    Enter name, PIN, responsible, unit: 4: User
+    Validate PIN via API: 3: System
+  section Date & Location
+    Select shooting range & area: 4: User
+    Pick date & time slots: 3: User
+    Load available areas: 3: System
+  section Ammunition & Weapons
+    Add weapons & quantities: 4: User
+    Load weapons by area: 3: System
+    Validate at least one weapon: 3: System
+  section Summary
+    Review all entries: 5: User
+    Submit collection entry: 4: User
+    Create collection via API: 3: System
+  section Success
+    Show success screen: 5: System
+    Option to start new entry: 3: User
+````
+
 ### Architecture
 
 ```mermaid
