@@ -2,15 +2,23 @@ import type { Route } from '@angular/router'
 import { NxWelcome } from './nx-welcome';
 import {LocaleResolver} from "@app-galaxy/translate-ui";
 
+export const VIEWS_PUBLIC_ROUTES: Route[] = [
+  {
+    path: '',
+    data: { path: "public" },
+    resolve: LocaleResolver.default,
+    loadChildren: () => import('./public').then(mod => mod.WIZARD_ROUTES)
+  },
+]
+
 export const VIEWS_ROUTES: Route[] = [
-    {
-      path:'bookmarks',
-      loadChildren:()=> import('./admin/bookmarks')
-        .then(mod => mod.BOOKMARKS_ROUTES),
-      data: { path: "bookmark" },
-      resolve: LocaleResolver.default,
-    },
-    // Non  Modules
+  {
+    path:'bookmarks',
+    loadChildren:()=> import('./admin/bookmarks')
+      .then(mod => mod.BOOKMARKS_ROUTES),
+    data: { path: "bookmark" },
+    resolve: LocaleResolver.default,
+  },
   {
     path:'admin',
     data: { path: "admin" },
@@ -37,10 +45,5 @@ export const VIEWS_ROUTES: Route[] = [
           .then(mod => mod.COLLECTION_ROUTES),
       },
     ]
-  }
-,
-    {
-      path:'**',
-      component:NxWelcome
-    }
+  },
 ].flat(2)

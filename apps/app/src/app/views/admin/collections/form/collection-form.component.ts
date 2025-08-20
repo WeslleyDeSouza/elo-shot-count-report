@@ -326,9 +326,9 @@ import {ComponentFormBase} from "@app-galaxy/sdk-ui";
   styles: ``
 })
 export class CollectionFormComponent extends ComponentFormBase implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
+  private destroy$  = new Subject<void>();
   private formBuilder = inject(FormBuilder);
-  private facade = inject(CollectionFacade);
+  private facade  = inject(CollectionFacade);
   private router = inject(Router);
 
   collection = signal<CollectionResultDto | null>(null);
@@ -428,6 +428,7 @@ export class CollectionFormComponent extends ComponentFormBase implements OnInit
       });
     });
 
+    // CollectionForm
     this.form = this.formBuilder.group({
       name: [personData?.name || '', [Validators.required]],
       responsible: [personData?.responsible || '', [Validators.required]],

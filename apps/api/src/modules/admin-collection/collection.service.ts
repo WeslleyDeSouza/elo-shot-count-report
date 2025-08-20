@@ -11,6 +11,10 @@ export class CollectionService {
     protected collectionRepo: Repository<CollectionEntity>
   ) {}
 
+  get repo(){
+    return this.collectionRepo
+  }
+
   async listCollections(tenantId: string, filterParams: CollectionFilterParamsDto = {}) {
     const queryBuilder = this.collectionRepo.createQueryBuilder('collection');
 

@@ -28,3 +28,21 @@ import { AuthUserEntity, AuthAdminService } from '@movit/auth-api';
 export class CoordinationOfficeModule {
   static DBOptions = DBOptions;
 }
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature(<any>DBOptions.entities),
+  ],
+  providers: [
+    CoordinationOfficeService,
+    CoordinationOfficeUserService,
+    AuthAdminService
+  ],
+  exports: [
+    CoordinationOfficeService,
+    CoordinationOfficeUserService
+  ],
+})
+export class CoordinationOfficeModuleSimple {
+  static DBOptions = DBOptions;
+}

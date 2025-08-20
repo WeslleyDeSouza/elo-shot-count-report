@@ -7,6 +7,10 @@ import { loadAuthMod, loadLayoutMod, RemoteModules } from "../mfe";
 
 export const routes: Routes = [
   {
+    path:'',
+    loadChildren: () =>import('./views/').then((mod) => mod.VIEWS_PUBLIC_ROUTES)
+  },
+  {
     path: 'auth',
     loadChildren: () =>
       loadAuthMod()

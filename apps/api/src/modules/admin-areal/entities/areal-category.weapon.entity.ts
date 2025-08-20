@@ -4,7 +4,8 @@ import { Unique } from 'typeorm';
 import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 
 @Entity('areal_category_weapon')
-@Unique(['categoryId', 'weaponId'])
+@Unique(['tenantId', 'id'])
+@Unique(['tenantId','categoryId', 'weaponId'])
 export class AreaCategoryWeaponLinkEntity extends TenantBaseEntity {
   protected self  = AreaCategoryWeaponLinkEntity;
 

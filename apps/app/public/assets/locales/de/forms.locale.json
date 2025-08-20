@@ -1,0 +1,145 @@
+{
+  "username": "Name des Nutzers",
+  "pin": "Pin des Nutzers",
+  "responsible": "Übungsleiter",
+  "place": "Ort",
+  "unit": "Einheit",
+  "areal": "Areal",
+  "weapon_list": "Waffenliste",
+  "relations": "Relationen",
+  "settings": "Einstellungen",
+  "amount": "Anzahl",
+  "ammunition_type": "Munitionsart",
+  "general_information": "Allgemeine Angaben",
+  "input_in_gram": "Eingabe in Gramm",
+  "add_more_location": "Speichern und weitere Schusszahlen hinzufügen",
+  "submit": "Speichern",
+  "allowed_area_names": "Areal Ids",
+  "allowed_area_names_desc": "Wenn Sie eine Nummer in das Feld eingeben, filtert das System automatisch die Gebiete heraus, die mit den von Ihnen eingegebenen Anfangszahlen übereinstimmen",
+  "resp": {
+    "army": "Militär",
+    "bl": "Blaulichtorganisationen",
+    "bl_short": "Blaulichtorg.",
+    "zv": "Zivil"
+  },
+  "step": {
+    "map": "Koordstelle",
+    "person": "Person",
+    "date_place": "Datum und Ort",
+    "date_time": "Datum und Uhrzeit",
+    "count": "Schusszahlmeldung",
+    "preview": "Vorschau"
+  },
+  "step_success": {
+    "title": "Vielen Dank!",
+    "sub_title": "Die Daten wurden gespeichert.<br>\n Sie werden nun weitergeleitet."
+  },
+  "wizard": {
+    "common": {
+      "back": "Zurück",
+      "next": "Weiter",
+      "cancel": "Abbrechen",
+      "actions": "Aktionen"
+    },
+    "login": {
+      "title": "Anmeldung",
+      "subtitle": "Geben Sie Ihre Daten ein, um mit der Erfassung zu beginnen",
+      "name": "Name des Nutzers",
+      "name_placeholder": "Vor- und Nachname eingeben",
+      "name_required": "Name ist erforderlich",
+      "pin": "Pin des Nutzers", 
+      "pin_placeholder": "PIN eingeben",
+      "pin_required": "PIN ist erforderlich",
+      "pin_invalid": "Ungültige PIN",
+      "responsible": "Übungsleiter",
+      "responsible_placeholder": "Übungsleiter eingeben",
+      "responsible_required": "Übungsleiter ist erforderlich",
+      "unit": "Einheit",
+      "unit_placeholder": "Einheit eingeben", 
+      "unit_required": "Einheit ist erforderlich",
+      "organization": "Organisation",
+      "army": "Militär",
+      "bl": "Blaulichtorganisationen",
+      "zv": "Zivil"
+    },
+    "date_location": {
+      "title": "Datum und Ort",
+      "subtitle": "Wählen Sie das Datum und den Ort für Ihre Erfassung",
+      "areal": "Areal",
+      "select_areal": "Areal auswählen",
+      "areal_required": "Areal ist erforderlich",
+      "date": "Datum",
+      "date_required": "Datum ist erforderlich",
+      "time_periods": "Zeiträume",
+      "time_periods_subtitle": "Geben Sie optional die Zeiten für verschiedene Tagesabschnitte an",
+      "morning": "Vormittag",
+      "midday": "Nachmittag", 
+      "evening": "Abend",
+      "from": "Von",
+      "till": "Bis"
+    },
+    "ammunition": {
+      "title": "Munition",
+      "subtitle": "Fügen Sie Waffen und die entsprechenden Munitionsmengen hinzu",
+      "add_weapon": "Waffe hinzufügen",
+      "select_weapon": "Waffe auswählen",
+      "count": "Anzahl",
+      "selected_weapons": "Ausgewählte Waffen",
+      "weapon_name": "Waffenname",
+      "remove_weapon": "Waffe entfernen",
+      "no_weapons": "Keine Waffen hinzugefügt",
+      "add_weapons_subtitle": "Fügen Sie Waffen hinzu, um fortzufahren",
+      "add_first_weapon": "Erste Waffe hinzufügen"
+    },
+    "summary": {
+      "title": "Zusammenfassung",
+      "subtitle": "Überprüfen Sie Ihre Eingaben vor der Übermittlung",
+      "personal_info": "Persönliche Informationen",
+      "name": "Name",
+      "responsible": "Übungsleiter", 
+      "unit": "Einheit",
+      "organization": "Organisation",
+      "army": "Militär",
+      "bl": "Blaulichtorganisationen",
+      "zv": "Zivil",
+      "location_date": "Ort und Datum",
+      "areal": "Areal",
+      "date": "Datum",
+      "morning": "Vormittag",
+      "midday": "Nachmittag",
+      "evening": "Abend", 
+      "weapons": "Waffen",
+      "weapon_name": "Waffenname",
+      "count": "Anzahl",
+      "no_weapons": "Keine Waffen ausgewählt",
+      "submit": "Übermitteln"
+    },
+    "success": {
+      "title": "Erfolgreich übermittelt!",
+      "message": "Ihre Schusszahlmeldung wurde erfolgreich übermittelt und gespeichert.",
+      "submitted_at": "Übermittelt um",
+      "status": "Status",
+      "completed": "Abgeschlossen",
+      "next_steps": "Ihre Daten wurden sicher gespeichert und können von den zuständigen Stellen eingesehen werden.",
+      "new_submission": "Neue Meldung",
+      "go_home": "Zur Startseite",
+      "secure_submission": "Sichere Übermittlung"
+    }
+  },
+  "placeholder": {
+    "first_last_name": "Vor und Nachname"
+  },
+  "error": {
+
+    "first_last_name_error": "Eingabe ungültig",
+    "validation": {
+      "email": "E-Mail ist ungültig",
+      "required": "[FIELD] ist erforderlich.",
+      "max_length": "[FIELD] darf nicht länger als [VALUE] Zeichen sein.",
+      "min_length": "[FIELD] darf nicht kürzer sein als [VALUE] Zeichen.",
+      "max_val": "[FIELD] darf nicht grösser sein als [VALUE].",
+      "min_val": "[FIELD] darf nicht kleiner sein als [VALUE].",
+      "invalid": "[FIELD] ist ungültig"
+    }
+  }
+}

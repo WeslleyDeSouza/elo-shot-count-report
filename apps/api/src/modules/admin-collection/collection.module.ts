@@ -6,17 +6,22 @@ import { AdminCollectionController } from './controllers/admin-collection.contro
 import DBOptions from './db/collection.database';
 import {AreaModuleSimple} from "../admin-areal";
 import { WeaponModuleSimple } from "../admin-weapon";
-import {CollectionDataExportService} from "./collection-data.service";
+import {CollectionDataExportService, CollectionDataService} from "./collection-data.service";
+import {
+  CoordinationOfficeModuleSimple
+} from "../admin-coordination-office";
+import {PublicCollectionController} from "./controllers/public-collection.controller";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CollectionEntity]),
     AreaModuleSimple,
-    WeaponModuleSimple
+    WeaponModuleSimple,
+    CoordinationOfficeModuleSimple
   ],
-  controllers: [AdminCollectionController],
-  providers: [CollectionService,CollectionDataExportService],
-  exports: [CollectionService,CollectionDataExportService],
+  controllers: [AdminCollectionController,PublicCollectionController],
+  providers: [CollectionService,CollectionDataService,CollectionDataExportService],
+  exports: [CollectionService,CollectionDataService,CollectionDataExportService],
 })
 export class CollectionModule {
   static DBOptions = DBOptions;

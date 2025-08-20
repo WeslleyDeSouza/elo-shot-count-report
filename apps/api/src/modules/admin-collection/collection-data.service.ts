@@ -8,6 +8,7 @@ import { WeaponCategoryModel } from '../admin-weapon/dto/weapon-category.model';
 import { ArealCategoryModel } from '../admin-areal/dto/areal-category.model';
 import { ArealModel } from '../admin-areal/dto/areal.model';
 import { CollectionFilterParamsDto, CollectionPersonDto, DateDto } from './dto/collection.model';
+import {CoordinationOfficeService} from "../admin-coordination-office";
 
 // DTOs for CollectionDataExportService responses
 export namespace CollectionExportDto {
@@ -174,12 +175,52 @@ export namespace CollectionExportDto {
 }
 
 @Injectable()
+export class CollectionDataService {
+  constructor(
+    protected collectionService: CollectionService,
+    protected coordinationOfficeService: CoordinationOfficeService,
+    protected weaponService: WeaponService,
+    protected arealService: ArealService,
+  ) {}
+
+  get repo(){
+    return this.collectionService.repo
+  }
+
+  verifyPin(tenantId:string, pin:string):Promise<boolean>{
+    return this.coordinationOfficeService.pinExists(
+      tenantId,pin
+    )
+  }
+
+  getArealNamesByPin(tenantId:string, pin:string):Promise<string | undefined>{
+    return this.coordinationOfficeService.findByPin(
+      tenantId,pin
+    ).then(res=>res?.allowedArealNames)
+  }
+
+  getWeaponIdsFromLinkedAreal(tenantId: string, arealId: string)  {
+    return this.arealService.getWeaponIdsFromLinkedAreals(tenantId, arealId);
+  }
+
+  listArealCategories (tenantId: string, filterParams?: { enabled?: boolean }) {
+    return this.arealService.listCategoryWithAreas(tenantId, filterParams);
+  }
+
+  listWeaponsCategories (tenantId: string, filterParams?: { enabled?: boolean })  {
+    return this.weaponService.listCategoryWithWeapons(tenantId, filterParams);
+  }
+}
+@Injectable()
 export class CollectionDataExportService {
   constructor(
     protected collectionService: CollectionService,
     protected weaponService: WeaponService,
     protected arealService: ArealService,
-  ) {}
+  ) {
+
+  }
+
 
   async generateCollectionTableByFilter(tenantId: string, searchParam: CollectionFilterParamsDto): Promise<CollectionExportDto.TableResult> {
     const collections = await this.collectionService.listCollections(tenantId, searchParam);
