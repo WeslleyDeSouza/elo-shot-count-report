@@ -1,101 +1,102 @@
-# Galaxy
+# ELO Schusszahlmeldung
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range management system. It introduces a custom-built Progressive Web App (PWA) that allows recruits to digitally report their shooting scores, replacing paper-based processes. The application provides administrators with real-time oversight, detailed reporting, and efficient management tools. Built with NestJS, Angular, TypeORM, and NX, the system ensures scalability, security, and user-friendliness. This digital transformation significantly improves accuracy, efficiency, and the overall shooting range experience.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+![Banner](https://desouza.ch/wp-content/uploads/2025/02/Mockup.png)
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+### Architecture
 
-## Run tasks
+```mermaid
+---
+title:  Project Architecture
+---
+flowchart LR
 
-To run the dev server for your app, use:
+%% styles
+classDef app fill:#f7e081,stroke:#333,stroke-width:1px
+classDef proxy fill:#cce5ff,stroke:#333,stroke-width:1px
+classDef backend fill:#d5f5e3,stroke:#333,stroke-width:1px
+classDef db fill:#f9e79f,stroke:#333,stroke-width:1px
 
-```sh
-npx nx serve app
+%% edge flow
+FE[Angular FE]:::app -->|HTTP| LB[Nginx Proxy]:::proxy
+
+subgraph BE[Backend]
+direction TB
+NX[NestJS]:::backend
+ADM[Admin Modules]:::backend
+PUB[Public Modules]:::backend
+DB[(MySQL)]:::db
+
+%% internal wiring
+NX --> ADM
+NX --> PUB
+NX --> DB
+end
+
+LB -->|HTTP| NX
 ```
 
-To create a production bundle:
+### Entity - UML
 
-```sh
-npx nx build app
+```mermaid
+---
+title: Entities namespaces and relationships
+---
+classDiagram
+
+Comming Soon
 ```
+----
 
-To see all available targets to run for a project, run:
+### Configurations
+| Category  | Path  |
+|-----------|-------|
+| **Env**   | `.env` |
+| **Docker** | `config/docker` |
+| **Swagger** | `config/swagger (generated)` |
 
-```sh
-npx nx show project app
-```
+----
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### Preparation
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Copy ``.env.example`` to `.env`
 
-## Add new projects
+----
+### Getting started | Setup
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+**With Docker:**
 
-Use the plugin's generator to create new projects.
+Run Docker:
+``docker-compose -f ./config/docker/docker-compose.yml up``
 
-To generate a new application, use:
 
-```sh
-npx nx g @nx/angular:app demo
-```
+**Without Docker:**
 
-To generate a new library, use:
 
-```sh
-npx nx g @nx/angular:lib mylib
-```
+**Running:**
+Run specific Application:
+``npx nx serve [APPNAME]``
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+Run ui Applications:
+`` npx nx run-many -t=serve -p=app*``
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Run api Applications:
+`` npx nx run-many -t=serve -p=api*``
 
-## Set up CI!
+**Test:**
 
-### Step 1
+Run ui Tests:
+`` npx nx run-many -t=test -p=app*``
 
-To connect to Nx Cloud, run the following command:
+Run api Tests:
+`` npx nx run-many -t=test -p=api*``
 
-```sh
-npx nx connect
-```
+----
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+### Tools
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+| Name        | Path | Example              |
+|-------------|------|----------------------|
+| **swagger** | `tools/swagger.generator.js` | `npm run ng-swagger` |
 
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)

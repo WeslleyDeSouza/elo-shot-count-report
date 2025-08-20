@@ -1,8 +1,7 @@
 import { Component, signal, inject, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {PublicCollectionService, PublicTenantListDto} from '@ui-elo/apiClient';
+import { PublicCollectionService, PublicTenantListDto } from '@ui-elo/apiClient';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { WizardService } from '../../services/wizard.service';
 import { firstValueFrom } from 'rxjs';
@@ -96,11 +95,8 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
 })
 export class TenantChooserComponent implements OnInit {
   private router = inject(Router);
-  private publicService = inject(
-    PublicCollectionService
-  );
-
-  wizardService = inject(WizardService);
+  private publicService = inject(PublicCollectionService);
+  protected wizardService = inject(WizardService);
 
   tenants = signal<PublicTenantListDto[]>([]);
   loading = signal(false);
