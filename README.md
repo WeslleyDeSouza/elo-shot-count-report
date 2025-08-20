@@ -8,33 +8,26 @@ The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range m
 
 ```mermaid
 ---
-title:  Project Architecture
+title: Ticketing architecture
 ---
 flowchart LR
 
-%% styles
-classDef app fill:#f7e081,stroke:#333,stroke-width:1px
-classDef proxy fill:#cce5ff,stroke:#333,stroke-width:1px
-classDef backend fill:#d5f5e3,stroke:#333,stroke-width:1px
-classDef db fill:#f9e79f,stroke:#333,stroke-width:1px
+%% entities
+    FE[Angular app]:::app
+    LB[Nginx Proxy]:::proxy
 
-%% edge flow
-FE[Angular FE]:::app -->|HTTP| LB[Nginx Proxy]:::proxy
+    subgraph OS [Orders service]
+    direction TB
+    subgraph O [API]
+        direction LR
+        OA[Admin API]:::service
+        OP[Public API]:::service
+    end
+    O --> O-M[(MySQL)]
+    end
 
-subgraph BE[Backend]
-direction TB
-NX[NestJS]:::backend
-ADM[Admin Modules]:::backend
-PUB[Public Modules]:::backend
-DB[(MySQL)]:::db
-
-%% internal wiring
-NX --> ADM
-NX --> PUB
-NX --> DB
-end
-
-LB -->|HTTP| NX
+%% flow
+    FE -->|HTTP| LB -->|HTTP| O
 ```
 
 ### Entity - UML
