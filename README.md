@@ -8,7 +8,7 @@ The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range m
 
 ```mermaid
 journey
-  title Collection Entry Wizard (Public)
+  title Collection Entry (Public)
   section Tenant Selection
     Choose tenant: 5: User
   section Login / Personal Info
@@ -34,7 +34,7 @@ journey
 ### User Story Admin
 ```mermaid
 journey
-  title Admin Journey – ELO Shot Counting System
+  title (Admin)
   section Coordination Offices
     View/search Coords: 4: Admin
     Create/edit coords with PIN/email: 4: Admin
