@@ -8,7 +8,7 @@ The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range m
 
 ```mermaid
 ---
-title: Ticketing architecture
+title: Architecture
 ---
 flowchart LR
 
