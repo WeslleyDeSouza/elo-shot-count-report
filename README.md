@@ -4,7 +4,7 @@ The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range m
 
 ![Banner](https://desouza.ch/wp-content/uploads/2025/02/Mockup.png)
 
-### User Story
+### User Story Public
 
 ```mermaid
 journey
@@ -30,6 +30,36 @@ journey
     Show success screen: 5: System
     Option to start new entry: 3: User
 ````
+
+### User Story Admin
+```mermaid
+journey
+  title Admin Journey – ELO Shot Counting System
+  section Coordination Offices
+    View/search Coords: 4: Admin
+    Create/edit coords with PIN/email: 4: Admin
+    Enable/disable coords: 3: Admin
+  section Shooting Ranges (Areals)
+    Browse categories & areals: 4: Admin
+    Create/edit category or areal: 4: Admin
+    Bulk-edit areals: 3: Admin
+    Enable/disable areal: 3: Admin
+  section Weapons
+    Browse weapon categories: 4: Admin
+    Create/edit category or weapon: 4: Admin
+    Bulk-edit weapons: 3: Admin
+    Enable/disable weapon: 3: Admin
+  section Collections
+    View list of collections: 5: Admin
+    Filter/search collections: 4: Admin
+    Create/edit collection manually: 4: Admin
+  section Links & Relations
+    Define allowed areals per coords: 3: Admin
+    Link weapons to areals: 3: Admin
+    Validate data for Wizard usage: 4: System
+  section Bookmarks
+    Manage user bookmarks & favorites: 3: Admin
+```
 
 ### Architecture
 
