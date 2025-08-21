@@ -1,0 +1,1 @@
+export * from './areal-weapon-relation-overview.component';
