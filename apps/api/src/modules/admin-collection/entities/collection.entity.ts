@@ -11,8 +11,9 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { DbPlatformColumn, TenantBaseEntity } from '@app-galaxy/core-api';
 import { EncryptionService } from '@api-elo/common';
-import { AreaCategoryEntity } from '../../admin-areal/entities/areal-category.entity';
-import {AreaEntity} from "../../admin-areal/entities/areal.entity";
+
+//
+import {AreaEntity,AreaCategoryEntity} from "../../admin-areal/entities";
 
 @Entity('collection')
 //@Unique(['tenantId', 'id'])
