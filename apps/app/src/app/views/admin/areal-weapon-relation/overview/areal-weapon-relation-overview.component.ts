@@ -85,7 +85,7 @@ import { EmptyStateComponent } from '../../_components';
             @if (filteredCategories().length === 0) {
               <app-empty-state
                 [title]="'admin.areal_weapon_relation.overview.no_categories_found' | translate"
-                icon="ri-folder-line"
+                iconClass="ri-folder-line"
               />
             } @else {
               <!-- Categories List -->
