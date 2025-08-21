@@ -5,15 +5,17 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   BeforeUpdate,
-  Unique
+  Unique, ManyToOne, JoinColumn
 } from 'typeorm';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { DbPlatformColumn, TenantBaseEntity } from '@app-galaxy/core-api';
 import { EncryptionService } from '@api-elo/common';
+import { AreaCategoryEntity } from '../../admin-areal/entities/areal-category.entity';
+import {AreaEntity} from "../../admin-areal/entities/areal.entity";
 
 @Entity('collection')
-@Unique(['tenantId', 'id'])
+//@Unique(['tenantId', 'id'])
 export class CollectionEntity extends TenantBaseEntity {
   protected self = CollectionEntity;
 
@@ -45,15 +47,12 @@ export class CollectionEntity extends TenantBaseEntity {
   @DbPlatformColumn({ type: 'boolean', nullable: true, default: true })
   enabled: boolean;
 
-  /* todo this causes "Foreign key constraint is incorrectly formed" because of the tenantId
-   * When tenantId has to be nullable.
-
-    @ManyToOne(() => AreaCategoryEntity, {
+  @ManyToOne(() => AreaCategoryEntity, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([
-    { name: 'tenantId', referencedColumnName: 'tenantId' },
+    //{ name: 'tenantId', referencedColumnName: 'tenantId' },
     { name: 'arealCategoryId', referencedColumnName: 'id' },
   ])
   arealCategory: AreaCategoryEntity;
@@ -63,11 +62,10 @@ export class CollectionEntity extends TenantBaseEntity {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([
-    { name: 'tenantId', referencedColumnName: 'tenantId' },
+   // { name: 'tenantId', referencedColumnName: 'tenantId' },
     { name: 'arealId', referencedColumnName: 'id' },
   ])
   areal: AreaEntity;
-  **/
 
   @CreateDateColumn()
   createdAt: Date | string;
@@ -75,7 +73,7 @@ export class CollectionEntity extends TenantBaseEntity {
   @CreateDateColumn()
   deletedAt: Date | string;
 
-  initialise(data: Partial<CollectionEntity>): CollectionEntity {
+  public initialise(data: Partial<CollectionEntity>): CollectionEntity {
     Object.assign(this,data)
     return  this;
   }

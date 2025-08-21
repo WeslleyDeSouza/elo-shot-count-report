@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   app-db:
-    container_name: galaxy-dashboard-db-mysql
+    container_name: app-elo-shot-counting-db
     image: mysql
     restart: no
     ports:
@@ -15,6 +15,6 @@ services:
       # MYSQL_RANDOM_ROOT_PASSWORD: "yes"  # Uncomment to generate a random root password
 
     volumes:
-      - db-dashboard-v2:/var/lib/mysql
+      - app-elo-shot-counting:/var/lib/mysql
 volumes:
-  db-dashboard-v2:
+  app-elo-shot-counting:
