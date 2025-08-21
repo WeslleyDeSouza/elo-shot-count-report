@@ -1,4 +1,4 @@
-import { Router, Routes } from '@angular/router';
+import {ActivatedRouteSnapshot, Router, Routes } from '@angular/router';
 import { inject, Injector } from '@angular/core';
 import { loadRemoteModule } from '@angular-architects/native-federation';
 import { MenuUtils } from "./views/admin/_common";
@@ -7,14 +7,14 @@ import { loadAuthMod, loadLayoutMod, RemoteModules } from "../mfe";
 
 export const routes: Routes = [
   {
-    path:'',
-    loadChildren: () =>import('./views/').then((mod) => mod.VIEWS_PUBLIC_ROUTES)
-  },
-  {
     path: 'auth',
     loadChildren: () =>
       loadAuthMod()
         .then((m) => m.authRoutes(m.VIEWS_ROUTES))
+  },
+  {
+    path:'w',
+    loadChildren: () =>import('./views/').then((mod) => mod.VIEWS_PUBLIC_ROUTES)
   },
   {
     path: '',
@@ -44,19 +44,20 @@ export const routes: Routes = [
           }))
       }],
     canActivate: [
-      async (url: any) => {
-
+      async (url: ActivatedRouteSnapshot) => {
         const injector = inject(Injector);
-        const auth = await loadAuthMod();
-
-        const session: any = injector.get(auth.AuthSessionService);
         const router = injector.get(Router);
 
-        console.log(session);
+        if( location.pathname === '/' ){
+          router.navigate(['/w']);
+          return  false
+        }
 
-        // use session.isStoredSessionValid()
+        const auth = await loadAuthMod();
+        const session: any = injector.get(auth.AuthSessionService);
+
         if (!session.session?.valid || !localStorage.getItem('app.session')) {
-          router.navigate(['/auth/login']);
+           router.navigate(['/auth/login']);
           return false;
         }
 

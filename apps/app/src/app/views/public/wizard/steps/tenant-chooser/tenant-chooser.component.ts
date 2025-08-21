@@ -55,14 +55,14 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
               <!-- Tenants List -->
               @if(!loading() && !error() && tenants().length > 0) {
                 <div class="row g-3">
-                  @for(tenant of tenants(); track tenant.identifier) {
+                  @for(tenant of tenants(); track tenant.workspaceName) {
                     <div class="col-12">
-                      <div class="card border-2 tenant-card" (click)="selectTenant(tenant.identifier || tenant.tenantName)" style="cursor: pointer; transition: all 0.2s;">
+                      <div class="card border-2 tenant-card" (click)="selectTenant(tenant.workspaceName || tenant.tenantName)" style="cursor: pointer; transition: all 0.2s;">
                         <div class="card-body p-3">
                           <div class="d-flex align-items-center">
                             <div class="flex-grow-1">
                               <h5 class="card-title mb-0">{{ tenant.tenantName }}</h5>
-                              <small class="text-muted">{{ tenant.identifier }}</small>
+                              <small class="text-muted">{{ tenant.workspaceName }}</small>
                             </div>
                             <i class="ri-arrow-right-line text-primary"></i>
                           </div>
@@ -125,6 +125,6 @@ export class TenantChooserComponent implements OnInit {
 
   selectTenant(identifier: string): void {
     this.wizardService.setTenantIdentifier(identifier);
-    this.router.navigate([WIZARD_ROUTES.LOGIN]);
+    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.LOGIN]);
   }
 }

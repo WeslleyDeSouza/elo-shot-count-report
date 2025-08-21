@@ -309,7 +309,7 @@ export class WizardSummaryComponent implements OnInit {
 
       if (result) {
         this.wizardService.nextStep();
-        this.router.navigate([WIZARD_ROUTES.SUCCESS]);
+        this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.SUCCESS]);
       }
     } catch (error) {
       console.error('Error submitting collection:', error);
@@ -320,7 +320,7 @@ export class WizardSummaryComponent implements OnInit {
 
   onBack(): void {
     this.wizardService.previousStep();
-    this.router.navigate([WIZARD_ROUTES.AMMUNITION]);
+    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.AMMUNITION]);
   }
 
   private async loadAvailableWeapons(): Promise<void> {

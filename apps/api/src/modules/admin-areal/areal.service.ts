@@ -4,14 +4,14 @@ import { AreaEntity } from './entities/areal.entity';
 import { Repository, Like } from 'typeorm';
 import { AreaCategoryEntity } from './entities/areal-category.entity';
 import { ArealCategoryModel } from './dto';
-import {AreaCategoryWeaponLinkEntity} from "./entities/areal-category.weapon.entity";
+import {ArealWeaponLinkEntity} from "./entities/areal-category.weapon.entity";
 
 @Injectable()
 export class ArealService {
   constructor(
     @InjectRepository(AreaEntity) protected areaRepo: Repository<AreaEntity>,
     @InjectRepository(AreaCategoryEntity) protected areaCatRepo: Repository<AreaCategoryEntity>,
-    @InjectRepository(AreaCategoryWeaponLinkEntity) protected areaCatWeaponLinkRepo: Repository<AreaCategoryWeaponLinkEntity>
+    @InjectRepository(ArealWeaponLinkEntity) protected areaCatWeaponLinkRepo: Repository<ArealWeaponLinkEntity>
   ) { }
 
   async listCategoryWithAreas(tenantId: string, filterParams: { enabled?: boolean } = {}) {
@@ -201,12 +201,12 @@ export class ArealService {
     return areal.save();
   }
 
-  getWeaponIdsFromLinkedAreals(tenantId:string,categoryId: string) {
+  getWeaponIdsFromLinkedAreals(tenantId:string,arealId: string) {
     return this.areaCatWeaponLinkRepo
       .find({
         where: {
           tenantId: tenantId,
-          categoryId: categoryId,
+          arealId: arealId,
         }
       })
       .then((rows) => rows.map((rows) => rows.weaponId));

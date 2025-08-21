@@ -252,12 +252,12 @@ export class WizardAmmunitionComponent implements OnInit {
 
     this.wizardService.updateCollectionData('weapons', weaponsData);
     this.wizardService.nextStep();
-    this.router.navigate([WIZARD_ROUTES.SUMMARY]);
+    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.SUMMARY]);
   }
 
   onBack(): void {
     this.wizardService.previousStep();
-    this.router.navigate([WIZARD_ROUTES.DATE_LOCATION]);
+    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.DATE_LOCATION]);
   }
 
   private async loadAvailableWeapons(): Promise<void> {

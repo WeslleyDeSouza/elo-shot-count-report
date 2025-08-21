@@ -223,12 +223,12 @@ export class WizardDateLocationComponent implements OnInit {
     const formValue = this.wizardService.locationForm.value;
     this.wizardService.updateCollectionData('location', formValue);
     this.wizardService.nextStep();
-    this.router.navigate([WIZARD_ROUTES.AMMUNITION]);
+    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.AMMUNITION]);
   }
 
   onBack(): void {
     this.wizardService.previousStep();
-    this.router.navigate([WIZARD_ROUTES.LOGIN]);
+    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.LOGIN]);
   }
 
   private async loadAvailableAreals(): Promise<void> {

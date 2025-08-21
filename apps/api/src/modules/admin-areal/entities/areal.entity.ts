@@ -4,11 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { AreaCategoryEntity } from './areal-category.entity';
+import { ArealWeaponLinkEntity } from './areal-category.weapon.entity';
 import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 
 @Entity('areal')
@@ -42,6 +44,9 @@ export class AreaEntity extends TenantBaseEntity {
   @ApiProperty()
   @DbPlatformColumn({ type: 'boolean', nullable: true, default: 0 })
   enabled: boolean;
+
+  @OneToMany(() => ArealWeaponLinkEntity, (link) => link.areal)
+  weaponLinks: ArealWeaponLinkEntity[];
 
   @BeforeInsert()
   protected async beforeInsert(): Promise<any> {

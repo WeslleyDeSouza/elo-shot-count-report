@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
-import {ApiBody, ApiParam, ApiProperty, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {AppsRolesGuard, GetUserId, ReplayGuard} from '@movit/auth-api';
-import { GetTenantId, TenantGuard } from '@app-galaxy/core-api';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
+import {ApiBody,  ApiProperty, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {AppsRolesGuard, ReplayGuard} from '@movit/auth-api';
 import { API_APPS_MAPPING } from "../../../main.mock-data";
 import { CollectionService } from '../collection.service';
 import {
@@ -36,7 +35,7 @@ class PublicTenantListDTO {
   @ApiProperty({
     type: String,
   })
-  identifier:string
+  workspaceName:string
 }
 
 @ApiTags('Public - Collection')
@@ -48,6 +47,19 @@ export class PublicCollectionController {
     private readonly collectionDataService: CollectionDataService,
   ) {}
 
+  protected async getTenantByIdentifier(val:string){
+    const result = await this.collectionDataService.repo.query('SELECT DISTINCT tenantId FROM tenant where workspaceName = ? limit 1',
+      [
+        val
+      ]);
+
+    if (!result[0]?.tenantId) {
+      throw new HttpException(`Tenant not found for identifier: ${val}`, HttpStatus.NOT_FOUND);
+    }
+
+    return result[0].tenantId;
+  }
+
   @Get('tenants/list')
   @ApiResponse({
     status: 200,
@@ -55,7 +67,7 @@ export class PublicCollectionController {
     type: PublicTenantListDTO
   })
   tenantsList() {
-    return this.collectionDataService.repo.query('SELECT DISTINCT tenantName, identifier FROM tenant');
+    return this.collectionDataService.repo.query('SELECT DISTINCT tenantName, workspaceName FROM tenant where workspaceName != "demo"',);
   }
 
 
@@ -71,10 +83,11 @@ export class PublicCollectionController {
       ttl: 60000,
     },
   })
-  verifyPin(
+  async verifyPin(
     @Param('identifier') identifier: string,
     @Param('cordNumber') cordNumber: string) {
-    return this.collectionDataService.verifyPin('',cordNumber).then((data) => ({ result: !!data }));
+    const tenantId = await this.getTenantByIdentifier(identifier);
+    return this.collectionDataService.verifyPin(tenantId,cordNumber).then((data) => ({ result: !!data }));
   }
 
   @Get(':identifier/cord-rule/:cordNumber')
@@ -88,10 +101,11 @@ export class PublicCollectionController {
       ttl: 60000,
     },
   })
-  getCoordinationByPin(
+  async getCoordinationByPin(
     @Param('identifier') identifier: string,
     @Param('cordNumber') cordNumber: string) {
-    return this.collectionDataService.getArealNamesByPin('',cordNumber).then((data) => ({
+    const tenantId = await this.getTenantByIdentifier(identifier);
+    return this.collectionDataService.getArealNamesByPin(tenantId,cordNumber).then((data) => ({
       areal: data?.split(',') || '',
     }));
   }
@@ -100,10 +114,10 @@ export class PublicCollectionController {
   @ApiBody({ type: CollectionCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: CollectionResultDto })
   @UseGuards(AppsRolesGuard(API_APPS_MAPPING.ADMIN_REPORT_ENTRIES))
-  createCollection(
+  async createCollection(
     @Param('identifier') identifier: string,
     @Body() body: CollectionCreateDto) {
-    let tenantId = ''
+    const tenantId = await this.getTenantByIdentifier(identifier);
     return this.collectionService.createCollection(tenantId, {...body}).catch((e) => {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
@@ -115,10 +129,10 @@ export class PublicCollectionController {
     isArray: true,
     type: WeaponCategoryModel,
   })
-  listWeaponFromAreal(
+  async listWeaponFromAreal(
     @Param('identifier') identifier: string,
     @Param('arealCategoryId') arealCategoryId: string) {
-    let tenantId = ''
+    const tenantId = await this.getTenantByIdentifier(identifier);
     return this.collectionDataService.getWeaponIdsFromLinkedAreal(tenantId, arealCategoryId).then((ids) => {
       return this.collectionDataService.listWeaponsCategories(tenantId, { enabled: true }).then((categories) => {
         for (let i = 0; i < categories.length; i++) {
@@ -135,8 +149,8 @@ export class PublicCollectionController {
     type: ArealCategoryModel,
     isArray: true,
   })
-  listAreal(@Param('identifier') identifier: string) {
-    let tenantId = ''
+  async listAreal(@Param('identifier') identifier: string) {
+    const tenantId = await this.getTenantByIdentifier(identifier);
     return this.collectionDataService.listArealCategories(tenantId, { enabled: true });
   }
 }

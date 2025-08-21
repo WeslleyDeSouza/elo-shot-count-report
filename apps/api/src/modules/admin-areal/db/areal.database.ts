@@ -2,7 +2,7 @@ import { ConnectionOptions } from 'typeorm';
 import * as path from 'path';
 import { AreaEntity } from '../entities/areal.entity';
 import { AreaCategoryEntity } from '../entities/areal-category.entity';
-import { AreaCategoryWeaponLinkEntity } from '../entities/areal-category.weapon.entity';
+import { ArealWeaponLinkEntity } from '../entities/areal-category.weapon.entity';
 
 const DBOptions = <ConnectionOptions>{
   type: process.env['DB_TYPE'],
@@ -18,7 +18,7 @@ const DBOptions = <ConnectionOptions>{
   cli: {
     migrationsDir: path.resolve('./migrations'),
   },
-  entities: [AreaEntity, AreaCategoryEntity, AreaCategoryWeaponLinkEntity],
+  entities: [AreaEntity, AreaCategoryEntity, ArealWeaponLinkEntity],
 };
 
 export default DBOptions;

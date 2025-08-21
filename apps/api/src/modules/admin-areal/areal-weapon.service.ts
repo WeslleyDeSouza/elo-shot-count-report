@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AreaEntity } from './entities/areal.entity';
 import { Repository } from 'typeorm';
-import { AreaCategoryEntity } from './entities/areal-category.entity';
-import { AreaCategoryWeaponLinkEntity } from './entities/areal-category.weapon.entity';
+import { ArealWeaponLinkEntity } from './entities/areal-category.weapon.entity';
 
 @Injectable()
 export class AreaWeaponLinkService {
   constructor(
-    @InjectRepository(AreaCategoryWeaponLinkEntity)
-    protected areaCatWeaponLinkRepo: Repository<AreaCategoryWeaponLinkEntity>
+    @InjectRepository(ArealWeaponLinkEntity)
+    protected areaCatWeaponLinkRepo: Repository<ArealWeaponLinkEntity>
   ) {}
-  getLinkFromAreal(categoryId: string) {
+  getLinkFromAreal(arealId: string) {
     return this.areaCatWeaponLinkRepo
       .find({
         where: {
-          categoryId: categoryId,
+          arealId: arealId,
         },
       })
       .then((rows) => rows.map((rows) => rows.weaponId));
@@ -26,24 +24,24 @@ export class AreaWeaponLinkService {
       weaponId: weaponId,
     });
   }
-  link(categoryId, weaponId) {
+  link(arealId, weaponId) {
     return this.areaCatWeaponLinkRepo
       .createQueryBuilder()
       .insert()
-      .into(AreaCategoryWeaponLinkEntity)
+      .into(ArealWeaponLinkEntity)
       .values({
-        categoryId: categoryId,
+        arealId: arealId,
         weaponId: weaponId,
       })
       .orIgnore()
       .execute();
   }
-  unLink(categoryId, weaponId) {
+  unLink(arealId, weaponId) {
     this.areaCatWeaponLinkRepo
       .createQueryBuilder()
       .delete()
       .where({
-        categoryId: categoryId,
+        arealId: arealId,
         weaponId: weaponId,
       })
       .execute();

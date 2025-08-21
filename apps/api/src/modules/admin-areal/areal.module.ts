@@ -5,21 +5,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AreaCategoryEntity } from './entities/areal-category.entity';
 import { AreaEntity } from './entities/areal.entity';
 import { AreaWeaponLinkService } from './areal-weapon.service';
-import { AreaCategoryWeaponLinkEntity } from './entities/areal-category.weapon.entity';
+import { ArealWeaponLinkEntity } from './entities/areal-category.weapon.entity';
 import {AdminArealController} from "./controllers/admin-areal.controller";
 import {AdminArealCategoryController} from "./controllers/admin-areal-category.controller";
+import {AdminArealWeaponController} from "./controllers/admin-areal-weapon.controller";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AreaEntity,
       AreaCategoryEntity,
-      AreaCategoryWeaponLinkEntity,
+      ArealWeaponLinkEntity,
     ]),
   ],
   controllers:[
     AdminArealController,
     AdminArealCategoryController,
+    AdminArealWeaponController,
   ],
   providers: [ArealService, AreaWeaponLinkService],
   exports: [ArealService, AreaWeaponLinkService],
@@ -33,7 +35,7 @@ export class AreaModule {
     TypeOrmModule.forFeature([
       AreaEntity,
       AreaCategoryEntity,
-      AreaCategoryWeaponLinkEntity,
+      ArealWeaponLinkEntity,
     ]),
   ],
   providers: [ArealService, AreaWeaponLinkService],

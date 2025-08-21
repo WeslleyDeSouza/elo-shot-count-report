@@ -2,14 +2,17 @@ import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/cor
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { WizardService } from './_common/services/wizard.service';
 import { WIZARD_ROUTES } from './wizard.routes.constants';
+import { TopbarComponent } from './_components';
 import { filter } from 'rxjs';
+import {Debounce} from "@app-galaxy/sdk-ui";
 
 @Component({
   selector: 'app-wizard-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, TopbarComponent],
   template: `
     <div class="wizard-container">
+      <app-topbar />
       <router-outlet />
     </div>
   `,
@@ -234,19 +237,15 @@ export class WizardLayoutComponent implements OnInit {
     // Check tenant identifier on route navigation
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.checkHasTenantSelection()
-      });
-
-    // Check if tenant identifier exists
-
+      .subscribe((event: NavigationEnd) => this.checkHasTenantSelection());
+  this.checkHasTenantSelection()
   }
 
-  checkHasTenantSelection(){
+  @Debounce(500)
+  checkHasTenantSelection(): void{
     const currentIdentifier = this.wizardService.getTenantIdentifier();
-   console.log(currentIdentifier);
-    if (!currentIdentifier) {
-      this.router.navigate([WIZARD_ROUTES.TENANT_CHOOSER]);
+    if ( !currentIdentifier && this.router.url.includes(WIZARD_ROUTES.BASE) ) {
+      this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.TENANT_CHOOSER]);
       return;
     }
   }
