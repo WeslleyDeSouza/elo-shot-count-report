@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { WizardService } from './services/wizard.service';
+import { WizardService } from './_common/services/wizard.service';
 import { WIZARD_ROUTES } from './wizard.routes.constants';
 import { filter } from 'rxjs';
 

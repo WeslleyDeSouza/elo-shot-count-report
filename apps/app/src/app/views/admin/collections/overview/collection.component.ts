@@ -6,7 +6,7 @@ import { Collection } from '../collection.model';
 import {firstValueFrom, Subject, takeUntil} from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
-import { EmptyStateComponent } from "../../../../components";
+import { EmptyStateComponent } from "../../_components";
 import {ComponentBase} from "@app-galaxy/sdk-ui";
 import {EnrichedCollection, TableResult} from "@ui-elo/apiClient";
 

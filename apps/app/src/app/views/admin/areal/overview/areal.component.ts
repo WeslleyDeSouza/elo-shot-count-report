@@ -7,7 +7,7 @@ import {Areal, ArealCategory,  } from '../areal.model';
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
-import {EmptyStateComponent} from "../../../../components";
+import {EmptyStateComponent} from "../../_components";
 
 const PATHS = {
   AREAL_CREATE: '/admin/areal/create',
@@ -120,25 +120,25 @@ export class ArealComponent implements OnInit, OnDestroy {
   searchAreas(event: any): void {
     const searchValue = event.target.value;
     this.searchText.set(searchValue);
-    
+
     // Auto-expand matching categories when searching
     if (searchValue.trim()) {
       const search = searchValue.toLowerCase();
       const categories = this.allCategories();
       const newStates = { ...this.collapsedStates() };
-      
+
       categories.forEach(category => {
         const categoryMatches = category.name.toLowerCase().includes(search) ||
                                category.code.toLowerCase().includes(search);
-        const hasMatchingArea = category.areas.some(area => 
+        const hasMatchingArea = category.areas.some(area =>
           area.name.toLowerCase().includes(search)
         );
-        
+
         if (categoryMatches || hasMatchingArea) {
           newStates[category.id] = false;
         }
       });
-      
+
       this.collapsedStates.set(newStates);
     }
   }

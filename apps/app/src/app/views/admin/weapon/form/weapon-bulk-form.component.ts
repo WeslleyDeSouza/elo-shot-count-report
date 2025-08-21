@@ -5,7 +5,7 @@ import {firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { WeaponFacade } from '../weapon.facade';
 import { Weapon, WeaponCategory } from '../weapon.model';
-import {BulkEditorComponent, BulkEditorConfig} from "../../../../components";
+import {BulkEditorComponent, BulkEditorConfig} from "../../_components";
 
 interface WeaponWithCategory extends Weapon {
   categoryName: string;

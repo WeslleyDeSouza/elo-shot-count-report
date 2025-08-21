@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
-import { WizardService } from '../../services/wizard.service';
+import { WizardService } from '../../_common/services/wizard.service';
 import {PublicCollectionService,  ArealCategoryModel} from "@ui-elo/apiClient";
 import { firstValueFrom } from 'rxjs';
 import { WIZARD_ROUTES } from '../../wizard.routes.constants';

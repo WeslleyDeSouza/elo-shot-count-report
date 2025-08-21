@@ -3,7 +3,7 @@ import { Router, RouterOutlet,ActivatedRoute } from '@angular/router';
 import {loadRemoteModule, processRemoteInfo} from '@angular-architects/native-federation';
 import { EffectsRunner } from '@ngrx/effects';
 import {Store} from "@ngrx/store";
-import {MenuUtils} from "./common";
+import {MenuUtils} from "./views/admin/_common";
 
 
 @Component({

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormArray, Validators, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
-import { WizardService } from '../../services/wizard.service';
+import { WizardService } from '../../_common/services/wizard.service';
 import { PublicCollectionService } from '@ui-elo/apiClient';
 import { firstValueFrom } from 'rxjs';
 import { WIZARD_ROUTES } from '../../wizard.routes.constants';
-import { EmptyStateComponent } from "../../../../../components";
+import { EmptyStateComponent } from "../../../../admin/_components";
 
 @Component({
   selector: 'app-wizard-ammunition',
@@ -40,8 +40,8 @@ import { EmptyStateComponent } from "../../../../../components";
               <div class="card bg-light mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                   <h6 class="mb-0">{{ 'wizard.ammunition.add_weapon' | translate }}</h6>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     class="btn btn-sm btn-outline-primary"
                     (click)="showAddWeaponForm.set(!showAddWeaponForm())">
                     <i [class]="showAddWeaponForm() ? 'ri-close-line' : 'ri-add-line'"></i>
@@ -52,9 +52,9 @@ import { EmptyStateComponent } from "../../../../../components";
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-6">
-                        <select 
-                          class="form-select" 
-                          [(ngModel)]="selectedWeaponId" 
+                        <select
+                          class="form-select"
+                          [(ngModel)]="selectedWeaponId"
                           [ngModelOptions]="{standalone: true}">
                           <option value="">{{ 'wizard.ammunition.select_weapon' | translate }}</option>
                           @for(weapon of getAvailableWeaponsForSelection(); track weapon.id) {
@@ -63,18 +63,18 @@ import { EmptyStateComponent } from "../../../../../components";
                         </select>
                       </div>
                       <div class="col-md-4">
-                        <input 
-                          type="number" 
-                          class="form-control" 
+                        <input
+                          type="number"
+                          class="form-control"
                           [(ngModel)]="selectedWeaponCount"
-                          [ngModelOptions]="{standalone: true}" 
-                          min="1" 
+                          [ngModelOptions]="{standalone: true}"
+                          min="1"
                           placeholder="{{ 'wizard.ammunition.count' | translate }}">
                       </div>
                       <div class="col-md-2">
-                        <button 
-                          type="button" 
-                          class="btn btn-success w-100" 
+                        <button
+                          type="button"
+                          class="btn btn-success w-100"
                           (click)="addWeapon()"
                           [disabled]="!selectedWeaponId() || !selectedWeaponCount()">
                           <i class="ri-add-line"></i>
@@ -112,16 +112,16 @@ import { EmptyStateComponent } from "../../../../../components";
                                   </div>
                                 </td>
                                 <td>
-                                  <input 
-                                    type="number" 
-                                    class="form-control form-control-sm" 
-                                    formControlName="count" 
+                                  <input
+                                    type="number"
+                                    class="form-control form-control-sm"
+                                    formControlName="count"
                                     min="0">
                                 </td>
                                 <td>
-                                  <button 
-                                    type="button" 
-                                    class="btn btn-sm btn-outline-danger" 
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
                                     (click)="removeWeapon(i)"
                                     title="{{ 'wizard.ammunition.remove_weapon' | translate }}">
                                     <i class="ri-delete-bin-line"></i>
@@ -142,9 +142,9 @@ import { EmptyStateComponent } from "../../../../../components";
                         [subtitle]="'wizard.ammunition.add_weapons_subtitle' | translate"
                         iconClass="ri-sword-line"
                         [compact]="true">
-                        <button 
-                          type="button" 
-                          class="btn btn-primary btn-sm" 
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-sm"
                           (click)="showAddWeaponForm.set(true)">
                           <i class="ri-add-line"></i> {{ 'wizard.ammunition.add_first_weapon' | translate }}
                         </button>
@@ -156,8 +156,8 @@ import { EmptyStateComponent } from "../../../../../components";
                 <!-- Actions -->
                 <div class="row">
                   <div class="col-6">
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       class="btn btn-outline-secondary w-100"
                       (click)="onBack()">
                       <i class="ri-arrow-left-line me-1"></i>
@@ -165,8 +165,8 @@ import { EmptyStateComponent } from "../../../../../components";
                     </button>
                   </div>
                   <div class="col-6">
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       class="btn btn-primary w-100"
                       (click)="onNext()"
                       [disabled]="weaponsArray.length === 0">
@@ -188,7 +188,7 @@ export class WizardAmmunitionComponent implements OnInit {
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   private publicService = inject(PublicCollectionService);
-  
+
   wizardService = inject(WizardService);
   availableWeapons = signal<any[]>([]);
   selectedWeaponId = signal<string>('');
@@ -264,16 +264,16 @@ export class WizardAmmunitionComponent implements OnInit {
     try {
       const identifier = this.wizardService.getTenantIdentifier();
       const selectedArealId = this.wizardService.locationForm.get('arealCategoryId')?.value;
-      
+
       if (!selectedArealId) {
         console.warn('No areal category selected');
         return;
       }
-      
+
       const response = await firstValueFrom(
         this.publicService.publicCollectionListWeaponFromAreal({ identifier, arealCategoryId: selectedArealId })
       );
-      
+
       const weapons = (response || []).flatMap((category: any) =>
         category.weapons.map((weapon: any) => ({
           ...weapon,

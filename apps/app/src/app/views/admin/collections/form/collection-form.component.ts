@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Collection } from '../collection.model';
 import { CollectionFacade } from '../collection.facade';
-import { EmptyStateComponent } from "../../../../components";
+import { EmptyStateComponent } from "../../_components";
 import {ArealCategoryResultDto, ArealResultDto, CollectionResultDto} from "@ui-elo/apiClient";
 import {ComponentFormBase} from "@app-galaxy/sdk-ui";
 

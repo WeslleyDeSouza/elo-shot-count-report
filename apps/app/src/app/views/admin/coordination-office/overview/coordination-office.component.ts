@@ -6,7 +6,7 @@ import { CoordinationOffice } from '../coordination-office.model';
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
-import {EmptyStateComponent} from "../../../../components";
+import {EmptyStateComponent} from "../../_components";
 
 @Component({
   selector: 'app-coordination-office',
@@ -66,7 +66,7 @@ export class CoordinationOfficeComponent implements OnInit, OnDestroy {
     return offices.sort((a, b) => {
       const aValue = a[field]?.toString().toLowerCase() ?? '';
       const bValue = b[field]?.toString().toLowerCase() ?? '';
-      
+
       const comparison = aValue.localeCompare(bValue);
       return direction === 'asc' ? comparison : -comparison;
     });

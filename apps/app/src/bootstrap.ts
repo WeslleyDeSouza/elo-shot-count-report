@@ -3,11 +3,9 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { provideStore } from "@ngrx/store";
 import { loadConfig, mfeConfig } from "./mfe";
-import {CustomFilterModule, ModuleRegistry } from 'ag-grid-community';
-import { ClientSideRowModelModule,ValidationModule ,CheckboxEditorModule,TextEditorModule ,
-
-  TextFilterModule, NumberFilterModule, DateFilterModule,RowSelectionModule,SelectEditorModule
-} from 'ag-grid-community';
+import { CustomFilterModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule,ValidationModule ,CheckboxEditorModule,TextEditorModule , TextFilterModule, NumberFilterModule, DateFilterModule,RowSelectionModule,SelectEditorModule } from 'ag-grid-community';
+import {provideCoreActionsFactory} from "@app-galaxy/sdk-ui";
 
 // Register AG Grid modules
 ModuleRegistry.registerModules([ClientSideRowModelModule,ValidationModule,CheckboxEditorModule,TextEditorModule,
@@ -22,6 +20,7 @@ loadConfig(mfeConfig)
             configSetting,
             configTemplateBuilder
           ])=> {
+
     const defaultConfig = {
       actions:{
         auth:configAuth.actions?.auth
@@ -33,10 +32,9 @@ loadConfig(mfeConfig)
 
     appConfig.providers = [
        appConfig.providers,
-       provideStore({
-        ... configAuth.reducer,
-        ... configCore.reducer,
-      }, { metaReducers: [configCore.reducerMeta ] }),
+       provideCoreActionsFactory(configCore.actions?.core),
+       provideStore({... configAuth.reducer, ... configCore.reducer}, { metaReducers: [configCore.reducerMeta ] }),
+        //
        configAuth.provider(),
        configCore.provider(defaultConfig),
        configAdmin.provider(defaultConfig),

@@ -7,7 +7,7 @@ import {Weapon, WeaponCategory} from '../weapon.model';
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
-import {EmptyStateComponent} from "../../../../components/empty-state";
+import {EmptyStateComponent} from "../../_components/empty-state";
 
 const PATHS = {
   WEAPON_CREATE: '/admin/weapon/create',
@@ -125,27 +125,27 @@ export class WeaponComponent implements OnInit, OnDestroy {
   searchWeapons(event: any): void {
     const searchValue = event.target.value;
     this.searchText.set(searchValue);
-    
+
     // Auto-expand matching categories when searching
     if (searchValue.trim()) {
       const search = searchValue.toLowerCase();
       const categories = this.allCategories();
       const newStates = { ...this.collapsedStates() };
-      
+
       categories.forEach(category => {
         const categoryMatches = category.name.toLowerCase().includes(search);
-        const hasMatchingWeapon = category.weapons.some(weapon => 
+        const hasMatchingWeapon = category.weapons.some(weapon =>
           weapon.name.toLowerCase().includes(search) ||
           weapon.nameDe.toLowerCase().includes(search) ||
           weapon.nameFr.toLowerCase().includes(search) ||
           weapon.nameIt.toLowerCase().includes(search)
         );
-        
+
         if (categoryMatches || hasMatchingWeapon) {
           newStates[category.id] = false;
         }
       });
-      
+
       this.collapsedStates.set(newStates);
     }
   }
@@ -230,11 +230,11 @@ export class WeaponComponent implements OnInit, OnDestroy {
     const categories = this.filteredCategories();
     const shouldExpandAll = !this.isAllExpanded();
     const newStates: {[key: string]: boolean} = {};
-    
+
     categories.forEach(category => {
       newStates[category.id] = !shouldExpandAll;
     });
-    
+
     this.collapsedStates.set(newStates);
   }
 

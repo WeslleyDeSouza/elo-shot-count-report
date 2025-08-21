@@ -1,7 +1,7 @@
 import { Router, Routes } from '@angular/router';
 import { inject, Injector } from '@angular/core';
 import { loadRemoteModule } from '@angular-architects/native-federation';
-import { MenuUtils } from "./common";
+import { MenuUtils } from "./views/admin/_common";
 import { Store } from "@ngrx/store";
 import { loadAuthMod, loadLayoutMod, RemoteModules } from "../mfe";
 

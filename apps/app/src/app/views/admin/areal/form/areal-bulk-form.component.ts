@@ -5,7 +5,7 @@ import {firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { ArealFacade } from '../areal.facade';
 import { Areal, ArealCategory } from '../areal.model';
-import {BulkEditorComponent, BulkEditorConfig} from "../../../../components";
+import {BulkEditorComponent, BulkEditorConfig} from "../../_components";
 
 interface ArealWithCategory extends Areal {
   categoryName: string;

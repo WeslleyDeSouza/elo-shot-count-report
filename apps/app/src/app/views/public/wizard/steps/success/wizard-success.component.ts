@@ -2,7 +2,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
-import { WizardService } from '../../services/wizard.service';
+import { WizardService } from '../../_common/services/wizard.service';
 
 @Component({
   selector: 'app-wizard-success',
@@ -24,7 +24,7 @@ import { WizardService } from '../../services/wizard.service';
 
               <!-- Success Icon -->
               <div class="mb-4">
-                <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
+                <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center"
                      style="width: 80px; height: 80px;">
                   <i class="ri-check-line text-success" style="font-size: 2.5rem;"></i>
                 </div>
@@ -61,15 +61,15 @@ import { WizardService } from '../../services/wizard.service';
 
               <!-- Actions -->
               <div class="d-flex gap-3 justify-content-center">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   class="btn btn-outline-primary"
                   (click)="onNewSubmission()">
                   <i class="ri-add-line me-1"></i>
                   {{ 'wizard.success.new_submission' | translate }}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   class="btn btn-primary"
                   (click)="onGoHome()">
                   <i class="ri-home-line me-1"></i>

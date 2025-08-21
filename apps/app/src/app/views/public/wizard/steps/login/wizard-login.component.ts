@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PublicCollectionService } from '@ui-elo/apiClient';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
-import { WizardService } from '../../services/wizard.service';
+import { WizardService } from '../../_common/services/wizard.service';
 import { firstValueFrom } from 'rxjs';
 import { WIZARD_ROUTES } from '../../wizard.routes.constants';
 

@@ -2,7 +2,7 @@ import { Component, signal, inject, ChangeDetectionStrategy, OnInit, computed } 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
-import { WizardService } from '../../services/wizard.service';
+import { WizardService } from '../../_common/services/wizard.service';
 import { PublicCollectionService } from '@ui-elo/apiClient';
 import { firstValueFrom } from 'rxjs';
 import { WIZARD_ROUTES } from '../../wizard.routes.constants';

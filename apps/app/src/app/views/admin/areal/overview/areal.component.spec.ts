@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { ArealComponent } from './areal.component';
 import { ArealFacade } from '../areal.facade';
 import { Areal, ArealCategory } from '../areal.model';
-import { EmptyStateComponent } from '../../../../components';
+import { EmptyStateComponent } from '../../_components';
 
 describe('ArealComponent', () => {
   let component: ArealComponent;

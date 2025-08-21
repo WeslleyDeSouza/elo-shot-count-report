@@ -65,7 +65,7 @@ journey
 
 ```mermaid
 ---
-title: Architecture
+title: Schusszahlmeldung Architecture
 ---
 flowchart LR
 
