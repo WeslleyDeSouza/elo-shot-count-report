@@ -3,14 +3,13 @@ import {
   BeforeInsert,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn, BeforeUpdate, Unique
+  PrimaryGeneratedColumn,
+  BeforeUpdate,
+  Unique
 } from 'typeorm';
+
 import { ApiProperty } from '@nestjs/swagger';
-import { AreaCategoryEntity } from '../../admin-areal/entities/areal-category.entity';
-import { AreaEntity } from '../../admin-areal/entities/areal.entity';
-import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
+import { DbPlatformColumn, TenantBaseEntity } from '@app-galaxy/core-api';
 import { EncryptionService } from '@api-elo/common';
 
 @Entity('collection')
@@ -46,8 +45,12 @@ export class CollectionEntity extends TenantBaseEntity {
   @DbPlatformColumn({ type: 'boolean', nullable: true, default: true })
   enabled: boolean;
 
-  @ManyToOne(() => AreaCategoryEntity, {
+  /* todo this causes "Foreign key constraint is incorrectly formed" because of the tenantId
+   * When tenantId has to be nullable.
+
+    @ManyToOne(() => AreaCategoryEntity, {
     onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn([
     { name: 'tenantId', referencedColumnName: 'tenantId' },
@@ -57,12 +60,14 @@ export class CollectionEntity extends TenantBaseEntity {
 
   @ManyToOne(() => AreaEntity, {
     onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn([
     { name: 'tenantId', referencedColumnName: 'tenantId' },
     { name: 'arealId', referencedColumnName: 'id' },
   ])
   areal: AreaEntity;
+  **/
 
   @CreateDateColumn()
   createdAt: Date | string;
