@@ -47,7 +47,7 @@ export class ArealFacade {
     this._loading.next(true);
     this._error.next(null);
 
-    return this.adminArealService.adminArealListArealGroupedByCategories().pipe(
+    return this.adminArealService.adminArealListArealGroupedByCategories({ withWeapons: false }).pipe(
       map((categories: any[]) =>
         categories.map(c => new ArealCategory(c)).sort((a, b) => (a.code + '').localeCompare(b.code + ''))
       ),

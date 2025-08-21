@@ -5,6 +5,10 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArealWeaponRelationFacade } from '../areal-weapon-relation.facade';
 import { ArealCategory } from '../../areal/areal.model';
 import { WeaponWithRelation } from '../areal-weapon-relation.model';
+
+interface ExtendedArealCategory extends Omit<ArealCategory, 'areas'> {
+  areas: any[];
+}
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { WeaponTransferComponent } from '../transfer/transfer.component';
@@ -27,16 +31,16 @@ import { EmptyStateComponent } from '../../_components';
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h1 class="h3 mb-1">{{ title }}</h1>
-              <p class="text-muted mb-0">{{ 'MANAGE_WEAPON_AREAL_RELATIONS' | translate }}</p>
+              <p class="text-muted mb-0">{{ 'admin.areal_weapon_relation.overview.manage_weapon_areal_relations' | translate }}</p>
             </div>
             <div class="d-flex gap-2">
-              <button 
+              <button
                 class="btn btn-outline-secondary"
                 (click)="refreshData()"
                 [disabled]="loading()"
               >
                 <i class="ri-refresh-line me-1"></i>
-                {{ 'REFRESH' | translate }}
+                {{ 'admin.areal_weapon_relation.overview.refresh' | translate }}
               </button>
             </div>
           </div>
@@ -51,7 +55,7 @@ import { EmptyStateComponent } from '../../_components';
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="{{ 'SEARCH_AREALS' | translate }}"
+                  placeholder="{{ 'admin.areal_weapon_relation.overview.search_areals' | translate }}"
                   (input)="searchAreals($event)"
                   [value]="searchText()"
                 >
@@ -63,7 +67,7 @@ import { EmptyStateComponent } from '../../_components';
           @if (loading()) {
             <div class="text-center py-5">
               <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">{{ 'LOADING' | translate }}...</span>
+                <span class="visually-hidden">{{ 'admin.areal_weapon_relation.overview.loading' | translate }}...</span>
               </div>
             </div>
           }
@@ -79,9 +83,8 @@ import { EmptyStateComponent } from '../../_components';
           <!-- Content -->
           @if (!loading() && !error()) {
             @if (filteredCategories().length === 0) {
-              <app-empty-state 
-                [title]="'NO_CATEGORIES_FOUND' | translate"
-                [description]="'NO_CATEGORIES_DESCRIPTION' | translate"
+              <app-empty-state
+                [title]="'admin.areal_weapon_relation.overview.no_categories_found' | translate"
                 icon="ri-folder-line"
               />
             } @else {
@@ -89,14 +92,14 @@ import { EmptyStateComponent } from '../../_components';
               @for (category of filteredCategories(); track category.id) {
                 <div class="card mb-3">
                   <div class="card-header">
-                    <div class="category-header cursor-pointer" 
+                    <div class="category-header cursor-pointer"
                          (click)="toggleCategoryCollapse(category.id)">
                       <div class="d-flex align-items-center">
                         <i class="ri-folder-line me-2 text-primary"></i>
                         <strong>{{ category.name }}</strong>
                         <span class="badge bg-secondary ms-2">{{ category.code }}</span>
                         <span class="text-muted ms-2">
-                          ({{ category.areas?.length || 0 }} {{ 'AREALS' | translate }})
+                          ({{ category.areas.length || 0 }} {{ 'admin.areal_weapon_relation.overview.areals' | translate }})
                         </span>
                       </div>
                       <i class="ri-arrow-down-s-line"
@@ -105,9 +108,9 @@ import { EmptyStateComponent } from '../../_components';
                   </div>
 
                   <div class="card-body" [ngbCollapse]="isCategoryCollapsed(category.id)">
-                    @if (category.areas?.length === 0) {
+                    @if (category.areas.length === 0) {
                       <div class="text-center text-muted py-3">
-                        {{ 'NO_AREALS_IN_CATEGORY' | translate }}
+                        {{ 'admin.areal_weapon_relation.overview.no_areals_in_category' | translate }}
                       </div>
                     } @else {
                       @for (areal of category.areas; track areal.id) {
@@ -116,14 +119,14 @@ import { EmptyStateComponent } from '../../_components';
                             <i class="ri-map-pin-line me-2 text-success"></i>
                             <h5 class="mb-0 me-2">{{ areal.name }}</h5>
                             @if (!areal.enabled) {
-                              <span class="badge bg-warning">{{ 'DISABLED' | translate }}</span>
+                              <span class="badge bg-warning">{{ 'admin.areal_weapon_relation.overview.disabled' | translate }}</span>
                             }
                           </div>
 
                           <app-weapon-transfer
                             [arealId]="areal.id"
                             [arealName]="areal.name"
-                            [weapons]="areal.weapons || []"
+                            [weapons]="areal.weaponLinks || []"
                             (weaponAssigned)="onWeaponAssigned($event)"
                             (weaponUnassigned)="onWeaponUnassigned($event)"
                           />
@@ -177,7 +180,7 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private facade = inject(ArealWeaponRelationFacade);
 
-  allCategories = signal<ArealCategory[]>([]);
+  allCategories = signal<ExtendedArealCategory[]>([]);
   searchText = signal('');
   loading = signal(false);
   error = signal<string | null>(null);
@@ -185,7 +188,7 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
 
   title = "Areal Weapon Relations";
 
-  filteredCategories: Signal<ArealCategory[]> = computed(() => {
+  filteredCategories: Signal<ExtendedArealCategory[]> = computed(() => {
     const categories = this.allCategories();
     const search = this.searchText().toLowerCase();
 
@@ -193,7 +196,7 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
       return categories;
     }
 
-    const matchesCategory = (category: ArealCategory): boolean => {
+    const matchesCategory = (category: ExtendedArealCategory): boolean => {
       return category.name.toLowerCase().includes(search) ||
              category.code.toString().toLowerCase().includes(search);
     };
@@ -204,13 +207,13 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
 
     return categories.filter(category =>
       matchesCategory(category) ||
-      category.areas?.some(areal => matchesAreal(areal))
+      category.areas.some(areal => matchesAreal(areal))
     ).map(category => ({
       ...category,
-      areas: category.areas?.filter(areal =>
+      areas: category.areas.filter(areal =>
         matchesAreal(areal) ||
         matchesCategory(category)
-      ) || []
+      )
     }));
   });
 
@@ -260,7 +263,7 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
       categories.forEach(category => {
         const categoryMatches = category.name.toLowerCase().includes(search) ||
                                category.code.toString().toLowerCase().includes(search);
-        const hasMatchingAreal = category.areas?.some(areal =>
+        const hasMatchingAreal = category.areas.some(areal =>
           areal.name.toLowerCase().includes(search)
         );
 

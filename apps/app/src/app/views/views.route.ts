@@ -45,7 +45,7 @@ export const VIEWS_ROUTES: Route[] = [
           .then(mod => mod.COLLECTION_ROUTES),
       },
       {
-        path:'areal-weapon-relation',
+        path:'areal-relation',
         loadChildren:()=> import('./admin/areal-weapon-relation')
           .then(mod => mod.AREAL_WEAPON_RELATION_ROUTES),
       },

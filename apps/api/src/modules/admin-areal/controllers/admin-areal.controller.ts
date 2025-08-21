@@ -1,5 +1,17 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Put,
+  Query,
+  UseGuards
+} from '@nestjs/common';
+import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AppsRolesGuard, ReplayGuard } from '@movit/auth-api';
 import {GetTenantId, TenantGuard} from '@app-galaxy/core-api';
@@ -30,6 +42,7 @@ import {ArealService} from "../areal.service";
 export class AdminArealController {
   constructor(private readonly arealService: ArealService) {}
 
+  // todo renamve this endpoint
   @Get('allowed-areal-rules')
   @ApiResponse({
     status: 200,
@@ -44,14 +57,20 @@ export class AdminArealController {
   }
 
   @Get('list')
+  @ApiQuery({ name: 'withWeapons', type: Boolean, required: false, description: 'Include linked weapons for each area' })
   @ApiResponse({
     status: 200,
     type: ArealCategoryResultDto,
     isArray: true,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  listArealGroupedByCategories(@GetTenantId() tenantId: string, @GetCordsRules() allowedRules: string[]) {
-    return this.arealService.listCategoryWithAreas(tenantId).then((cateogires) => {
+  listArealGroupedByCategories(
+    @GetTenantId() tenantId: string,
+    @GetCordsRules() allowedRules: string[],
+    @Query('withWeapons') withWeapons?: boolean
+  ) {
+    const relationOptions = withWeapons ? ['areas', 'areas.weapons'] : ['areas'];
+    return this.arealService.listCategoryWithAreas(tenantId, {}, relationOptions).then((cateogires) => {
       return cateogires.filter((category) =>
         allowedRules.find((allowedCode) => (category.code + '')?.startsWith(allowedCode))
       );

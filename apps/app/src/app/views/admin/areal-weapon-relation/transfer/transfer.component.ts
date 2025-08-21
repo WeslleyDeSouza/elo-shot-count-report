@@ -27,14 +27,14 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
                 id="availableSelectAll-{{ arealId() }}"
               >
               <label class="form-check-label ms-2" for="availableSelectAll-{{ arealId() }}">
-                {{ filteredAvailableWeapons().length }} {{ 'AVAILABLE_WEAPONS' | translate }}
+                {{ filteredAvailableWeapons().length }} {{ 'admin.areal_weapon_relation.transfer.available_weapons' | translate }}
               </label>
             </div>
             <div class="transfer-search">
               <input
                 type="text"
                 class="form-control form-control-sm"
-                placeholder="{{ 'SEARCH_WEAPONS' | translate }}"
+                placeholder="{{ 'admin.areal_weapon_relation.transfer.search_weapons' | translate }}"
                 [(ngModel)]="availableSearchText"
                 (input)="updateAvailableSearch($event)"
               >
@@ -55,13 +55,13 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
                   >
                   <span class="weapon-name">{{ weapon.name }}</span>
                   @if (!weapon.enabled) {
-                    <small class="text-muted ms-auto">({{ 'DISABLED' | translate }})</small>
+                    <small class="text-muted ms-auto">({{ 'admin.areal_weapon_relation.overview.disabled' | translate }})</small>
                   }
                 </div>
               }
               @if (filteredAvailableWeapons().length === 0) {
                 <div class="text-center text-muted p-3">
-                  {{ 'NO_WEAPONS_AVAILABLE' | translate }}
+                  {{ 'admin.areal_weapon_relation.transfer.no_weapons_available' | translate }}
                 </div>
               }
             </div>
@@ -75,7 +75,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
               class="transfer-btn btn btn-outline-primary btn-sm"
               [disabled]="selectedAvailable().length === 0"
               (click)="moveToAssigned()"
-              title="{{ 'ASSIGN_SELECTED_WEAPONS' | translate }}"
+              title="{{ 'admin.areal_weapon_relation.transfer.assign_selected_weapons' | translate }}"
             >
               <i class="ri-arrow-right-line"></i>
             </button>
@@ -83,7 +83,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
               class="transfer-btn btn btn-outline-secondary btn-sm"
               [disabled]="selectedAssigned().length === 0"
               (click)="moveToAvailable()"
-              title="{{ 'UNASSIGN_SELECTED_WEAPONS' | translate }}"
+              title="{{ 'admin.areal_weapon_relation.transfer.unassign_selected_weapons' | translate }}"
             >
               <i class="ri-arrow-left-line"></i>
             </button>
@@ -103,14 +103,14 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
                 id="assignedSelectAll-{{ arealId() }}"
               >
               <label class="form-check-label ms-2" for="assignedSelectAll-{{ arealId() }}">
-                {{ filteredAssignedWeapons().length }} {{ 'ASSIGNED_WEAPONS' | translate }}
+                {{ filteredAssignedWeapons().length }} {{ 'admin.areal_weapon_relation.transfer.assigned_weapons' | translate }}
               </label>
             </div>
             <div class="transfer-search">
               <input
                 type="text"
                 class="form-control form-control-sm"
-                placeholder="{{ 'SEARCH_WEAPONS' | translate }}"
+                placeholder="{{ 'admin.areal_weapon_relation.transfer.search_weapons' | translate }}"
                 [(ngModel)]="assignedSearchText"
                 (input)="updateAssignedSearch($event)"
               >
@@ -132,7 +132,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
               }
               @if (filteredAssignedWeapons().length === 0) {
                 <div class="text-center text-muted p-3">
-                  {{ 'NO_WEAPONS_ASSIGNED' | translate }}
+                  {{ 'admin.areal_weapon_relation.transfer.no_weapons_assigned' | translate }}
                 </div>
               }
             </div>

@@ -4,44 +4,50 @@ import { Observable, BehaviorSubject, map, catchError, of, finalize, combineLate
 import { ArealWeaponRelation, WeaponWithRelation, ArealWithWeapons } from "./areal-weapon-relation.model";
 import { ArealCategory } from "../areal/areal.model";
 
+interface ExtendedArealCategory extends Omit<ArealCategory, 'areas'> {
+  areas: ArealWithWeapons[];
+}
+
 @Injectable()
 export class ArealWeaponRelationFacade {
   private adminArealService = inject(AdminArealService);
   private adminWeaponService = inject(AdminWeaponService);
 
   private _loading = new BehaviorSubject<boolean>(false);
-  private _arealCategories = new BehaviorSubject<ArealCategory[]>([]);
+  private _arealCategories = new BehaviorSubject<ExtendedArealCategory[]>([]);
   private _error = new BehaviorSubject<string | null>(null);
 
   public readonly loading$ = this._loading.asObservable();
-  public readonly arealCategories$ = this._arealCategories.asObservable();
   public readonly error$ = this._error.asObservable();
 
-  loadArealCategoriesWithWeapons(): Observable<ArealCategory[]> {
+  loadArealCategoriesWithWeapons(): Observable<ExtendedArealCategory[]> {
     this._loading.next(true);
     this._error.next(null);
 
     return forkJoin({
-      areals: this.adminArealService.adminArealListArealGroupedByCategories(),
-      weapons: this.adminWeaponService.adminWeaponListWeaponGroupedByCategories()
+      areals: this.adminArealService.adminArealListArealGroupedByCategories({ withWeapons: false }),
+      weapons: this.adminWeaponService.adminWeaponListWeapon({})
     }).pipe(
       map(({ areals, weapons }) => {
-        const allWeapons = weapons.flatMap((wc: any) => 
+        const allWeapons = weapons.flatMap((wc: any) =>
           wc.weapons.map((w: any) => ({ ...w, categoryName: wc.name }))
         );
 
-        return areals.map((category: any) => ({
-          ...category,
-          areas: category.areas.map((areal: any) => ({
-            ...areal,
-            categoryName: category.name,
-            weapons: allWeapons.map((weapon: any) => ({
-              ...weapon,
-              hasRelation: Math.random() > 0.7, // Mock data - replace with actual API call
-              relationId: Math.random() > 0.7 ? `rel-${weapon.id}-${areal.id}` : undefined
+        return areals.map((category: any) => {
+          const arealCategory = new ArealCategory(category);
+          return {
+            ...arealCategory,
+            areas: category.areas.map((areal: any) => ({
+              ...areal,
+              categoryName: category.name,
+              weaponLinks: allWeapons.map((weapon: any) => ({
+                ...weapon,
+                hasRelation: Math.random() > 0.7, // Mock data - replace with actual API call
+                relationId: Math.random() > 0.7 ? `rel-${weapon.id}-${areal.id}` : undefined
+              }))
             }))
-          }))
-        }));
+          } as ExtendedArealCategory;
+        });
       }),
       catchError(error => {
         this._error.next('Failed to load areal categories and weapons');

@@ -8,10 +8,10 @@ export class CollectionArealService {
   protected apiCat = inject(AdminArealCategoryService);
 
   loadArealGroupedByCategories(){
-    return this.api.adminArealListArealGroupedByCategories()
+    return this.api.adminArealListArealGroupedByCategories({ withWeapons: false })
   }
 
   loadCategories(){
-    return this.apiCat.adminArealCategoryList()
+    return this.apiCat.adminArealCategoryList({})
   }
 }

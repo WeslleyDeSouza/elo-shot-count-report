@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ArealCategoryModel } from './areal-category.model';
 import {IsBoolean, IsNotEmpty, IsOptional, IsString} from 'class-validator';
 import { BaseModel } from "@api-elo/models";
+import { ArealWeaponLinkResultDto } from './areal-weapon.model';
 
 export class ArealModel extends BaseModel<ArealCategoryModel> {
   @ApiProperty({ type: String, required: false })
@@ -90,4 +91,7 @@ export class ArealResultDto {
 
   @ApiProperty({ type: String, required: false })
   deletedBy?: string;
+
+  @ApiProperty({ type: ArealWeaponLinkResultDto, isArray: true, required: false })
+  weaponLinks?: ArealWeaponLinkResultDto[];
 }

@@ -14,19 +14,20 @@ export class ArealService {
     @InjectRepository(ArealWeaponLinkEntity) protected areaCatWeaponLinkRepo: Repository<ArealWeaponLinkEntity>
   ) { }
 
-  async listCategoryWithAreas(tenantId: string, filterParams: { enabled?: boolean } = {}) {
-    return this.areaCatRepo.find(<any>{
+  async listCategoryWithAreas(tenantId: string, filterParams: { enabled?: boolean } = {},  relations =['areas']) {
+    return this.areaCatRepo.find({
       where: {
         tenantId,
         areas: {
           ...filterParams,
         },
       },
-      relations: {
-        areas: true,
-      },
+      relations: relations,
       order: {
         code: 'asc',
+        areas: {
+          name: 'ASC'
+        }
       },
     });
   }

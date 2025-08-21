@@ -56,6 +56,30 @@
         "create_first_category": "Erste Kategorie erstellen"
       }
     },
+    "areal_weapon_relation": {
+      "overview": {
+        "title": "Areal-Waffen-Relationen",
+        "subtitle": "Waffen-Areal-Zuordnungen verwalten",
+        "manage_weapon_areal_relations": "Waffen-Areal-Relationen verwalten",
+        "refresh": "Aktualisieren",
+        "search_areals": "Areale suchen",
+        "loading": "Lade",
+        "no_categories_found": "Keine Kategorien gefunden",
+        "no_categories_description": "Es wurden keine Areal-Kategorien gefunden",
+        "areals": "Areale",
+        "no_areals_in_category": "Keine Areale in dieser Kategorie",
+        "disabled": "Deaktiviert"
+      },
+      "transfer": {
+        "available_weapons": "Verfügbare Waffen",
+        "assigned_weapons": "Zugewiesene Waffen",
+        "search_weapons": "Waffen suchen",
+        "assign_selected_weapons": "Ausgewählte Waffen zuweisen",
+        "unassign_selected_weapons": "Ausgewählte Waffen entfernen",
+        "no_weapons_available": "Keine Waffen verfügbar",
+        "no_weapons_assigned": "Keine Waffen zugewiesen"
+      }
+    },
     "weapon": {
       "form": {
         "weapon_name": "Waffenname",

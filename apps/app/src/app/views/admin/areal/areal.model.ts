@@ -1,4 +1,4 @@
-import { ArealResultDto, ArealCategoryResultDto } from '@ui-elo/apiClient'
+import {ArealResultDto, ArealCategoryResultDto, ArealWeaponLinkResultDto} from '@ui-elo/apiClient'
 
  type ArealModel = ArealResultDto;
  type ArealCategoryModel = ArealCategoryResultDto;
@@ -15,7 +15,7 @@ export class Areal implements ArealModel {
   tenantId!: string;
   deletedAt?: string;
   deletedBy?: string;
-
+  weaponLinks?: Array<ArealWeaponLinkResultDto>;
   constructor(data?: Partial<ArealModel>) {
     if (data) {
       Object.assign(this, data);
