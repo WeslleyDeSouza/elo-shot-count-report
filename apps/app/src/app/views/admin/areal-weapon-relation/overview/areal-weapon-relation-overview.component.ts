@@ -115,21 +115,31 @@ import { EmptyStateComponent } from '../../_components';
                     } @else {
                       @for (areal of category.areas; track areal.id) {
                         <div class="areal-section mb-4">
-                          <div class="d-flex align-items-center mb-3">
-                            <i class="ri-map-pin-line me-2 text-success"></i>
-                            <h5 class="mb-0 me-2">{{ areal.name }}</h5>
-                            @if (!areal.enabled) {
-                              <span class="badge bg-warning">{{ 'admin.areal_weapon_relation.overview.disabled' | translate }}</span>
-                            }
+                          <div class="areal-header cursor-pointer d-flex align-items-center justify-content-between mb-3"
+                               (click)="toggleArealCollapse(areal.id)">
+                            <div class="d-flex align-items-center">
+                              <i class="ri-map-pin-line me-2 text-success"></i>
+                              <h5 class="mb-0 me-2">{{ areal.name }}</h5>
+                              @if (!areal.enabled) {
+                                <span class="badge bg-warning">{{ 'admin.areal_weapon_relation.overview.disabled' | translate }}</span>
+                              }
+                            </div>
+                            <i class="ri-arrow-down-s-line"
+                               [class.rotated]="!isArealCollapsed(areal.id)"></i>
                           </div>
 
-                          <app-weapon-transfer
-                            [arealId]="areal.id"
-                            [arealName]="areal.name"
-                            [weapons]="areal.weaponLinks || []"
-                            (weaponAssigned)="onWeaponAssigned($event)"
-                            (weaponUnassigned)="onWeaponUnassigned($event)"
-                          />
+                          <div [ngbCollapse]="isArealCollapsed(areal.id)">
+                            @if(!isArealCollapsed(areal.id)){
+                              <app-weapon-transfer
+                                [arealId]="areal.id"
+                                [arealName]="areal.name"
+                                [weapons]="areal.weaponLinks || []"
+                                (weaponAssigned)="onWeaponAssigned($event)"
+                                (weaponUnassigned)="onWeaponUnassigned($event)"
+                              />
+                            }
+
+                          </div>
                         </div>
 
                         @if (!$last) {
@@ -152,6 +162,17 @@ import { EmptyStateComponent } from '../../_components';
       justify-content: space-between;
       align-items: center;
       width: 100%;
+    }
+
+    .areal-header {
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      background-color: #f8f9fa;
+      transition: background-color 0.2s ease;
+    }
+
+    .areal-header:hover {
+      background-color: #e9ecef;
     }
 
     .cursor-pointer {
@@ -185,6 +206,7 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
   loading = signal(false);
   error = signal<string | null>(null);
   collapsedStates = signal<{[key: string]: boolean}>({});
+  arealCollapsedStates = signal<{[key: string]: boolean}>({});
 
   title = "Areal Weapon Relations";
 
@@ -235,19 +257,23 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
     this.facade.error$
       .pipe(takeUntil(this.destroy$))
       .subscribe(error => this.error.set(error));
+
+    this.facade.arealCategories$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(categories => {
+        this.allCategories.set(categories);
+        // Auto-expand first category if none are expanded yet
+        if (categories.length > 0 && Object.keys(this.collapsedStates()).length === 0) {
+          const firstCategoryId = categories[0].id;
+          this.collapsedStates.set({ [firstCategoryId]: false });
+        }
+      });
   }
 
   private loadData(): void {
     this.facade.loadArealCategoriesWithWeapons()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(categories => {
-        this.allCategories.set(categories);
-        // Auto-expand first category
-        if (categories.length > 0) {
-          const firstCategoryId = categories[0].id;
-          this.collapsedStates.set({ ...this.collapsedStates(), [firstCategoryId]: false });
-        }
-      });
+      .subscribe();
   }
 
   searchAreals(event: any): void {
@@ -296,12 +322,24 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
     return this.collapsedStates()[categoryId] ?? true;
   }
 
+  toggleArealCollapse(arealId: string): void {
+    const current = this.arealCollapsedStates();
+    this.arealCollapsedStates.set({
+      ...current,
+      [arealId]: !current[arealId]
+    });
+  }
+
+  isArealCollapsed(arealId: string): boolean {
+    return !(this.arealCollapsedStates()[arealId] ?? false);
+  }
+
   onWeaponAssigned(event: { weaponId: string; arealId: string }): void {
     this.facade.createWeaponRelation(event.arealId, event.weaponId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(success => {
-        if (success) {
-          // Reload data to get updated relations
+        if (!success) {
+          // Only reload on failure - success is handled by local cache update
           this.loadData();
         }
       });
@@ -311,8 +349,8 @@ export class ArealWeaponRelationOverviewComponent implements OnInit, OnDestroy {
     this.facade.removeWeaponRelation(event.relationId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(success => {
-        if (success) {
-          // Reload data to get updated relations
+        if (!success) {
+          // Only reload on failure - success is handled by local cache update
           this.loadData();
         }
       });

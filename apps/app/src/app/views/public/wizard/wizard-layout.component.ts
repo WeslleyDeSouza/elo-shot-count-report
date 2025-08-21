@@ -244,7 +244,7 @@ export class WizardLayoutComponent implements OnInit {
   @Debounce(500)
   checkHasTenantSelection(): void{
     const currentIdentifier = this.wizardService.getTenantIdentifier();
-    if ( !currentIdentifier && this.router.url.includes(WIZARD_ROUTES.BASE) ) {
+    if ( !currentIdentifier && !this.router.url.includes('/admin') && this.router.url.includes(WIZARD_ROUTES.BASE) ) {
       this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.TENANT_CHOOSER]);
       return;
     }

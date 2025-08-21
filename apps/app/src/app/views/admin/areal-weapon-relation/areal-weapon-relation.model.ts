@@ -24,4 +24,5 @@ export interface ArealWithWeapons {
   categoryName: string;
   enabled: boolean;
   weapons: WeaponWithRelation[];
+  weaponLinks?: WeaponWithRelation[];
 }

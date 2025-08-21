@@ -1,5 +1,4 @@
 import type { Route } from '@angular/router'
-import { NxWelcome } from './nx-welcome';
 import {LocaleResolver} from "@app-galaxy/translate-ui";
 
 export const VIEWS_PUBLIC_ROUTES: Route[] = [

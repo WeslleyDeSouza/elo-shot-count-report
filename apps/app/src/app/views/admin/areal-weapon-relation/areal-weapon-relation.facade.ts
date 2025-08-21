@@ -18,6 +18,7 @@ export class ArealWeaponRelationFacade {
   private _error = new BehaviorSubject<string | null>(null);
 
   public readonly loading$ = this._loading.asObservable();
+  public readonly arealCategories$ = this._arealCategories.asObservable();
   public readonly error$ = this._error.asObservable();
 
   loadArealCategoriesWithWeapons(): Observable<ExtendedArealCategory[]> {
@@ -33,7 +34,7 @@ export class ArealWeaponRelationFacade {
           wc.weapons.map((w: any) => ({ ...w, categoryName: wc.name }))
         );
 
-        return areals.map((category: any) => {
+        const categories = areals.map((category: any) => {
           const arealCategory = new ArealCategory(category);
           return {
             ...arealCategory,
@@ -48,6 +49,10 @@ export class ArealWeaponRelationFacade {
             }))
           } as ExtendedArealCategory;
         });
+        
+        // Update the cached data
+        this._arealCategories.next(categories);
+        return categories;
       }),
       catchError(error => {
         this._error.next('Failed to load areal categories and weapons');
@@ -66,6 +71,8 @@ export class ArealWeaponRelationFacade {
     return of(true).pipe(
       map(() => {
         console.log('Creating relation for areal:', arealId, 'weapon:', weaponId);
+        // Update local cache on success
+        this.updateLocalWeaponRelation(arealId, weaponId, true);
         return true;
       }),
       catchError(error => {
@@ -85,6 +92,8 @@ export class ArealWeaponRelationFacade {
     return of(true).pipe(
       map(() => {
         console.log('Removing relation:', relationId);
+        // Update local cache on success
+        this.updateLocalWeaponRelationByRelationId(relationId, false);
         return true;
       }),
       catchError(error => {
@@ -98,5 +107,54 @@ export class ArealWeaponRelationFacade {
 
   clearError(): void {
     this._error.next(null);
+  }
+
+  private updateLocalWeaponRelation(arealId: string, weaponId: string, hasRelation: boolean): void {
+    const currentCategories = this._arealCategories.value;
+    const updatedCategories = currentCategories.map(category => ({
+      ...category,
+      areas: category.areas.map(areal => {
+        if (areal.id === arealId) {
+          return {
+            ...areal,
+            weaponLinks: areal.weaponLinks?.map(weapon => {
+              if (weapon.id === weaponId) {
+                return {
+                  ...weapon,
+                  hasRelation,
+                  relationId: hasRelation ? `rel-${weaponId}-${arealId}` : undefined
+                };
+              }
+              return weapon;
+            })
+          };
+        }
+        return areal;
+      })
+    }));
+
+    this._arealCategories.next(updatedCategories);
+  }
+
+  private updateLocalWeaponRelationByRelationId(relationId: string, hasRelation: boolean): void {
+    const currentCategories = this._arealCategories.value;
+    const updatedCategories = currentCategories.map(category => ({
+      ...category,
+      areas: category.areas.map(areal => ({
+        ...areal,
+        weaponLinks: areal.weaponLinks?.map(weapon => {
+          if (weapon.relationId === relationId) {
+            return {
+              ...weapon,
+              hasRelation,
+              relationId: hasRelation ? relationId : undefined
+            };
+          }
+          return weapon;
+        })
+      }))
+    }));
+
+    this._arealCategories.next(updatedCategories);
   }
 }
