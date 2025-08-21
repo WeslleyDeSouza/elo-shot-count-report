@@ -5,7 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,BeforeUpdate
+  PrimaryGeneratedColumn, BeforeUpdate, Unique
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { AreaCategoryEntity } from '../../admin-areal/entities/areal-category.entity';
@@ -14,6 +14,7 @@ import {DbPlatformColumn, TenantBaseEntity} from '@app-galaxy/core-api';
 import { EncryptionService } from '@api-elo/common';
 
 @Entity('collection')
+@Unique(['tenantId', 'id'])
 export class CollectionEntity extends TenantBaseEntity {
   protected self = CollectionEntity;
 

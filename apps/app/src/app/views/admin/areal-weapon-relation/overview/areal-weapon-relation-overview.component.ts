@@ -24,8 +24,7 @@ import { EmptyStateComponent } from '../../_components';
     WeaponTransferComponent,
     EmptyStateComponent,
   ],
-  template: `
-    <div class="container-fluid">
+  template: `<div class="container-fluid">
       <div class="row">
         <div class="col-12">
           <div class="d-flex justify-content-between align-items-center mb-4">
@@ -154,8 +153,7 @@ import { EmptyStateComponent } from '../../_components';
           }
         </div>
       </div>
-    </div>
-  `,
+    </div>`,
   styles: [`
     .category-header {
       display: flex;
