@@ -123,7 +123,6 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
         if (office) {
           this.formSubmit.emit(office);
           this.resetForm();
-          this.router.navigate(['/admin/coordination-office']);
         }
       });
   }

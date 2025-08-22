@@ -6,7 +6,12 @@
     "admin_tenant": "Mandatenverwaltung",
     "app-config": "Applikationverwaltung",
     "settings": "Einstellungen",
-    "co": "Koordinationsstellen"
+    "co": "Koordinationsstellen",
+    "records": "Datensätze",
+    "export": "Export",
+    "areal": "Areal",
+    "areal_relation": "Waffenzuweisung",
+    "weapon_list": "Waffenliste"
   },
   "error": {
     "404": {

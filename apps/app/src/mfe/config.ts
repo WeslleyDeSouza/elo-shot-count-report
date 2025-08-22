@@ -34,10 +34,10 @@ export const mfeConfig = {
           { key: 'phone' },
           //
           { key: 'roles', type: 'tags' },
-          { key: 'lastLogin', type: 'dateTime' },
+          { key: 'loginLast', type: 'dateTime' },
           { key: 'createdAt', type: 'dateTime' },
         ],
-        fields: ['userId', 'firstName', 'lastName', 'email', 'phone', 'loginInfo', 'loginLast'],
+        fields: ['userId', 'firstName', 'lastName', 'email', 'phone', 'loginInfo', 'loginLast','createdAt'],
         editable: true
       },
       tenantOverview:{

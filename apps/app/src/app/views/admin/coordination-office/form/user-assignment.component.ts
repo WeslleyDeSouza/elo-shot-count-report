@@ -18,7 +18,8 @@ export interface User {
   template: `
     <div class="card">
       <div class="card-header">
-        <h5 class="card-title mb-0">{{ 'Assigned Users' | translate }}</h5>
+        <h5 class="card-title mb-0">{{ 'admin.coordination_office.user_assignment.assigned_users' | translate }}</h5>
+        <small class="text-muted">{{ 'admin.coordination_office.user_assignment.description' | translate }}</small>
       </div>
       <div class="card-body">
         @if(loading()) {
@@ -36,13 +37,13 @@ export interface User {
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th>{{ 'User' | translate }}</th>
+                  <th>{{ 'admin.coordination_office.user_assignment.user' | translate }}</th>
                   <th class="text-end">
                     <button
                       type="button"
                       class="btn btn-link btn-sm p-0 text-decoration-none"
                       (click)="toggleAllUsers()">
-                      {{ 'Toggle All' | translate }}
+                      {{ 'admin.coordination_office.user_assignment.toggle_all' | translate }}
                     </button>
                   </th>
                 </tr>
@@ -78,7 +79,7 @@ export interface User {
             </table>
             @if(availableUsers().length === 0) {
               <div class="text-center py-3 text-muted">
-                <p>{{ 'No users available' | translate }}</p>
+                <p>{{ 'admin.coordination_office.user_assignment.no_users_available' | translate }}</p>
               </div>
             }
           </div>

@@ -69,7 +69,7 @@ export class AdminArealController {
     @GetCordsRules() allowedRules: string[],
     @Query('withWeapons') withWeapons?: boolean
   ) {
-    const relationOptions = withWeapons ? ['areas', 'areas.weapons'] : ['areas'];
+    const relationOptions = withWeapons ? ['areas', 'areas.weaponLinks'] : ['areas'];
     return this.arealService.listCategoryWithAreas(tenantId, {}, relationOptions).then((cateogires) => {
       return cateogires.filter((category) =>
         allowedRules.find((allowedCode) => (category.code + '')?.startsWith(allowedCode))
