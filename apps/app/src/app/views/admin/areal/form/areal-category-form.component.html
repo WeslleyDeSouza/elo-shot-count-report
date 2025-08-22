@@ -46,6 +46,13 @@
                   @if (getFieldError('code'); as error) {
                     <div class="invalid-feedback">{{ error | translate }}</div>
                   }
+                  <div class="form-text">
+                    @if (allowedPrefixes().length > 0) {
+                      {{ 'admin.areal.form.category_code_prefix_help' | translate }}: {{ allowedPrefixes().join(', ') }}
+                    } @else {
+                      {{ 'admin.areal.form.category_code_help' | translate }}
+                    }
+                  </div>
                 </div>
               </div>
             </div>

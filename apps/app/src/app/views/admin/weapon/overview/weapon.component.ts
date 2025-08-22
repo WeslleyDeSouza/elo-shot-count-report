@@ -94,6 +94,9 @@ export class WeaponComponent implements OnInit, OnDestroy {
     return categories.length > 0 && categories.every(cat => !collapsed[cat.id]);
   });
 
+  canAddWeapon = computed(() => this.allCategories().length >= 1);
+  canBulkEdit = computed(() => this.allCategories().length >= 3);
+
   ngOnInit(): void {
     this.setupFacadeSubscriptions();
     this.loadCategories();

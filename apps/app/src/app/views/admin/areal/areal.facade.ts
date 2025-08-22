@@ -11,6 +11,7 @@ export class ArealFacade {
   private _loading = new BehaviorSubject<boolean>(false);
   private _categories = new BehaviorSubject<ArealCategory[]>([]);
   private _error = new BehaviorSubject<string | null>(null);
+  private _allowedRules = new BehaviorSubject<string[]>([]);
 
   private parseConstraintError(error: any): string {
     const errorMessage = error?.message || error?.error?.message || '';
@@ -37,16 +38,31 @@ export class ArealFacade {
   public readonly loading$ = this._loading.asObservable();
   public readonly categories$ = this._categories.asObservable();
   public readonly error$ = this._error.asObservable();
+  public readonly allowedRules$ = this._allowedRules.asObservable();
 
   constructor(
     private adminArealService: AdminArealService,
     private adminArealCategoryService: AdminArealCategoryService
   ) { }
 
-  loadCategories(): Observable<ArealCategory[]> {
+  loadAllowedArealRules(): Observable<string[]> {
     this._loading.next(true);
     this._error.next(null);
 
+    return this.adminArealService.adminArealAllowedArealRulSet().pipe(
+      map((rules: string[]) => rules || []),
+      catchError(error => {
+        this._error.next('Failed to load allowed areal rules');
+        console.error('Error loading allowed areal rules:', error);
+        return of([]);
+      }),
+      finalize(() => this._loading.next(false))
+    );
+  }
+
+  loadCategories(): Observable<ArealCategory[]> {
+    this._loading.next(true);
+    this._error.next(null);
     return this.adminArealService.adminArealListArealGroupedByCategories({ withWeapons: false }).pipe(
       map((categories: any[]) =>
         categories.map(c => new ArealCategory(c)).sort((a, b) => (a.code + '').localeCompare(b.code + ''))
@@ -180,5 +196,22 @@ export class ArealFacade {
 
   isLoading(): boolean {
     return this._loading.value;
+  }
+
+  refreshAllowedRules(): void {
+    this.loadAllowedArealRules().subscribe(rules => {
+      this._allowedRules.next(rules);
+    });
+  }
+
+  getCurrentAllowedRules(): string[] {
+    return this._allowedRules.value;
+  }
+
+  validateCategoryCodePrefix(code: string): boolean {
+    const allowedRules = this.getCurrentAllowedRules();
+    if (allowedRules.length === 0) return true;
+    
+    return allowedRules.some(rule => code.toString().startsWith(rule.toString()));
   }
 }

@@ -122,7 +122,9 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
       .subscribe(office => {
         if (office) {
           this.formSubmit.emit(office);
-          this.resetForm();
+          this.router.navigateByUrl(
+            this.router.url.replace('/create', `/edit/${office.id}`)
+          )
         }
       });
   }
@@ -134,7 +136,7 @@ export class CoordinationOfficeFormComponent extends ComponentFormBase<Coordinat
       .subscribe(office => {
         if (office) {
           this.formSubmit.emit(office);
-          this.router.navigate(['/admin/coordination-office']);
+          this.onCancel()
         }
       });
   }

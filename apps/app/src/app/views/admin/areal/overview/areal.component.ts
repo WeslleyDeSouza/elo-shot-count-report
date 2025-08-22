@@ -89,6 +89,9 @@ export class ArealComponent implements OnInit, OnDestroy {
     }));
   });
 
+  canAddAreal = computed(() => this.allCategories().length >= 1);
+  canBulkEdit = computed(() => this.allCategories().length >= 3);
+
   ngOnInit(): void {
     this.setupFacadeSubscriptions();
     this.loadCategories();

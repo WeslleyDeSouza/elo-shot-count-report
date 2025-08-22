@@ -1,5 +1,5 @@
 import { Component, input, output, OnInit, OnDestroy, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ArealCategory } from '../areal.model';
 import { ArealFacade } from '../areal.facade';
@@ -34,10 +34,31 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
   isEditMode = computed(() => !!this.getId());
   formTitle = computed(() => this.isEditMode() ? 'admin.areal.form.edit_areal_category' : 'admin.areal.form.create_new_areal_category');
   submitButtonText = computed(() => this.isEditMode() ? 'admin.areal.form.update_category' : 'admin.areal.form.create_category');
+  allowedPrefixes = signal<string[]>([]);
+
+  private categoryCodePrefixValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) return null;
+      
+      const isValid = this.facade.validateCategoryCodePrefix(value);
+      if (!isValid) {
+        const allowedRules = this.facade.getCurrentAllowedRules();
+        return { 
+          categoryCodePrefix: { 
+            value: value,
+            allowedPrefixes: allowedRules 
+          } 
+        };
+      }
+      return null;
+    };
+  }
 
   ngOnInit(): void {
     this.initializeForm();
     this.setupFacadeSubscriptions();
+    this.facade.refreshAllowedRules();
   }
 
   override getData(): void {
@@ -68,7 +89,7 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
       ),
       code: new FormControl(
         this.category()?.code || '',
-        [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[A-Z0-9_-]+$/)]
+        [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[A-Z0-9_-]+$/), this.categoryCodePrefixValidator()]
       )
     });
 
@@ -85,6 +106,10 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
     this.facade.error$
       .pipe(takeUntil(this.destroy$))
       .subscribe(error => this.error.set(error));
+
+    this.facade.allowedRules$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(rules => this.allowedPrefixes.set(rules));
   }
 
   onSubmit(): void {
@@ -181,6 +206,11 @@ export class ArealCategoryFormComponent extends ComponentFormBase<ArealCategory>
       }
       if (control.errors['pattern']) {
         return `${this.getFieldLabel(fieldName)} must contain only uppercase letters, numbers, hyphens, and underscores`;
+      }
+      if (control.errors['categoryCodePrefix']) {
+        const allowedPrefixes = control.errors['categoryCodePrefix'].allowedPrefixes;
+        const prefixList = allowedPrefixes.join(', ');
+        return `Category code must start with one of the allowed prefixes: ${prefixList}`;
       }
     }
     return null;

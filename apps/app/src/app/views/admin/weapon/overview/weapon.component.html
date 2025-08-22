@@ -5,9 +5,16 @@
       <button type="button" class="btn btn-primary me-2" (click)="createWeaponCategory()">
         <i class="ri-add-line"></i> {{ 'admin.common.add_category' | translate }}
       </button>
-      <button type="button" class="btn btn-outline-primary me-2" (click)="openBulkEditor()">
-        <i class="ri-table-line"></i> {{ 'admin.common.bulk_edit' | translate }}
-      </button>
+      @if (canAddWeapon()) {
+        <button type="button" class="btn btn-primary me-2" (click)="createWeapon()">
+          <i class="ri-add-line"></i> {{ 'admin.common.add_weapon' | translate }}
+        </button>
+      }
+      @if (canBulkEdit()) {
+        <button type="button" class="btn btn-outline-primary me-2" (click)="openBulkEditor()">
+          <i class="ri-table-line"></i> {{ 'admin.common.bulk_edit' | translate }}
+        </button>
+      }
     </div>
     <div>
       <button

@@ -53,9 +53,7 @@ export class AdminWeaponController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   listWeapon(@GetTenantId() tenantId: string, @GetCordsRules() allowedRules: string[]) {
     return this.weaponService.listCategoryWithWeapons(tenantId).then((categories) => {
-      return categories.filter((category) =>
-        allowedRules.find((allowedCode) => (category.code + '')?.startsWith(allowedCode))
-      );
+      return categories//.filter((category) => allowedRules.find((allowedCode) => (category.code + '')?.startsWith(allowedCode)));
     });
   }
 

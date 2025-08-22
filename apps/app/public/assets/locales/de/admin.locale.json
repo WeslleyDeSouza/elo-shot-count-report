@@ -46,7 +46,9 @@
         "edit_areal_category": "Areal-Kategorie bearbeiten",
         "create_new_areal_category": "Neue Areal-Kategorie erstellen",
         "update_category": "Kategorie aktualisieren",
-        "create_category": "Kategorie erstellen"
+        "create_category": "Kategorie erstellen",
+        "category_code_prefix_help": "Der Kategoriecode muss mit einem der erlaubten Präfixe beginnen",
+        "category_code_help": "Geben Sie einen gültigen Kategoriecode ein"
       },
       "overview": {
         "no_areas_in_category": "Keine Areale in dieser Kategorie",

@@ -3,7 +3,7 @@ import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AppsRolesGuard, GetUserId, ReplayGuard } from '@movit/auth-api';
 import { GetTenantId, TenantGuard } from '@app-galaxy/core-api';
-import {CordsRolesGuard} from "@api-elo/common";
+import {CordsRolesGuard, GetCordsRules} from "@api-elo/common";
 import {API_APPS_MAPPING} from "../../../main.mock-data";
 import {ArealService} from "../areal.service";
 
@@ -53,7 +53,18 @@ export class AdminArealCategoryController {
     isArray: false,
   })
   @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
-  create(@GetTenantId() tenantId: string, @Body() body: ArealCategoryCreateDto, @GetUserId() userId: string) {
+  create(@GetTenantId() tenantId: string, @Body() body: ArealCategoryCreateDto, @GetUserId() userId: string,   @GetCordsRules() allowedRules: string[]) {
+    // Validate that the category code starts with one of the allowed prefixes
+    if (allowedRules && allowedRules.length > 0) {
+      const isValidPrefix = allowedRules.some(rule => body.code?.toString().startsWith(rule.toString()));
+      if (!isValidPrefix) {
+        throw new HttpException(
+          `Category code must start with one of the allowed prefixes: ${allowedRules.join(', ')}`, 
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    }
+
     return this.adminService.createArealCat(tenantId, body).catch((e) => {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
@@ -68,7 +79,18 @@ export class AdminArealCategoryController {
     isArray: false,
   })
   @UseGuards(AppsRolesGuard( API_APPS_MAPPING.ADMIN_DATA_LIST_AREAL))
-  update(@GetTenantId() tenantId: string, @Param('id') id: string, @Body() body: ArealCategoryUpdateDto) {
+  update(@GetTenantId() tenantId: string, @Param('id') id: string, @Body() body: ArealCategoryUpdateDto,   @GetCordsRules() allowedRules: string[]) {
+    // Validate that the category code starts with one of the allowed prefixes
+    if (body.code && allowedRules && allowedRules.length > 0) {
+      const isValidPrefix = allowedRules.some(rule => body.code?.toString().startsWith(rule.toString()));
+      if (!isValidPrefix) {
+        throw new HttpException(
+          `Category code must start with one of the allowed prefixes: ${allowedRules.join(', ')}`, 
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    }
+
     return this.adminService
       .updateArealCat(tenantId, id, body)
       .then((data) => (data.affected ? body : new HttpException('Item not saved', 500)));
