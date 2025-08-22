@@ -186,7 +186,7 @@ export class WizardLoginComponent {
       if (isValidPin) {
         this.wizardService.updateCollectionData('personal', formValue);
         this.wizardService.nextStep();
-        this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.DATE_LOCATION]);
+        this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.DATE_TIME]);
       } else {
         this.pinError.set(true);
       }

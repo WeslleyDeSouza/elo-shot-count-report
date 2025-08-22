@@ -16,6 +16,15 @@ export const WIZARD_ROUTES: Route[] = [
         loadComponent: () => import('./steps/login/wizard-login.component').then(c => c.WizardLoginComponent)
       },
       {
+        path: WIZARD_ROUTE_PATHS.DATE_TIME,
+        loadComponent: () => import('./steps/date-time/wizard-date-time.component').then(c => c.WizardDateTimeComponent)
+      },
+      {
+        path: WIZARD_ROUTE_PATHS.LOCATIONS,
+        loadComponent: () => import('./steps/locations/wizard-locations.component').then(c => c.WizardLocationsComponent)
+      },
+      // Legacy routes - will be removed
+      {
         path: WIZARD_ROUTE_PATHS.DATE_LOCATION,
         loadComponent: () => import('./steps/date-location/wizard-date-location.component').then(c => c.WizardDateLocationComponent)
       },

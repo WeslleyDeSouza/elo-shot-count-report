@@ -1,6 +1,12 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+export interface LocationData {
+  arealId: string;
+  arealCategoryId: string;
+  weapons: { [weaponId: string]: number };
+}
+
 export interface Collection {
   personal: {
     name: string;
@@ -9,7 +15,18 @@ export interface Collection {
     unit: string;
     userType: string;
   };
-  location: {
+  dateTime: {
+    date: string;
+    morningFrom?: string;
+    morningTill?: string;
+    middayFrom?: string;
+    middayTill?: string;
+    eveningFrom?: string;
+    eveningTill?: string;
+  };
+  locations: LocationData[];
+  // Legacy support - will be removed
+  location?: {
     arealId: string;
     arealCategoryId: string;
     date: string;
@@ -20,7 +37,7 @@ export interface Collection {
     eveningFrom?: string;
     eveningTill?: string;
   };
-  weapons: { [weaponId: string]: number };
+  weapons?: { [weaponId: string]: number };
 }
 
 @Injectable()
@@ -39,6 +56,17 @@ export class WizardService {
     userType: ['M', [Validators.required]]
   });
 
+  dateTimeForm = this.formBuilder.group({
+    date: [new Date().toISOString().split('T')[0], [Validators.required]],
+    morningFrom: [''],
+    morningTill: [''],
+    middayFrom: [''],
+    middayTill: [''],
+    eveningFrom: [''],
+    eveningTill: ['']
+  });
+
+  // Legacy forms - will be removed
   locationForm = this.formBuilder.group({
     arealId: ['', [Validators.required]],
     arealCategoryId: [''],
@@ -80,6 +108,8 @@ export class WizardService {
     this.currentStep.set(0);
     this.tenantSelectionValue.set('');
     this.personalForm.reset();
+    this.dateTimeForm.reset();
+    // Legacy support
     this.locationForm.reset();
     this.weaponsForm.reset();
   }

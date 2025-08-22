@@ -1,18 +1,49 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
+import {Component, ChangeDetectionStrategy, OnInit, inject, computed, signal} from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { WizardService } from './_common/services/wizard.service';
 import { WIZARD_ROUTES } from './wizard.routes.constants';
 import { TopbarComponent } from './_components';
 import { filter } from 'rxjs';
-import {Debounce} from "@app-galaxy/sdk-ui";
+import { Debounce } from "@app-galaxy/sdk-ui";
+import { TranslatePipe } from '@app-galaxy/translate-ui';
 
 @Component({
   selector: 'app-wizard-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, TopbarComponent],
+  imports: [RouterOutlet, TopbarComponent, TranslatePipe],
   template: `
     <div class="wizard-container">
       <app-topbar />
+
+      <!-- Steps Progress -->
+      @if (shouldShowSteps()) {
+        <div class="container-fluid py-3">
+          <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+              <div class="steps-container">
+                <div class="steps-progress">
+                  @for (step of wizardSteps; track step.id; let i = $index) {
+                    <div class="step-item" [class]="getStepClass(i)">
+                      <div class="step-circle">
+                        @if (i < currentStepIndex()) {
+                          <i class="ri-check-line"></i>
+                        } @else {
+                          <span>{{ i + 1 }}</span>
+                        }
+                      </div>
+                      <div class="step-label">{{ step.label | translate }}</div>
+                    </div>
+                    @if (i < wizardSteps.length - 1) {
+                      <div class="step-connector" [class.active]="i < currentStepIndex()"></div>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
       <router-outlet />
     </div>
   `,
@@ -20,6 +51,87 @@ import {Debounce} from "@app-galaxy/sdk-ui";
     /* Layout Styles */
     .wizard-container {
       min-height: 100vh;
+    }
+
+    /* Steps Progress Styles */
+    .steps-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .steps-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      border: 2px solid #e9ecef;
+      background: #fff;
+      color: #6c757d;
+      transition: all 0.3s ease;
+    }
+
+    .step-item.active .step-circle {
+      background: #0d6efd;
+      border-color: #0d6efd;
+      color: #fff;
+    }
+
+    .step-item.completed .step-circle {
+      background: #198754;
+      border-color: #198754;
+      color: #fff;
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #6c757d;
+      max-width: 100px;
+      line-height: 1.2;
+    }
+
+    .step-item.active .step-label,
+    .step-item.completed .step-label {
+      color: #212529;
+      font-weight: 600;
+    }
+
+    .step-connector {
+      flex: 1;
+      height: 2px;
+      background: #e9ecef;
+      margin: 0 0.5rem;
+      margin-bottom: 1.5rem;
+      min-width: 20px;
+      transition: background 0.3s ease;
+    }
+
+    .step-connector.active {
+      background: #198754;
     }
 
     /* Global Wizard Styles */
@@ -232,12 +344,51 @@ import {Debounce} from "@app-galaxy/sdk-ui";
 export class WizardLayoutComponent implements OnInit {
   private router = inject(Router);
   private wizardService = inject(WizardService);
+  private currentPath = signal(this.router.url)
+
+  wizardSteps = [
+    { id: 'login', label: 'wizard.steps.login', path:WIZARD_ROUTES.LOGIN},
+    { id: 'date-time', label: 'wizard.steps.date_time', path:WIZARD_ROUTES.DATE_TIME },
+    { id: 'locations', label: 'wizard.steps.locations', path:WIZARD_ROUTES.LOCATIONS },
+    { id: 'summary', label: 'wizard.steps.summary', path:WIZARD_ROUTES.SUMMARY },
+    { id: 'success', label: 'wizard.steps.success', path:WIZARD_ROUTES.SUCCESS }
+  ];
+
+  currentStepIndex = computed(() => {
+    const url = this.currentPath()
+
+    // Find the current step index based on the URL
+    const currentStepIndex = this.wizardSteps.findIndex(step => url.includes(step.path));
+
+    // Handle legacy routes
+    if (currentStepIndex === -1) {
+      if (url.includes(WIZARD_ROUTES.DATE_LOCATION)) return 1; // Legacy date-location maps to date-time
+      if (url.includes(WIZARD_ROUTES.AMMUNITION)) return 2; // Legacy ammunition maps to locations
+    }
+
+    return currentStepIndex >= 0 ? currentStepIndex : 0;
+  });
+
+  shouldShowSteps(): boolean {
+    const url = this.router.url;
+    return !url.includes(WIZARD_ROUTES.TENANT_CHOOSER) && url.includes(WIZARD_ROUTES.BASE);
+  }
+
+  getStepClass(index: number): string {
+    const current = this.currentStepIndex();
+    if (index < current) return 'completed';
+    if (index === current) return 'active';
+    return '';
+  }
 
   ngOnInit(): void {
     // Check tenant identifier on route navigation
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => this.checkHasTenantSelection());
+      .subscribe((event: NavigationEnd) => {
+        this.currentPath.set(this.router.url)
+        this.checkHasTenantSelection()
+      });
   this.checkHasTenantSelection()
   }
 

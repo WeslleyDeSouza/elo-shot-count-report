@@ -65,58 +65,48 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
                 </div>
               </div>
 
-              <!-- Location and Date -->
+              <!-- Date and Time -->
               <div class="card mb-3">
                 <div class="card-header bg-info text-white">
                   <h6 class="mb-0">
-                    <i class="ri-map-pin-line me-2"></i>
-                    {{ 'wizard.summary.location_date' | translate }}
+                    <i class="ri-calendar-line me-2"></i>
+                    {{ 'wizard.summary.date_time' | translate }}
                   </h6>
                 </div>
                 <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="mb-2">
-                        <strong>{{ 'wizard.summary.areal' | translate }}:</strong>
-                        <span class="ms-2">{{ getArealName() }}</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="mb-2">
-                        <strong>{{ 'wizard.summary.date' | translate }}:</strong>
-                        <span class="ms-2">{{ formatDate(collectionData().location?.date) }}</span>
-                      </div>
-                    </div>
+                  <div class="mb-2">
+                    <strong>{{ 'wizard.summary.date' | translate }}:</strong>
+                    <span class="ms-2">{{ formatDate(collectionData().dateTime?.date || collectionData().location?.date) }}</span>
                   </div>
 
                   <!-- Time Periods -->
                   @if(hasTimePeriods()) {
                     <hr>
                     <div class="row">
-                      @if(collectionData().location?.morningFrom || collectionData().location?.morningTill) {
+                      @if(getTimeFrom('morning') || getTimeTill('morning')) {
                         <div class="col-md-4">
                           <div class="text-center p-2 bg-light rounded">
                             <i class="ri-sun-line text-warning"></i>
                             <div class="small fw-semibold">{{ 'wizard.summary.morning' | translate }}</div>
-                            <div class="small">{{ collectionData().location?.morningFrom }} - {{ collectionData().location?.morningTill }}</div>
+                            <div class="small">{{ getTimeFrom('morning') }} - {{ getTimeTill('morning') }}</div>
                           </div>
                         </div>
                       }
-                      @if(collectionData().location?.middayFrom || collectionData().location?.middayTill) {
+                      @if(getTimeFrom('midday') || getTimeTill('midday')) {
                         <div class="col-md-4">
                           <div class="text-center p-2 bg-light rounded">
                             <i class="ri-sun-fill text-warning"></i>
                             <div class="small fw-semibold">{{ 'wizard.summary.midday' | translate }}</div>
-                            <div class="small">{{ collectionData().location?.middayFrom }} - {{ collectionData().location?.middayTill }}</div>
+                            <div class="small">{{ getTimeFrom('midday') }} - {{ getTimeTill('midday') }}</div>
                           </div>
                         </div>
                       }
-                      @if(collectionData().location?.eveningFrom || collectionData().location?.eveningTill) {
+                      @if(getTimeFrom('evening') || getTimeTill('evening')) {
                         <div class="col-md-4">
                           <div class="text-center p-2 bg-light rounded">
                             <i class="ri-moon-line text-info"></i>
                             <div class="small fw-semibold">{{ 'wizard.summary.evening' | translate }}</div>
-                            <div class="small">{{ collectionData().location?.eveningFrom }} - {{ collectionData().location?.eveningTill }}</div>
+                            <div class="small">{{ getTimeFrom('evening') }} - {{ getTimeTill('evening') }}</div>
                           </div>
                         </div>
                       }
@@ -125,46 +115,91 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
                 </div>
               </div>
 
-              <!-- Weapons -->
-              <div class="card mb-4">
-                <div class="card-header bg-success text-white">
-                  <h6 class="mb-0">
-                    <i class="ri-sword-line me-2"></i>
-                    {{ 'wizard.summary.weapons' | translate }}
-                  </h6>
-                </div>
-                <div class="card-body">
-                  @if(getWeaponsList().length > 0) {
-                    <div class="table-responsive">
-                      <table class="table table-sm mb-0">
-                        <thead>
-                          <tr>
-                            <th>{{ 'wizard.summary.weapon_name' | translate }}</th>
-                            <th class="text-end">{{ 'wizard.summary.count' | translate }}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          @for(weapon of getWeaponsList(); track weapon.id) {
+              <!-- Locations and Weapons -->
+              @if(getLocationsList().length > 0) {
+                @for(location of getLocationsList(); track location.arealId; let i = $index) {
+                  <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                      <h6 class="mb-0">
+                        <i class="ri-map-pin-line me-2"></i>
+                        {{ 'wizard.summary.location' | translate }} {{ i + 1 }}: {{ location.arealName }}
+                      </h6>
+                    </div>
+                    <div class="card-body">
+                      @if(location.weaponsList.length > 0) {
+                        <div class="table-responsive">
+                          <table class="table table-sm mb-0">
+                            <thead>
+                              <tr>
+                                <th>{{ 'wizard.summary.weapon_name' | translate }}</th>
+                                <th class="text-end">{{ 'wizard.summary.count' | translate }}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @for(weapon of location.weaponsList; track weapon.id) {
+                                <tr>
+                                  <td>
+                                    <i class="ri-sword-line me-2 text-muted"></i>
+                                    {{ weapon.name }}
+                                  </td>
+                                  <td class="text-end">
+                                    <span class="badge bg-primary">{{ weapon.count }}</span>
+                                  </td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      } @else {
+                        <div class="text-muted text-center py-3">
+                          {{ 'wizard.summary.no_weapons' | translate }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              } @else {
+                <!-- Fallback for legacy data -->
+                <div class="card mb-4">
+                  <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">
+                      <i class="ri-sword-line me-2"></i>
+                      {{ 'wizard.summary.weapons' | translate }}
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    @if(getWeaponsList().length > 0) {
+                      <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                          <thead>
                             <tr>
-                              <td>
-                                <i class="ri-sword-line me-2 text-muted"></i>
-                                {{ weapon.name }} ({{ weapon.categoryName }})
-                              </td>
-                              <td class="text-end">
-                                <span class="badge bg-primary">{{ weapon.count }}</span>
-                              </td>
+                              <th>{{ 'wizard.summary.weapon_name' | translate }}</th>
+                              <th class="text-end">{{ 'wizard.summary.count' | translate }}</th>
                             </tr>
-                          }
-                        </tbody>
-                      </table>
-                    </div>
-                  } @else {
-                    <div class="text-muted text-center py-3">
-                      {{ 'wizard.summary.no_weapons' | translate }}
-                    </div>
-                  }
+                          </thead>
+                          <tbody>
+                            @for(weapon of getWeaponsList(); track weapon.id) {
+                              <tr>
+                                <td>
+                                  <i class="ri-sword-line me-2 text-muted"></i>
+                                  {{ weapon.name }} ({{ weapon.categoryName }})
+                                </td>
+                                <td class="text-end">
+                                  <span class="badge bg-primary">{{ weapon.count }}</span>
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    } @else {
+                      <div class="text-muted text-center py-3">
+                        {{ 'wizard.summary.no_weapons' | translate }}
+                      </div>
+                    }
+                  </div>
                 </div>
-              </div>
+              }
 
               <!-- Actions -->
               <div class="row">
@@ -244,12 +279,85 @@ export class WizardSummaryComponent implements OnInit {
   }
 
   hasTimePeriods(): boolean {
-    const location = this.collectionData().location;
+    const dateTime = this.collectionData().dateTime;
+    const location = this.collectionData().location; // Legacy support
     return !!(
+      dateTime?.morningFrom || dateTime?.morningTill ||
+      dateTime?.middayFrom || dateTime?.middayTill ||
+      dateTime?.eveningFrom || dateTime?.eveningTill ||
       location?.morningFrom || location?.morningTill ||
       location?.middayFrom || location?.middayTill ||
       location?.eveningFrom || location?.eveningTill
     );
+  }
+
+  getTimeFrom(period: 'morning' | 'midday' | 'evening'): string {
+    const dateTime = this.collectionData().dateTime;
+    const location = this.collectionData().location; // Legacy support
+    return dateTime?.[`${period}From`] || location?.[`${period}From`] || '';
+  }
+
+  getTimeTill(period: 'morning' | 'midday' | 'evening'): string {
+    const dateTime = this.collectionData().dateTime;
+    const location = this.collectionData().location; // Legacy support
+    return dateTime?.[`${period}Till`] || location?.[`${period}Till`] || '';
+  }
+
+  getLocationsList(): any[] {
+    const locations = this.collectionData().locations || [];
+    return locations.map(location => ({
+      arealId: location.arealId,
+      arealName: this.getArealNameById(location.arealId),
+      weaponsList: this.getWeaponsListForLocation(location)
+    }));
+  }
+
+  getArealNameById(arealId: string): string {
+    const areal = this.availableAreals()
+      .flatMap((category: any) => category.areas)
+      .find((areal: any) => areal.id === arealId);
+    return areal ? areal.name : arealId;
+  }
+
+  getWeaponsListForLocation(location: any): any[] {
+    const weapons = location.weapons || {};
+    return Object.entries(weapons)
+      .map(([weaponId, count]: [string, any]) => {
+        const weapon = this.availableWeapons().find(w => w.id === weaponId);
+        return {
+          id: weaponId,
+          name: weapon?.name || weaponId,
+          count
+        };
+      })
+      .filter(weapon => weapon.count > 0);
+  }
+
+  combineAllWeapons(data: any): { [weaponId: string]: number } {
+    const combinedWeapons: { [weaponId: string]: number } = {};
+
+    // Handle new structure with locations
+    if (data.locations && data.locations.length > 0) {
+      data.locations.forEach((location: any) => {
+        const weapons = location.weapons || {};
+        Object.entries(weapons).forEach(([weaponId, count]: [string, any]) => {
+          if (count > 0) {
+            combinedWeapons[weaponId] = (combinedWeapons[weaponId] || 0) + count;
+          }
+        });
+      });
+    }
+
+    // Handle legacy structure
+    if (data.weapons) {
+      Object.entries(data.weapons).forEach(([weaponId, count]: [string, any]) => {
+        if (count > 0) {
+          combinedWeapons[weaponId] = (combinedWeapons[weaponId] || 0) + count;
+        }
+      });
+    }
+
+    return combinedWeapons;
   }
 
   getWeaponsList(): any[] {
@@ -273,11 +381,13 @@ export class WizardSummaryComponent implements OnInit {
     try {
       const data = this.collectionData();
 
+      // Support both new and legacy data structures
+      const locations = data.locations || [];
+      const dateTime = data.dateTime || data.location;
+
       const submissionData = {
         pin: data.personal?.pin,
         userType: data.personal?.userType,
-        arealId: data.location?.arealId,
-        arealCategoryId: data.location?.arealCategoryId,
         person: {
           name: data.personal?.name,
           responsible: data.personal?.responsible,
@@ -285,21 +395,26 @@ export class WizardSummaryComponent implements OnInit {
           pin: data.personal?.pin
         },
         date: {
-          date: data.location?.date,
+          date: dateTime?.date,
           morning: {
-            from: data.location?.morningFrom || null,
-            till: data.location?.morningTill || null
+            from: dateTime?.morningFrom || null,
+            till: dateTime?.morningTill || null
           },
           midday: {
-            from: data.location?.middayFrom || null,
-            till: data.location?.middayTill || null
+            from: dateTime?.middayFrom || null,
+            till: dateTime?.middayTill || null
           },
           evening: {
-            from: data.location?.eveningFrom || null,
-            till: data.location?.eveningTill || null
+            from: dateTime?.eveningFrom || null,
+            till: dateTime?.eveningTill || null
           }
         },
-        weapons: data.weapons || {}
+        // For multiple locations, we'll submit each location separately or combine weapons
+        locations: locations.length > 0 ? locations : undefined,
+        // Legacy support - combine all weapons from all locations
+        arealId: locations[0]?.arealId || data.location?.arealId,
+        arealCategoryId: locations[0]?.arealCategoryId || data.location?.arealCategoryId,
+        weapons: this.combineAllWeapons(data)
       };
 
       const identifier = this.wizardService.getTenantIdentifier();
@@ -320,14 +435,46 @@ export class WizardSummaryComponent implements OnInit {
 
   onBack(): void {
     this.wizardService.previousStep();
-    this.router.navigate([WIZARD_ROUTES.BASE,WIZARD_ROUTES.AMMUNITION]);
+    this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.LOCATIONS]);
   }
 
   private async loadAvailableWeapons(): Promise<void> {
     try {
       const identifier = this.wizardService.getTenantIdentifier();
-      const selectedArealId = this.wizardService.locationForm.get('arealCategoryId')?.value;
+      const data = this.collectionData();
+      const locations = data.locations || [];
 
+      // For new structure, load weapons for all locations
+      if (locations.length > 0) {
+        const allWeapons: any[] = [];
+        for (const location of locations) {
+          try {
+            const response = await firstValueFrom(
+              this.publicService.publicCollectionListWeaponFromAreal({ 
+                identifier, 
+                arealCategoryId: location.arealCategoryId 
+              })
+            );
+            if (response) {
+              // Flatten the weapon categories into a simple array
+              const weapons = response.flatMap(category => 
+                category.weapons?.map(weapon => ({
+                  ...weapon,
+                  categoryName: category.name
+                })) || []
+              );
+              allWeapons.push(...weapons);
+            }
+          } catch (error) {
+            console.error('Failed to load weapons for location:', location.arealId, error);
+          }
+        }
+        this.availableWeapons.set(allWeapons);
+        return;
+      }
+
+      // Legacy support
+      const selectedArealId = this.wizardService.locationForm.get('arealCategoryId')?.value;
       if (!selectedArealId) {
         return;
       }
