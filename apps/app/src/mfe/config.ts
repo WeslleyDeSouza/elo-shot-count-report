@@ -69,8 +69,6 @@ export const mfeConfig = {
   templateBuilder:{
     env:environment,
     effects:true,
-    pages:{
-
-    }
+    pages:{}
   }
 }
