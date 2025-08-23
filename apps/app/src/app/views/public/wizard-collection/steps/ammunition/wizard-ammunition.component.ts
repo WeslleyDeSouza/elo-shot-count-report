@@ -20,7 +20,7 @@ import { EmptyStateComponent } from "../../../../admin/_components";
     EmptyStateComponent
   ],
   template: `
-    <div class="container-fluid min-vh-100 d-flex align-items-center">
+    <div class="container-fluid d-flex align-items-center">
       <div class="row w-100 justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
           <div class="card shadow">

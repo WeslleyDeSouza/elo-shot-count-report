@@ -88,3 +88,12 @@
 @import "quill/dist/quill.snow.css";
 @import "quill/dist/quill.bubble.css";
 
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior-x: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+

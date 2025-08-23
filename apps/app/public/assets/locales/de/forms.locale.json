@@ -39,7 +39,8 @@
       "back": "Zurück",
       "next": "Weiter",
       "cancel": "Abbrechen",
-      "actions": "Aktionen"
+      "actions": "Aktionen",
+      "edit": "Bearbeiten"
     },
     "login": {
       "title": "Anmeldung",
@@ -102,7 +103,9 @@
       "army": "Militär",
       "bl": "Blaulichtorganisationen",
       "zv": "Zivil",
+      "date_time": "Datum und Uhrzeit",
       "location_date": "Ort und Datum",
+      "location": "Standort",
       "areal": "Areal",
       "date": "Datum",
       "morning": "Vormittag",
@@ -113,6 +116,21 @@
       "count": "Anzahl",
       "no_weapons": "Keine Waffen ausgewählt",
       "submit": "Übermitteln"
+    },
+    "locations": {
+      "title": "Standorte und Waffen",
+      "subtitle": "Wählen Sie Areale und die entsprechenden Waffen aus",
+      "location": "Standort",
+      "arealCategory": "Areal-Kategorie",
+      "areal": "Areal",
+      "weapons": "Waffen",
+      "select_category": "Kategorie auswählen",
+      "select_areal": "Areal auswählen",
+      "select_areal_first": "Wählen Sie zuerst ein Areal aus",
+      "add_location": "Standort hinzufügen",
+      "category_required": "Kategorie ist erforderlich",
+      "areal_required": "Areal ist erforderlich",
+      "weapons_required": "Mindestens eine Waffe ist erforderlich"
     },
     "success": {
       "title": "Erfolgreich übermittelt!",

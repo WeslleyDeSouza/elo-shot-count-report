@@ -26,7 +26,23 @@
       "back": "Zurück",
       "save": "Speichern",
       "all": "Alle",
-      "clear_filters": "Filter löschen"
+      "clear_filters": "Filter löschen",
+      "import": "Importieren",
+      "import_data": "Daten importieren",
+      "file_upload": "Datei-Upload",
+      "json_import": "JSON-Import",
+      "upload_file": "Datei hochladen",
+      "paste_json": "JSON einfügen",
+      "download_template": "Vorlage herunterladen",
+      "supported_formats": "Unterstützte Formate",
+      "maximum_size": "Maximale Größe",
+      "import_results": "Import-Ergebnisse",
+      "successful_imports": "Erfolgreiche Importe",
+      "failed_imports": "Fehlgeschlagene Importe",
+      "categories": "Kategorien",
+      "items": "Einträge",
+      "import_summary": "Import-Zusammenfassung",
+      "close": "Schließen"
     },
     "areal": {
       "form": {

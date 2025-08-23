@@ -1,1 +1,1 @@
-export * from './wizard/wizard.routes';
+export * from './wizard-collection/wizard.routes';

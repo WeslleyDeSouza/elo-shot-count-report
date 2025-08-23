@@ -7,12 +7,6 @@ import { PublicCollectionService, ArealCategoryModel, WeaponModel } from "@ui-el
 import { firstValueFrom } from 'rxjs';
 import { WIZARD_ROUTES } from '../../wizard.routes.constants';
 
-export interface LocationFormData {
-  arealId: string;
-  arealCategoryId: string;
-  weapons: { [weaponId: string]: number };
-}
-
 @Component({
   selector: 'app-wizard-locations',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,22 +15,22 @@ export interface LocationFormData {
     TranslatePipe
   ],
   template: `
-    <div class="container-fluid min-vh-100 d-flex align-items-center">
+    <div class="container-fluid py-4">
       <div class="row w-100 justify-content-center">
         <div class="col-12 col-xl-10">
           <div class="card shadow">
-            <div class="card-body p-4">
+            <div class="card-body p-3">
               <!-- Header -->
-              <div class="text-center mb-4">
-                <h2 class="h4 mb-2">{{ 'wizard.locations.title' | translate }}</h2>
-                <p class="text-muted">{{ 'wizard.locations.subtitle' | translate }}</p>
+              <div class="text-center mb-3">
+                <h2 class="h5 mb-1">{{ 'wizard.locations.title' | translate }}</h2>
+                <p class="text-muted small">{{ 'wizard.locations.subtitle' | translate }}</p>
               </div>
 
               <!-- Locations Form -->
               <form [formGroup]="locationsForm" (ngSubmit)="onNext()">
                 <div formArrayName="locations">
                   @for (locationControl of locationControls.controls; track locationControl; let i = $index) {
-                    <div class="card mb-4" [class.border-primary]="locationControls.controls.length === 1">
+                    <div class="card mb-3" [class.border-primary]="locationControls.controls.length === 1">
                       <div class="card-header d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">
                           <i class="ri-map-pin-line me-2"></i>
@@ -56,7 +50,30 @@ export interface LocationFormData {
                           <div class="row">
                             <!-- Areal Selection -->
                             <div class="col-md-6">
-                              <div class="mb-3">
+                              <div class="mb-2">
+                                <label class="form-label">
+                                  {{ 'wizard.locations.arealCategory' | translate }} <span class="text-danger">*</span>
+                                </label>
+                                <select
+                                  class="form-select"
+                                  formControlName="arealCategoryId"
+                                  (change)="onCategoryChange(i)"
+                                  [class.is-invalid]="isLocationFieldInvalid(i, 'arealCategoryId')">
+                                  <option value="">{{ 'wizard.locations.select_category' | translate }}</option>
+                                  @for(category of availableArealCategories(); track category.id) {
+                                    <option [value]="category.id">{{ category.name }}</option>
+                                  }
+                                </select>
+                                @if(isLocationFieldInvalid(i, 'arealCategoryId')) {
+                                  <div class="invalid-feedback">
+                                    {{ 'wizard.locations.category_required' | translate }}
+                                  </div>
+                                }
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="mb-2">
                                 <label class="form-label">
                                   {{ 'wizard.locations.areal' | translate }} <span class="text-danger">*</span>
                                 </label>
@@ -66,12 +83,8 @@ export interface LocationFormData {
                                   (change)="onArealChange(i)"
                                   [class.is-invalid]="isLocationFieldInvalid(i, 'arealId')">
                                   <option value="">{{ 'wizard.locations.select_areal' | translate }}</option>
-                                  @for(category of availableAreals(); track category.id) {
-                                    <optgroup label="{{category?.name}}">
-                                      @for(areal of category?.areas; track areal.id) {
-                                        <option [value]="areal.id">{{ areal.name }}</option>
-                                      }
-                                    </optgroup>
+                                  @for(areal of getAvailableArealsByCategory(i); track areal.id) {
+                                    <option [value]="areal.id">{{ areal.name }}</option>
                                   }
                                 </select>
                                 @if(isLocationFieldInvalid(i, 'arealId')) {
@@ -84,23 +97,23 @@ export interface LocationFormData {
 
                             <!-- Weapons Selection -->
                             <div class="col-md-6">
-                              <div class="mb-3">
+                              <div class="mb-2">
                                 <label class="form-label">
                                   {{ 'wizard.locations.weapons' | translate }} <span class="text-danger">*</span>
                                 </label>
-                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                <div class="border rounded p-2" style="max-height: 150px; overflow-y: auto;">
                                   @if (getAvailableWeapons(i).length === 0) {
                                     <p class="text-muted mb-0 small">{{ 'wizard.locations.select_areal_first' | translate }}</p>
                                   } @else {
                                     <div class="row" formGroupName="weapons">
                                       @for (weapon of getAvailableWeapons(i); track weapon.id) {
-                                        <div class="col-12 mb-2">
+                                        <div class="col-12 mb-1">
                                           <div class="d-flex align-items-center">
-                                            <label class="form-label mb-0 me-auto">{{ weapon.name }}</label>
+                                            <label class="form-label mb-0 me-auto small">{{ weapon.name }}</label>
                                             <input
                                               type="number"
                                               class="form-control form-control-sm"
-                                              style="width: 80px;"
+                                              style="width: 70px;"
                                               min="0"
                                               placeholder="0"
                                               [formControlName]="weapon.id">
@@ -125,10 +138,10 @@ export interface LocationFormData {
                 </div>
 
                 <!-- Add Location Button -->
-                <div class="text-center mb-4">
+                <div class="text-center mb-3">
                   <button
                     type="button"
-                    class="btn btn-outline-primary"
+                    class="btn btn-outline-primary btn-sm"
                     (click)="addLocation()">
                     <i class="ri-add-line me-1"></i>
                     {{ 'wizard.locations.add_location' | translate }}
@@ -175,7 +188,7 @@ export class WizardLocationsComponent implements OnInit {
   private publicService = inject(PublicCollectionService);
 
   wizardService = inject(WizardService);
-  availableAreals = signal<ArealCategoryModel[]>([]);
+  availableArealCategories = signal<ArealCategoryModel[]>([]);
   weaponsByAreal = signal<{ [arealId: string]: WeaponModel[] }>({});
 
   locationsForm = this.formBuilder.group({
@@ -187,13 +200,13 @@ export class WizardLocationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadAvailableAreals();
+    this.loadAvailableArealCategories();
   }
 
   createLocationForm(): FormGroup {
     return this.formBuilder.group({
       arealId: ['', [Validators.required]],
-      arealCategoryId: [''],
+      arealCategoryId: ['', [Validators.required]],
       weapons: this.formBuilder.group({})
     });
   }
@@ -229,17 +242,28 @@ export class WizardLocationsComponent implements OnInit {
   isFormValid(): boolean {
     if (this.locationsForm.invalid) return false;
 
-    // Check if each location has at least one weapon selected
+    // Check if each location has category, areal, and at least one weapon selected
     for (let i = 0; i < this.locationControls.length; i++) {
       const locationControl = this.locationControls.at(i);
+      const categoryId = locationControl?.get('arealCategoryId')?.value;
       const arealId = locationControl?.get('arealId')?.value;
 
-      if (!arealId) return false;
+      if (!categoryId || !arealId) return false;
 
       if (this.isLocationWeaponsInvalid(i)) return false;
     }
 
     return true;
+  }
+
+  getAvailableArealsByCategory(locationIndex: number): any[] {
+    const locationControl = this.locationControls.at(locationIndex);
+    const categoryId = locationControl?.get('arealCategoryId')?.value;
+
+    if (!categoryId) return [];
+
+    const category = this.availableArealCategories().find(cat => cat.id === categoryId);
+    return category?.areas || [];
   }
 
   getAvailableWeapons(locationIndex: number): WeaponModel[] {
@@ -251,22 +275,31 @@ export class WizardLocationsComponent implements OnInit {
     return this.weaponsByAreal()[arealId] || [];
   }
 
+  onCategoryChange(locationIndex: number): void {
+    const locationControl = this.locationControls.at(locationIndex) as FormGroup;
+
+    // Clear areal selection when category changes
+    locationControl?.patchValue({
+      arealId: ''
+    });
+
+    // Clear weapons form group
+    const weaponsGroup = this.formBuilder.group({});
+    locationControl?.setControl('weapons', weaponsGroup);
+  }
+
   async onArealChange(locationIndex: number): Promise<void> {
     const locationControl = this.locationControls.at(locationIndex);
     const selectedArealId = locationControl?.get('arealId')?.value;
 
     if (!selectedArealId) return;
 
-    // Find and set category ID
-    const selectedAreal = this.availableAreals()
+    // Find the selected areal to get its category ID
+    const selectedAreal = this.availableArealCategories()
       .flatMap(category => category.areas)
       .find(areal => areal.id === selectedArealId);
 
     if (selectedAreal) {
-      locationControl?.patchValue({
-        arealCategoryId: selectedAreal.categoryId
-      });
-
       // Load weapons for this areal if not already loaded
       if (!this.weaponsByAreal()[selectedArealId]) {
         await this.loadWeaponsForAreal(selectedArealId);
@@ -307,41 +340,41 @@ export class WizardLocationsComponent implements OnInit {
     this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.DATE_TIME]);
   }
 
-  private async loadAvailableAreals(): Promise<void> {
+  private async loadAvailableArealCategories(): Promise<void> {
     try {
       const identifier = this.wizardService.getTenantIdentifier();
       const response = await firstValueFrom(
         this.publicService.publicCollectionListAreal({ identifier })
       );
-      this.availableAreals.set(response || []);
+      this.availableArealCategories.set(response || []);
     } catch (error) {
-      console.error('Failed to load areals:', error);
+      console.error('Failed to load areal categories:', error);
     }
   }
 
   private async loadWeaponsForAreal(arealId: string): Promise<void> {
     try {
       const identifier = this.wizardService.getTenantIdentifier();
-      
+
       // Find the category ID for this areal
-      const selectedAreal = this.availableAreals()
+      const selectedAreal = this.availableArealCategories()
         .flatMap(category => category.areas)
         .find(areal => areal.id === arealId);
-      
+
       if (!selectedAreal?.categoryId) {
         console.error('Could not find category for areal:', arealId);
         return;
       }
 
       const response = await firstValueFrom(
-        this.publicService.publicCollectionListWeaponFromAreal({ 
-          identifier, 
-          arealCategoryId: selectedAreal.categoryId 
+        this.publicService.publicCollectionListWeaponFromAreal({
+          identifier,
+          arealCategoryId: selectedAreal.categoryId
         })
       );
 
       // Flatten the weapon categories into a simple array
-      const weapons = (response || []).flatMap(category => 
+      const weapons = (response || []).flatMap(category =>
         category.weapons?.map(weapon => ({
           ...weapon,
           categoryName: category.name

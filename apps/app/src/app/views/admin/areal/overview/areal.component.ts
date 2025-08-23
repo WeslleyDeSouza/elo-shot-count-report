@@ -1,13 +1,14 @@
 import {Component, signal, computed, OnInit, OnDestroy, inject, Signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ArealFacade } from '../areal.facade';
 import {Areal, ArealCategory,  } from '../areal.model';
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import {EmptyStateComponent} from "../../_components";
+import { DataImporterComponent, type ArealData } from '../../_components/data-importer/data-importer.component';
 
 const PATHS = {
   AREAL_CREATE: '/admin/areal/create',
@@ -50,6 +51,7 @@ export class ArealComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private facade = inject(ArealFacade);
   private router = inject(Router);
+  private modalService = inject(NgbModal);
 
   allCategories = signal<ArealCategory[]>([]);
   searchText = signal('');
@@ -224,5 +226,53 @@ export class ArealComponent implements OnInit, OnDestroy {
 
   openBulkEditor(): void {
     this.router.navigate([PATHS.AREAL_BULK_EDIT]);
+  }
+
+  openImporter(): void {
+    const modalRef = this.modalService.open(DataImporterComponent, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+
+    modalRef.componentInstance.importType.set('areal');
+
+    modalRef.componentInstance.onImport.subscribe((event: { type: 'areal'; data: ArealData[] }) => {
+      this.handleImportData(event.data);
+    });
+  }
+
+  private handleImportData(data: ArealData[]): void {
+    // Process each chunk of import data
+    data.forEach(arealData => {
+      // Save category using facade
+      this.facade.createArealCategory({
+        id: arealData.id,
+        name: arealData.name,
+        code: arealData.code + ''
+      }).pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (savedCategory) => {
+          // Save areas for this category
+          arealData.areas.forEach(area => {
+            this.facade.createAreal({
+              id: area.id,
+              name: area.name,
+              categoryId: savedCategory?.id,
+              enabled: area.enabled
+            }).pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => console.log(`Area ${area.name} saved successfully`),
+              error: (error:any) => console.error(`Failed to save area ${area.name}:`, error)
+            });
+          });
+
+          // Refresh the categories list after import
+          this.loadCategories();
+        },
+        error: (error:any) => {
+          console.error(`Failed to save category ${arealData.name}:`, error);
+        }
+      });
+    });
   }
 }

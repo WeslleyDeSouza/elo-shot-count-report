@@ -1,4 +1,4 @@
-import { Component, Input, type OnInit } from '@angular/core'
+import { Component, Input, Output, EventEmitter, type OnInit } from '@angular/core'
 import {
     DROPZONE_CONFIG,
     DropzoneConfigInterface,
@@ -89,8 +89,10 @@ class="btn btn-link btn-lg text-dark"
 })
 export class FileUploaderComponent implements OnInit {
     @Input() showPreview = false
+    @Input() manuallyUpload: boolean = false; // upload manully by event
     @Input() form!: FormGroup;
     @Input() controlName = 'backgroundImage'; // default field name
+    @Output() fileSelected = new EventEmitter<File>();
     uploadedFiles: UploadedFile[] = []
 
 
@@ -131,6 +133,12 @@ export class FileUploaderComponent implements OnInit {
     }
 
     onFileAdded(file: File): void {
+        if (this.manuallyUpload) {
+            // Emit the file for manual handling
+            this.fileSelected.emit(file);
+            return;
+        }
+
         const appName = 'your-app-name'; // replace with dynamic value if needed
 
         this.fileUploadService.uploadFile(file, appName).subscribe({

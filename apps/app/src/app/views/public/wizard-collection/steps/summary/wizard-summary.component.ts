@@ -15,7 +15,7 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
     TranslatePipe
   ],
   template: `
-    <div class="container-fluid min-vh-100 d-flex align-items-center">
+    <div class="container-fluid d-flex align-items-center">
       <div class="row w-100 justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
           <div class="card shadow">
@@ -33,11 +33,18 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
 
               <!-- Personal Information -->
               <div class="card mb-3">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                   <h6 class="mb-0">
                     <i class="ri-user-line me-2"></i>
                     {{ 'wizard.summary.personal_info' | translate }}
                   </h6>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-light"
+                    (click)="editPersonalInfo()"
+                    title="{{ 'wizard.common.edit' | translate }}">
+                    <i class="ri-edit-line"></i>
+                  </button>
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -67,11 +74,18 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
 
               <!-- Date and Time -->
               <div class="card mb-3">
-                <div class="card-header bg-info text-white">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                   <h6 class="mb-0">
                     <i class="ri-calendar-line me-2"></i>
                     {{ 'wizard.summary.date_time' | translate }}
                   </h6>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-light"
+                    (click)="editDateTime()"
+                    title="{{ 'wizard.common.edit' | translate }}">
+                    <i class="ri-edit-line"></i>
+                  </button>
                 </div>
                 <div class="card-body">
                   <div class="mb-2">
@@ -119,11 +133,18 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
               @if(getLocationsList().length > 0) {
                 @for(location of getLocationsList(); track location.arealId; let i = $index) {
                   <div class="card mb-3">
-                    <div class="card-header bg-success text-white">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">
                         <i class="ri-map-pin-line me-2"></i>
                         {{ 'wizard.summary.location' | translate }} {{ i + 1 }}: {{ location.arealName }}
                       </h6>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-light"
+                        (click)="editLocations()"
+                        title="{{ 'wizard.common.edit' | translate }}">
+                        <i class="ri-edit-line"></i>
+                      </button>
                     </div>
                     <div class="card-body">
                       @if(location.weaponsList.length > 0) {
@@ -161,11 +182,18 @@ import { WIZARD_ROUTES } from '../../wizard.routes.constants';
               } @else {
                 <!-- Fallback for legacy data -->
                 <div class="card mb-4">
-                  <div class="card-header bg-success text-white">
+                  <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">
                       <i class="ri-sword-line me-2"></i>
                       {{ 'wizard.summary.weapons' | translate }}
                     </h6>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-light"
+                      (click)="editWeapons()"
+                      title="{{ 'wizard.common.edit' | translate }}">
+                      <i class="ri-edit-line"></i>
+                    </button>
                   </div>
                   <div class="card-body">
                     @if(getWeaponsList().length > 0) {
@@ -438,6 +466,22 @@ export class WizardSummaryComponent implements OnInit {
     this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.LOCATIONS]);
   }
 
+  editPersonalInfo(): void {
+    this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.LOGIN]);
+  }
+
+  editDateTime(): void {
+    this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.DATE_TIME]);
+  }
+
+  editLocations(): void {
+    this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.LOCATIONS]);
+  }
+
+  editWeapons(): void {
+    this.router.navigate([WIZARD_ROUTES.BASE, WIZARD_ROUTES.AMMUNITION]);
+  }
+
   private async loadAvailableWeapons(): Promise<void> {
     try {
       const identifier = this.wizardService.getTenantIdentifier();
@@ -450,14 +494,14 @@ export class WizardSummaryComponent implements OnInit {
         for (const location of locations) {
           try {
             const response = await firstValueFrom(
-              this.publicService.publicCollectionListWeaponFromAreal({ 
-                identifier, 
-                arealCategoryId: location.arealCategoryId 
+              this.publicService.publicCollectionListWeaponFromAreal({
+                identifier,
+                arealCategoryId: location.arealCategoryId
               })
             );
             if (response) {
               // Flatten the weapon categories into a simple array
-              const weapons = response.flatMap(category => 
+              const weapons = response.flatMap(category =>
                 category.weapons?.map(weapon => ({
                   ...weapon,
                   categoryName: category.name

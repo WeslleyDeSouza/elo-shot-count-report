@@ -1,13 +1,14 @@
 import {Component, signal, computed, OnInit, OnDestroy, inject, Signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WeaponFacade } from '../weapon.facade';
 import {Weapon, WeaponCategory} from '../weapon.model';
 import { Subject, takeUntil } from 'rxjs';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import {EmptyStateComponent} from "../../_components/empty-state";
+import { DataImporterComponent, type WeaponData } from '../../_components/data-importer/data-importer.component';
 
 const PATHS = {
   WEAPON_CREATE: '/admin/weapon/create',
@@ -50,6 +51,7 @@ export class WeaponComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private facade = inject(WeaponFacade);
   private router = inject(Router);
+  private modalService = inject(NgbModal);
 
   allCategories = signal<WeaponCategory[]>([]);
   searchText = signal('');
@@ -243,5 +245,57 @@ export class WeaponComponent implements OnInit, OnDestroy {
 
   openBulkEditor(): void {
     this.router.navigate([PATHS.WEAPON_BULK_EDIT]);
+  }
+
+  openImporter(): void {
+    const modalRef = this.modalService.open(DataImporterComponent, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+
+    modalRef.componentInstance.importType.set('weapon');
+
+    modalRef.componentInstance.onImport.subscribe((event: { type: 'weapon'; data: WeaponData[] }) => {
+      this.handleImportData(event.data);
+    });
+  }
+
+  private handleImportData(data: WeaponData[]): void {
+    // Process each chunk of import data
+    data.forEach(weaponData => {
+      // Save category using facade
+      this.facade.createWeaponCategory({
+        id: weaponData.id,
+        name: weaponData.name,
+        code: weaponData.code
+      }).pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (savedCategory) => {
+          // Save weapons for this category
+          weaponData.weapons.forEach(weapon => {
+            this.facade.createWeapon({
+              id: weapon.id,
+              name: weapon.name,
+              nameDe: weapon.nameDe,
+              nameFr: weapon.nameFr,
+              nameIt: weapon.nameIt,
+              categoryId: savedCategory?.id,
+              enabled: weapon.enabled,
+              inWeight: weapon.inWeight
+            }).pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => console.log(`Weapon ${weapon.name} saved successfully`),
+              error: (error:any) => console.error(`Failed to save weapon ${weapon.name}:`, error)
+            });
+          });
+
+          // Refresh the categories list after import
+          this.loadCategories();
+        },
+        error: (error:any) => {
+          console.error(`Failed to save category ${weaponData.name}:`, error);
+        }
+      });
+    });
   }
 }
