@@ -6,7 +6,10 @@ import {
   IsObject,
   IsBoolean,
   IsUUID,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CollectionPersonDto {
   @ApiProperty({ type: String, required: true })
@@ -97,6 +100,55 @@ export class CollectionCreateDto {
   weapons: { [key: string]: number };
 
 }
+
+export class CollectionLocationDto {
+  @ApiProperty({ type: String, required: true, format: 'uuid' })
+  @IsUUID()
+  @IsNotEmpty()
+  arealId: string;
+
+  @ApiProperty({ type: String, required: true, format: 'uuid' })
+  @IsUUID()
+  @IsNotEmpty()
+  arealCategoryId: string;
+
+  @ApiProperty({
+    type: Object,
+    required: true,
+    description: 'Weapons list with counts',
+  })
+  @IsObject()
+  weapons: Record<string, number>;
+}
+
+export class CollectionManyCreateDto {
+  @ApiProperty({ type: String, required: true })
+  @IsString()
+  @IsNotEmpty()
+  userType: string;
+
+  @ApiProperty({ type: String, required: true })
+  @IsString()
+  @IsNotEmpty()
+  pin: string;
+
+  @ApiProperty({ type: CollectionPersonDto, required: true })
+  @IsObject()
+  person: CollectionPersonDto;
+
+  @ApiProperty({ type: DateDto, required: true })
+  @IsObject()
+  date: DateDto;
+
+  @ApiProperty({
+    type: [CollectionLocationDto],
+    required: true,
+    description: 'Array of locations with their weapons data'
+  })
+  @IsArray()
+  locations: CollectionLocationDto[];
+}
+
 
 export class CollectionUpdateDto {
   @ApiProperty({ type: String, required: false, format: 'uuid' })

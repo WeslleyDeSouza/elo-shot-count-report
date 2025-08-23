@@ -1,10 +1,11 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
 import {ApiBody,  ApiProperty, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AppsRolesGuard, ReplayGuard} from '@movit/auth-api';
+import { v4 as uuidv4 } from 'uuid';
 import { API_APPS_MAPPING } from "../../../main.mock-data";
 import { CollectionService } from '../collection.service';
 import {
-  CollectionCreateDto,
+  CollectionCreateDto, CollectionManyCreateDto,
   CollectionResultDto
 } from '../dto';
 import {CollectionDataService} from "../collection-data.service";
@@ -110,10 +111,9 @@ export class PublicCollectionController {
     }));
   }
 
-  @Put('')
+  @Put('entry')
   @ApiBody({ type: CollectionCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: CollectionResultDto })
-  @UseGuards(AppsRolesGuard(API_APPS_MAPPING.ADMIN_REPORT_ENTRIES))
   async createCollection(
     @Param('identifier') identifier: string,
     @Body() body: CollectionCreateDto) {
@@ -122,6 +122,42 @@ export class PublicCollectionController {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     });
   }
+
+
+  @Put('many')
+  @ApiBody({ type: CollectionManyCreateDto })
+  @ApiResponse({ status: 200, description: 'Success.', type: [CollectionResultDto] })
+  async createCollections(
+    @Param('identifier') identifier: string,
+    @Body() body: CollectionManyCreateDto) {
+    const tenantId: string = await this.getTenantByIdentifier(identifier);
+    const groupId = uuidv4();
+    
+    try {
+      const collections = [];
+
+      for (const location of body.locations) {
+        const collectionData: CollectionCreateDto & { groupId: string } = {
+          arealId: location.arealId,
+          arealCategoryId: location.arealCategoryId,
+          userType: body.userType,
+          pin: body.pin,
+          person: body.person,
+          date: body.date,
+          weapons: location.weapons,
+          groupId: groupId
+        };
+
+        const collection = await this.collectionService.createCollection(tenantId, collectionData);
+        collections.push(collection);
+      }
+
+      return collections;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 
   @Get(':identifier/weapon/list-relation/:arealCategoryId')
   @ApiResponse({

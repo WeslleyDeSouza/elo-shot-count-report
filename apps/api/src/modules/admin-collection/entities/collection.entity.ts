@@ -36,6 +36,9 @@ export class CollectionEntity extends TenantBaseEntity {
   @DbPlatformColumn({ type: 'varchar', length: 25, nullable: false })
   pin: string;
 
+  @DbPlatformColumn({ type: 'uuid', nullable: true })
+  groupId: string;
+
   @DbPlatformColumn({ type: 'longtext', nullable: true })
   weapons: string;
 

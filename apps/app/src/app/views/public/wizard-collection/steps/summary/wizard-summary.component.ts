@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { WizardService } from '../../_common/services/wizard.service';
-import { PublicCollectionService } from '@ui-elo/apiClient';
+import { PublicCollectionService, CollectionManyCreateDto } from '@ui-elo/apiClient';
 import { firstValueFrom } from 'rxjs';
 import { WIZARD_ROUTES } from '../../wizard.routes.constants';
 
@@ -413,17 +413,17 @@ export class WizardSummaryComponent implements OnInit {
       const locations = data.locations || [];
       const dateTime = data.dateTime || data.location;
 
-      const submissionData = {
-        pin: data.personal?.pin,
-        userType: data.personal?.userType,
+      const submissionData: CollectionManyCreateDto = {
+        pin: data.personal?.pin || '',
+        userType: data.personal?.userType || '',
         person: {
-          name: data.personal?.name,
-          responsible: data.personal?.responsible,
-          unit: data.personal?.unit,
-          pin: data.personal?.pin
+          name: data.personal?.name || '',
+          responsible: data.personal?.responsible || '',
+          unit: data.personal?.unit || '',
+          pin: data.personal?.pin || ''
         },
         date: {
-          date: dateTime?.date,
+          date: dateTime?.date || '',
           morning: {
             from: dateTime?.morningFrom || null,
             till: dateTime?.morningTill || null
@@ -437,17 +437,16 @@ export class WizardSummaryComponent implements OnInit {
             till: dateTime?.eveningTill || null
           }
         },
-        // For multiple locations, we'll submit each location separately or combine weapons
-        locations: locations.length > 0 ? locations : undefined,
-        // Legacy support - combine all weapons from all locations
-        arealId: locations[0]?.arealId || data.location?.arealId,
-        arealCategoryId: locations[0]?.arealCategoryId || data.location?.arealCategoryId,
-        weapons: this.combineAllWeapons(data)
+        locations: locations.length > 0 ? locations.map(location => ({
+          arealId: location.arealId || '',
+          arealCategoryId: location.arealCategoryId || '',
+          weapons: location.weapons || {}
+        })) : []
       };
 
       const identifier = this.wizardService.getTenantIdentifier();
       const result = await firstValueFrom(
-        this.publicService.publicCollectionCreateCollection({ identifier, body: <any>submissionData })
+        this.publicService.publicCollectionCreateCollections({ identifier, body: submissionData })
       );
 
       if (result) {

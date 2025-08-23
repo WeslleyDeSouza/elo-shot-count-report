@@ -115,12 +115,14 @@ export class CollectionService {
     });
   }
 
-  async createCollection(tenantId: string, createValues: CollectionCreateDto & {createdBy?:string}) {
+  async createCollection(tenantId: string, createValues: CollectionCreateDto & {createdBy?:string, groupId?:string}) {
     const arealId = createValues.arealId;
     const arealCategoryId = createValues.arealCategoryId;
+    const groupId = createValues.groupId;
 
     delete createValues.arealId;
     delete createValues.arealCategoryId;
+    delete createValues.groupId;
 
 
     const collection = this.collectionRepo.create({
@@ -129,6 +131,7 @@ export class CollectionService {
       tenantId:tenantId,
       arealId,
       arealCategoryId,
+      groupId,
       person: JSON.stringify(createValues.person),
       date: JSON.stringify(createValues.date),
       weapons: JSON.stringify(createValues.weapons)
