@@ -1,5 +1,5 @@
 import {Component, signal, computed, OnInit, OnDestroy, inject, Signal} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, TitleCasePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ArealFacade } from '../areal.facade';
@@ -9,6 +9,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import {EmptyStateComponent} from "../../_components";
 import { DataImporterComponent, type ArealData } from '../../_components/data-importer/data-importer.component';
+import {Debounce} from "@app-galaxy/sdk-ui";
 
 const PATHS = {
   AREAL_CREATE: '/admin/areal/create',
@@ -21,11 +22,11 @@ const PATHS = {
 @Component({
   selector: 'app-areal',
   imports: [
-    CommonModule,
     FormsModule,
     NgbCollapseModule,
     TranslatePipe,
     EmptyStateComponent,
+    TitleCasePipe,
   ],
   templateUrl: './areal.component.html',
   styles: `
@@ -114,6 +115,7 @@ export class ArealComponent implements OnInit, OnDestroy {
       .subscribe(error => this.error.set(error));
   }
 
+  @Debounce(1000)
   private loadCategories(): void {
     this.facade.loadCategories()
       .pipe(takeUntil(this.destroy$))
@@ -242,6 +244,8 @@ export class ArealComponent implements OnInit, OnDestroy {
   }
 
   private handleImportData(data: ArealData[]): void {
+    console.log('Areal component received import data:', data);
+
     // Process each chunk of import data
     data.forEach(arealData => {
       // Save category using facade
@@ -261,7 +265,6 @@ export class ArealComponent implements OnInit, OnDestroy {
               enabled: area.enabled
             }).pipe(takeUntil(this.destroy$))
             .subscribe({
-              next: () => console.log(`Area ${area.name} saved successfully`),
               error: (error:any) => console.error(`Failed to save area ${area.name}:`, error)
             });
           });

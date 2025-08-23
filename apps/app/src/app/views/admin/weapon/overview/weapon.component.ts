@@ -9,6 +9,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import {EmptyStateComponent} from "../../_components/empty-state";
 import { DataImporterComponent, type WeaponData } from '../../_components/data-importer/data-importer.component';
+import {Debounce} from "@app-galaxy/sdk-ui";
 
 const PATHS = {
   WEAPON_CREATE: '/admin/weapon/create',
@@ -119,6 +120,7 @@ export class WeaponComponent implements OnInit, OnDestroy {
       .subscribe(error => this.error.set(error));
   }
 
+  @Debounce(1000)
   private loadCategories(): void {
     this.facade.loadCategories()
       .pipe(takeUntil(this.destroy$))
@@ -261,6 +263,8 @@ export class WeaponComponent implements OnInit, OnDestroy {
   }
 
   private handleImportData(data: WeaponData[]): void {
+    console.log('Weapon component received import data:', data);
+
     // Process each chunk of import data
     data.forEach(weaponData => {
       // Save category using facade
@@ -284,7 +288,6 @@ export class WeaponComponent implements OnInit, OnDestroy {
               inWeight: weapon.inWeight
             }).pipe(takeUntil(this.destroy$))
             .subscribe({
-              next: () => console.log(`Weapon ${weapon.name} saved successfully`),
               error: (error:any) => console.error(`Failed to save weapon ${weapon.name}:`, error)
             });
           });

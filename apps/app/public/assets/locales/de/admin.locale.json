@@ -42,7 +42,10 @@
       "categories": "Kategorien",
       "items": "Einträge",
       "import_summary": "Import-Zusammenfassung",
-      "close": "Schließen"
+      "close": "Schließen",
+      "select_file_to_upload": "Bitte wählen Sie eine Datei zum Hochladen aus.",
+      "enter_valid_json": "Bitte geben Sie gültige JSON-Daten ein.",
+      "invalid_json_format": "Das JSON-Format ist ungültig. Bitte überprüfen Sie Ihre Eingabe."
     },
     "areal": {
       "form": {

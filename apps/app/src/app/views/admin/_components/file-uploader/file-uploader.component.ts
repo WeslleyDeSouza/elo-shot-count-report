@@ -85,6 +85,7 @@ class="btn btn-link btn-lg text-dark"
             provide: DROPZONE_CONFIG,
             useValue: DEFAULT_DROPZONE_CONFIG,
         },
+      FileUploadService
     ],
 })
 export class FileUploaderComponent implements OnInit {
