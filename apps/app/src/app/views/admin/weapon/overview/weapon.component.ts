@@ -42,7 +42,6 @@ const PATHS = {
       gap: 0.5rem;
     }
 
-
     .cursor-pointer {
       cursor: pointer;
     }
