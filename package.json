@@ -25,7 +25,7 @@
     "@angular/ssr": "~20.0.0",
     "@app-galaxy/auth-ui": "^0.0.59",
     "@app-galaxy/core-api": "^0.0.29",
-    "@app-galaxy/sdk-ui": "^0.0.63",
+    "@app-galaxy/sdk-ui": "^0.0.69",
     "@app-galaxy/translate-ui": "^0.0.53",
     "@movit/auth-api": "^0.0.985",
     "@movit/email": "^0.0.13",
