@@ -89,200 +89,57 @@ flowchart LR
 
 ### Entity - UML
 Auto Generated in config/uml
+
 ```mermaid
 ---
 title: Entities namespaces and relationships
 ---
 erDiagram
-  tenant {
-    varchar tenantId PK
-    varchar identifier
-    varchar workspaceName
-    varchar workspaceLocationCode
-    varchar tenantName
-    varchar tenantDomain
-    tinyint enabled
-    smallint createdYear
-    datetime deletedAt
-    datetime createdAt
-  }
-  auth_user {
-    varchar userId PK
-    varchar iamId
-    varchar iamSource
-    varchar email
-    varchar username
-    varchar host
-    varchar password
-    varchar salt
-    smallint authCreatedAt
-    tinyint isIntern "Internal User, User is owned by Organisation"
-    date deleted
-    timestamp loginLast
-    timestamp loginFirst
-    varchar passwordResetLink
-    varchar avatar
-    char gender
-    varchar firstName
-    varchar lastName
-    varchar phone
-    date birthDay
-    char preferredLanguage
-    datetime createdAt
-    varchar pin
-    smallint pinAttempt
-  }
-  auth_login {
-    int id PK
-    smallint authCreatedAt
-    varchar uuId
-    varchar info
+  %% === WEAPON MANAGEMENT ===
+  weapon_category {
     varchar tenantId
-    varchar sourceType
-    enum type
-    varchar deviceInfo
-    varchar value
-    timestamp updatedAt
-    timestamp expiresAt
-    varchar userId FK
-  }
-  auth_template {
-    int id PK
-    int tenantId
-    char lang
-    char name "KEY identifier"
-    char title
-    varchar subject
-    text template
-    text settings
-  }
-  app_category {
-    int categoryId PK
-    varchar domain
-    int parentCategoryId
-    varchar tenantId
-    varchar title
-  }
-  app_user_right {
-    int id PK
-    varchar userId
-    varchar tenantId FK
-    int roleId FK
-  }
-  app_role {
-    int roleId PK
-    varchar tenantId
-    enum type
-    varchar domain
-    varchar title
-    tinyint state
-    tinyint isDefault
-    tinyint hasAdminRights
-    tinyint hasPaymentRights
-    tinyint hasOnBoardingRights
-    json settings
-  }
-  app_role_right {
     varchar id PK
+    varchar name
+    double code
+  }
+  
+  weapon {
     varchar tenantId FK
-    int roleId FK
-    int appId FK
-    varchar access
-  }
-  app_app {
-    int appId PK
-    varchar domain
-    varchar tenantId
-    varchar title
-    varchar path
-    varchar pathMobile
-    varchar img
-    varchar icon
-    varchar imgDashboard
-    int categoryId FK
-  }
-  app_user_setting {
-    int id PK
-    int settingId
-    varchar domain
-    varchar tenantId FK
-    varchar userId
-    int appId FK
-    varchar section
-    varchar platform
-    json settings
-  }
-  auth_user_invited {
-    varchar invitationId PK
-    varchar email
-    varchar tenantId
-    varchar tenantName
-    datetime updatedAt
-    datetime createdAt
-    enum state
-    enum direction
-    timestamp emailSentAt
-    enum emailStatus
-    int emailSendCount
-  }
-  tenant_user_role {
-    varchar tenantId FK
-    int id PK
-    varchar userId FK
-    varchar roles "user,admin,contributor,ect"
-    smallint userCreatedAt
-  }
-  tenant_structure_user_role {
     varchar id PK
-    varchar userId FK
-    varchar tenantId
-    varchar structureItemId
-    enum type "DIVISIONS: Part of a tenant that operates within the entire organization.
-DEPARTMENTS: Independent structural unit of the organization.
-TEAMS: Method of organizing employees based on their qualities.
-LOCATIONS: Physical locations where the tenant operates.
-OPERATIONS: Broad range of activities related to business operations."
-    varchar role "Possible values: manager, member, admin, observer"
-    smallint createdYear
-  }
-  tenant_app_config {
-    varchar configId PK
-    varchar tenantId
-    varchar domainName
-    varchar domainTopLevel
-    varchar configKey
-    json config
+    varchar categoryId FK
+    varchar name
+    varchar nameDe
+    varchar nameFr
+    varchar nameIt
     tinyint enabled
-    smallint createdYear
+    tinyint inWeight
   }
-  user_config {
-    int configId PK
-    varchar ownerId
-    varchar metaSection
-    varchar metaKey
-    text metaValue
+  
+  areal_weapon {
+    varchar tenantId FK
+    int id PK
+    varchar arealId FK
+    varchar weaponId
   }
-  tenant_config {
-    int configId PK
+
+  %% === AREA MANAGEMENT ===
+  areal_category {
     varchar tenantId
-    varchar ownerId
-    varchar metaSection
-    varchar metaKey
-    text metaValue
-    datetime createdAt
+    varchar id PK
+    varchar name
+    double code
+    tinyint enabled
   }
-  boo_bookmark {
-    varchar tenantId
-    varchar bookmarkId PK
-    varchar title
-    varchar refId
-    varchar refType
-    text url
-    varchar category
-    tinyint isPrivate
-    varchar createdBy
-    timestamp createdAt
+  
+  areal {
+    varchar tenantId FK
+    varchar id PK
+    varchar categoryId FK
+    varchar name
+    tinyint enabled
   }
+
+  %% === COORDINATION SYSTEM ===
   coordination_office {
     varchar tenantId
     varchar id PK
@@ -295,6 +152,7 @@ OPERATIONS: Broad range of activities related to business operations."
     varchar createdBy
     tinyint enabled
   }
+  
   coordination_office_users {
     varchar tenantId
     varchar id PK
@@ -305,43 +163,8 @@ OPERATIONS: Broad range of activities related to business operations."
     datetime assigned_at
     datetime updated_at
   }
-  weapon_category {
-    varchar tenantId
-    varchar id PK
-    varchar name
-    double code
-  }
-  weapon {
-    varchar tenantId FK
-    varchar id PK
-    varchar categoryId FK
-    varchar name
-    varchar nameDe
-    varchar nameFr
-    varchar nameIt
-    tinyint enabled
-    tinyint inWeight
-  }
-  areal_weapon {
-    varchar tenantId FK
-    int id PK
-    varchar arealId FK
-    varchar weaponId
-  }
-  areal {
-    varchar tenantId FK
-    varchar id PK
-    varchar categoryId FK
-    varchar name
-    tinyint enabled
-  }
-  areal_category {
-    varchar tenantId
-    varchar id PK
-    varchar name
-    double code
-    tinyint enabled
-  }
+
+  %% === COLLECTION SYSTEM ===
   collection {
     varchar tenantId
     varchar id PK
@@ -357,17 +180,8 @@ OPERATIONS: Broad range of activities related to business operations."
     datetime createdAt
     datetime deletedAt
   }
-  auth_login }|--|| auth_user: user
-  app_user_right }|--|| app_role: role
-  app_role_right }|--|| app_app: app
-  app_role_right }|--|| app_role: role
-  app_app }|--|| app_category: category
-  app_user_setting }|--|| app_app: app
-  tenant_user_role }|--|| auth_user: user
-  tenant_user_role }|--|| tenant: tenant
-  tenant_structure_user_role }|--|| auth_user: user
-  coordination_office_users }|--|| coordination_office: coordinationOffice
-  coordination_office_users }|--|| auth_user: user
+
+  %% === RELATIONSHIPS ===
   weapon }|--|| weapon_category: category
   areal_weapon }|--|| areal: areal
   areal }|--|| areal_category: category
