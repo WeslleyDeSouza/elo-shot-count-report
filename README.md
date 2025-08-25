@@ -1,6 +1,18 @@
-# ELO Schusszahlmeldung
+# ELO Schusszahlmeldung / Digital Shooting Logs
 
-The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range management system. It introduces a custom-built Progressive Web App (PWA) that allows recruits to digitally report their shooting scores, replacing paper-based processes. The application provides administrators with real-time oversight, detailed reporting, and efficient management tools. Built with NestJS, Angular, TypeORM, and NX, the system ensures scalability, security, and user-friendliness. This digital transformation significantly improves accuracy, efficiency, and the overall shooting range experience.
+This repository powers the modernization of the Swiss Army’s shooting range system, built as a Progressive Web App (PWA) to replace manual, paper-based score reporting.
+
+## It contains:
+
+- Enable recruits to submit shooting data digitally and effortlessly
+- Provide administrators with intuitive dashboards for real-time oversight and detailed reports
+- Use a robust tech stack: **NestJS**, **TypeORM (MySQL)**, **Angular**, and **Nx** for structured, scalable development
+- Ensure security, efficiency, and accuracy in a production-grade military environment
+- Seamlessly orchestrate deployment with and without containerization (e.g., bare-metal setups or Docker/Kubernetes)
+
+## Description
+The ELO Schusszahlmeldung project modernizes the Swiss Army’s shooting range management system. It introduces a custom-built Progressive Web App (PWA) that allows recruits to digitally report their shooting scores, replacing paper-based processes. The application provides administrators with real-time oversight, detailed reporting, and efficient management tools.
+Built with NestJS, Angular, TypeORM, and NX, the system ensures scalability, security, and user-friendliness. This digital transformation significantly improves accuracy, efficiency, and the overall shooting range experience.
 
 ![Banner](https://desouza.ch/wp-content/uploads/2025/02/Mockup.png)
 
