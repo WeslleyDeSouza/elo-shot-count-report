@@ -20,8 +20,8 @@ export class CollectionService {
 
     queryBuilder.where('collection.tenantId = :tenantId', { tenantId });
 
-    if (filterParams.pin) {
-      queryBuilder.andWhere('collection.pin = :pin', { pin: filterParams.pin });
+    if (filterParams.pin && filterParams.pin.length > 0) {
+      queryBuilder.andWhere('collection.pin IN (:...pins)', { pins: filterParams.pin });
     }
 
     if (filterParams.arealCategoryId) {

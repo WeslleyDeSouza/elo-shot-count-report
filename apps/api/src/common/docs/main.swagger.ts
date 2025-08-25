@@ -2,7 +2,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 //import { SCHEMA_USER_ACCOUNT_TYPE } from "./app/module/user/user.model";
 
-export const swagger = (app) => {
+export const setupSwagger = (app) => {
   const config = new DocumentBuilder()
     .setTitle('API')
     .setVersion('1.0.0')

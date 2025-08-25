@@ -34,7 +34,7 @@ export class AdminCollectionController {
   @Get('list')
   @ApiQuery({ name: 'enabled', required: false, type: Boolean })
   @ApiQuery({ name: 'year', required: false, type: String })
-  @ApiQuery({ name: 'pin', required: false, type: String })
+  @ApiQuery({ name: 'pin', required: false, type: String , isArray: true})
   @ApiQuery({ name: 'arealCategoryId', required: false, type: String })
   @ApiQuery({ name: 'arealId', required: false, type: String })
   @ApiResponse({
@@ -44,10 +44,10 @@ export class AdminCollectionController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   listCollections(
-    @GetTenantId() tenantId: string,
     @GetCordsRules() allowedRules: string[],
+    @GetTenantId() tenantId: string,
     @Query('year') year?: string,
-    @Query('pin') pin?: string,
+    @Query('pin') pin?: string[],
     @Query('arealCategoryId') arealCategoryId?: string,
     @Query('arealId') arealId?: string
   ) {
@@ -62,7 +62,7 @@ export class AdminCollectionController {
   @Get('table')
   @ApiQuery({ name: 'enabled', required: false, type: Boolean })
   @ApiQuery({ name: 'year', required: false, type: String })
-  @ApiQuery({ name: 'pin', required: false, type: String })
+  @ApiQuery({ name: 'pin', required: false, type: [String], isArray: true })
   @ApiQuery({ name: 'arealCategoryId', required: false, type: String })
   @ApiQuery({ name: 'arealId', required: false, type: String })
   @ApiResponse({
@@ -71,10 +71,10 @@ export class AdminCollectionController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   listTableCollections(
-    @GetTenantId() tenantId: string,
     @GetCordsRules() allowedRules: string[],
+    @GetTenantId() tenantId: string,
     @Query('year') year?: string,
-    @Query('pin') pin?: string,
+    @Query('pin') pin?: string[],
     @Query('arealCategoryId') arealCategoryId?: string,
     @Query('arealId') arealId?: string
   ) {

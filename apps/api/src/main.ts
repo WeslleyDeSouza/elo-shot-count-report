@@ -1,7 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { swagger } from './main.swagger';
+import { setupSwagger } from './common/docs/main.swagger';
 import {
   env,
   MiddlewareCors,
@@ -11,6 +11,7 @@ import {
 import {staticFileMiddleware} from "./core/static-file";
 import {DataSource} from "typeorm";
 import {applyMiddlewareAppStripeDouble} from "./common/utils";
+import {setupMermaidUml} from "./common/docs";
 
 env.load();
 
@@ -32,7 +33,10 @@ async function bootstrap() {
   app.use(MiddlewareSecurityHeaders());
   app.use(staticFileMiddleware(dataSource));
 
-  if (env.isSwaggerEnabled) swagger(app);
+  if (env.isSwaggerEnabled) {
+    setupSwagger(app);
+    setupMermaidUml(app);
+  }
 
   const port: number = +(process.env.API_PORT ||process.env.PORT || 3003);
 

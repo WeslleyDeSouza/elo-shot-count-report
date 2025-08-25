@@ -201,10 +201,11 @@ export class CollectionFilterParamsDto {
   @IsString()
   year?: string | number;
 
-  @ApiProperty({ type: String, required: false, description: 'Filter by PIN' })
+  @ApiProperty({ type: [String], required: false, description: 'Filter by PIN', isArray: true })
   @IsOptional()
-  @IsString()
-  pin?: string;
+  @IsArray()
+  @IsString({ each: true })
+  pin?: string[];
 
   @ApiProperty({ type: String, required: false, format: 'uuid', description: 'Filter by areal category ID' })
   @IsOptional()

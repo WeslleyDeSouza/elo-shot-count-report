@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { EmptyStateComponent } from "../../_components";
 import {ComponentBase} from "@app-galaxy/sdk-ui";
 import {EnrichedCollection, TableResult} from "@ui-elo/apiClient";
+import { ChoicesDirective, ChoicesOptions } from '../../_common';
 
 const PATHS = {
   COLLECTION_CREATE: '/admin/collections/create',
@@ -24,7 +25,8 @@ const PATHS = {
     DatePipe,
     FormsModule,
     TranslatePipe,
-    EmptyStateComponent
+    EmptyStateComponent,
+    ChoicesDirective
   ],
   templateUrl: './collection.component.html',
   styles: `
@@ -50,30 +52,67 @@ export class CollectionComponent extends ComponentBase implements OnInit, OnDest
   // Filters
   filterEnabled = signal<boolean | undefined>(undefined);
   filterYear = signal<string>('');
-  filterPin = signal<string>('');
+  filterPin = signal<string[]>([]);
 
   title = "Collection";
   subTitle = "Collections";
 
-  filteredCollections: Signal<EnrichedCollection[]> = computed(() => {
-    const collections = this.allCollections();
-    const search = this.searchText().toLowerCase();
+  // Available PINs for filtering (computed from collections)
+  availablePins = computed(() => {
+    const pins = this.allCollections().map(collection => collection.pin);
+    return [...new Set(pins)].sort();
+  });
 
-    if (!search) {
-      return collections;
+  // Choices.js options for PIN filter  
+  pinChoicesOptions: ChoicesOptions = {
+    searchEnabled: true,
+    removeItemButton: true,
+    placeholder: true,
+    maxItemCount: 10,
+    itemSelectText: ''
+  };
+
+  filteredCollections: Signal<EnrichedCollection[]> = computed(() => {
+    let collections = this.allCollections();
+    const search = this.searchText().toLowerCase();
+    const enabledFilter = this.filterEnabled();
+    const yearFilter = this.filterYear().trim();
+    const pinFilter = this.filterPin();
+
+    // Apply search filter
+    if (search) {
+      collections = collections.filter(collection => {
+        const personData = collection.personData;
+        const dateData = collection.dateData;
+
+        return collection.pin.toLowerCase().includes(search) ||
+               collection.userType.toLowerCase().includes(search) ||
+               personData?.name?.toLowerCase().includes(search) ||
+               personData?.responsible?.toLowerCase().includes(search) ||
+               personData?.unit?.toLowerCase().includes(search) ||
+               dateData?.date?.toLowerCase().includes(search);
+      });
     }
 
-    return collections.filter(collection => {
-      const personData = collection.personData;
-      const dateData = collection.dateData;
+    // Apply enabled filter
+    if (enabledFilter !== undefined) {
+      collections = collections.filter(collection => collection.enabled === enabledFilter);
+    }
 
-      return collection.pin.toLowerCase().includes(search) ||
-             collection.userType.toLowerCase().includes(search) ||
-             personData?.name?.toLowerCase().includes(search) ||
-             personData?.responsible?.toLowerCase().includes(search) ||
-             personData?.unit?.toLowerCase().includes(search) ||
-             dateData?.date?.toLowerCase().includes(search);
-    });
+    // Apply year filter
+    if (yearFilter) {
+      collections = collections.filter(collection => {
+        const dateData = collection.dateData;
+        return dateData?.date?.includes(yearFilter);
+      });
+    }
+
+    // Apply PIN filter (multiple selection)
+    if (pinFilter.length > 0) {
+      collections = collections.filter(collection => pinFilter.includes(collection.pin));
+    }
+
+    return collections;
   });
 
   ngOnInit(): void {
@@ -106,7 +145,7 @@ export class CollectionComponent extends ComponentBase implements OnInit, OnDest
         this.facade.loadCollectionTable({
           enabled: this.filterEnabled(),
           year: this.filterYear() || undefined,
-          pin: this.filterPin() || undefined
+          pin: this.filterPin().length > 0 ? this.filterPin() : undefined
         })
       );
 
@@ -183,7 +222,7 @@ export class CollectionComponent extends ComponentBase implements OnInit, OnDest
   clearFilters(): void {
     this.filterEnabled.set(undefined);
     this.filterYear.set('');
-    this.filterPin.set('');
+    this.filterPin.set([]);
     this.loadCollections();
   }
 

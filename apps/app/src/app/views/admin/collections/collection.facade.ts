@@ -20,7 +20,7 @@ export class CollectionFacade {
   loadCollectionTable(filterParams?: {
     enabled?: boolean;
     year?: string;
-    pin?: string;
+    pin?: string[];
     arealCategoryId?: string;
     arealId?: string;
   }): Observable<TableResult> {

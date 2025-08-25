@@ -167,6 +167,9 @@
       "year": "Jahr",
       "enter_year": "Jahr eingeben",
       "enter_pin": "PIN eingeben",
+      "select_pins": "PINs auswählen...",
+      "search_pins": "PINs suchen...",
+      "no_pins_found": "Keine PINs gefunden",
       "form": {
         "name": "Name",
         "responsible": "Verantwortlicher",
