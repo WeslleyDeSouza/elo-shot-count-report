@@ -32,32 +32,40 @@ import { EmptyStateComponent } from '../../_components';
               <h1 class="h3 mb-1">{{ title }}</h1>
               <p class="text-muted mb-0">{{ 'admin.areal_weapon_relation.overview.manage_weapon_areal_relations' | translate }}</p>
             </div>
-            <div class="d-flex gap-2">
-              <button
-                class="btn btn-outline-secondary"
-                (click)="refreshData()"
-                [disabled]="loading()"
-              >
-                <i class="ri-refresh-line me-1"></i>
-                {{ 'admin.areal_weapon_relation.overview.refresh' | translate }}
-              </button>
-            </div>
           </div>
 
-          <!-- Search -->
+          <!-- Config Block -->
           <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="input-group">
-                <span class="input-group-text">
-                  <i class="ri-search-line"></i>
-                </span>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="{{ 'admin.areal_weapon_relation.overview.search_areals' | translate }}"
-                  (input)="searchAreals($event)"
-                  [value]="searchText()"
-                >
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row align-items-center g-3">
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <div class="position-relative">
+                        <input
+                          type="text"
+                          class="form-control ps-3 rounded"
+                          placeholder="{{ 'admin.areal_weapon_relation.overview.search_areals' | translate }}"
+                          (input)="searchAreals($event)"
+                          [value]="searchText()"
+                        >
+                        <i class="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-1 text-muted"></i>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-end">
+                      <div role="group" class="btn-group">
+                        <button
+                          class="btn btn-outline-secondary"
+                          (click)="refreshData()"
+                          [disabled]="loading()"
+                        >
+                          <i class="ri-refresh-line"></i>
+                          {{ 'admin.areal_weapon_relation.overview.refresh' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

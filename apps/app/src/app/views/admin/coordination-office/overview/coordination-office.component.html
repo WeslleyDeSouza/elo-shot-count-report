@@ -1,24 +1,32 @@
-<!-- Search and action buttons -->
+<!-- Config Block -->
 <div class="row mb-3">
-  <div class="col-md-6">
-    <div class="input-group">
-      <span class="input-group-text">
-        <i class="ri-search-line"></i>
-      </span>
-      <input
-        type="text"
-        class="form-control"
-        [placeholder]="'admin.common.search_coordination_offices' | translate"
-        (input)="searchOffices($event)">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="position-relative">
+              <input
+                type="text"
+                class="form-control ps-3 rounded"
+                [placeholder]="'admin.common.search_coordination_offices' | translate"
+                (input)="searchOffices($event)">
+              <i class="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-1 text-muted"></i>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-end">
+            <div role="group" class="btn-group">
+              <button type="button" class="btn btn-outline-secondary" (click)="refreshOffices()">
+                <i class="ri-refresh-line"></i> {{ 'admin.common.refresh' | translate }}
+              </button>
+              <button type="button" class="btn btn-primary" (click)="createCoordinationOffice()">
+                <i class="ri-add-line"></i> {{ 'admin.common.add_coordination_office' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <button type="button" class="btn btn-primary me-2" (click)="createCoordinationOffice()">
-      <i class="ri-add-line"></i> {{ 'admin.common.add_coordination_office' | translate }}
-    </button>
-    <button type="button" class="btn btn-outline-secondary" (click)="refreshOffices()">
-      <i class="ri-refresh-line"></i> {{ 'admin.common.refresh' | translate }}
-    </button>
   </div>
 </div>
 

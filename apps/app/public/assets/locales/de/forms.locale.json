@@ -35,6 +35,13 @@
     "sub_title": "Die Daten wurden gespeichert.<br>\n Sie werden nun weitergeleitet."
   },
   "wizard": {
+    "steps": {
+      "login": "Person",
+      "date_time": "Datum und Ort",
+      "locations": "Schusszahlmeldung",
+      "summary": "Vorschau",
+      "success": "Erfolgreich"
+    },
     "common": {
       "back": "Zurück",
       "next": "Weiter",
@@ -75,6 +82,19 @@
       "time_periods_subtitle": "Geben Sie optional die Zeiten für verschiedene Tagesabschnitte an",
       "morning": "Vormittag",
       "midday": "Nachmittag", 
+      "evening": "Abend",
+      "from": "Von",
+      "till": "Bis"
+    },
+    "date_time": {
+      "title": "Datum und Uhrzeit",
+      "subtitle": "Wählen Sie das Datum und die Uhrzeiten für Ihre Erfassung",
+      "date": "Datum",
+      "date_required": "Datum ist erforderlich",
+      "time_periods": "Zeiträume",
+      "time_periods_subtitle": "Geben Sie optional die Zeiten für verschiedene Tagesabschnitte an",
+      "morning": "Vormittag",
+      "midday": "Nachmittag",
       "evening": "Abend",
       "from": "Von",
       "till": "Bis"

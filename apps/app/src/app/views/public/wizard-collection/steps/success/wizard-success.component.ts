@@ -102,11 +102,11 @@ export class WizardSuccessComponent {
 
   onNewSubmission(): void {
     this.wizardService.resetWizard();
-    this.router.navigate(['/wizard/login']);
+    this.router.navigate(['/w/login']);
   }
 
   onGoHome(): void {
     this.wizardService.resetWizard();
-    this.router.navigate(['/']);
+    this.router.navigate(['/w']);
   }
 }

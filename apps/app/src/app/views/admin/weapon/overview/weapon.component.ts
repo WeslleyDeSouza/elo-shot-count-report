@@ -9,7 +9,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import {EmptyStateComponent} from "../../_components/empty-state";
 import { DataImporterComponent, type WeaponData } from '../../_components/data-importer/data-importer.component';
-import {Debounce} from "@app-galaxy/sdk-ui";
+import {ComponentBase, Debounce} from "@app-galaxy/sdk-ui";
 
 const PATHS = {
   WEAPON_CREATE: '/admin/weapon/create',
@@ -47,7 +47,7 @@ const PATHS = {
     }
   `
 })
-export class WeaponComponent implements OnInit, OnDestroy {
+export class WeaponComponent extends ComponentBase implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private facade = inject(WeaponFacade);
   private router = inject(Router);
@@ -101,12 +101,15 @@ export class WeaponComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupFacadeSubscriptions();
-    this.loadCategories();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  getData(){
+    this.loadCategories();
   }
 
   private setupFacadeSubscriptions(): void {
@@ -123,9 +126,8 @@ export class WeaponComponent implements OnInit, OnDestroy {
   private loadCategories(): void {
     this.facade.loadCategories()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(categories => {
-        this.allCategories.set(categories);
-      });
+      .subscribe(categories =>
+        this.allCategories.set(categories))
   }
 
   searchWeapons(event: any): void {

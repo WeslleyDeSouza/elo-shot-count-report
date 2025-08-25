@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { TranslateService } from '@app-galaxy/translate-ui';
 import {RouterLink} from "@angular/router";
+import {LayoutThemeTogglerComponent} from "@app-galaxy/sdk-ui";
 
 @Component({
   selector: 'app-topbar',
@@ -23,21 +24,26 @@ import {RouterLink} from "@angular/router";
 
         <!-- Language Selector -->
         <div class="language-selector">
-          <button class="lang-btn active">DE</button>
-          <button class="lang-btn">FR</button>
-          <button class="lang-btn">IT</button>
-          <button class="lang-btn">EN</button>
+          <button (click)="setLanguage('de')" [class]="'lang-btn' + (ts.lang === 'de' ? ' active' : '')">DE</button>
+          <button (click)="setLanguage('fr')" [class]="'lang-btn' + (ts.lang === 'fr' ? ' active' : '')">FR</button>
+          <button (click)="setLanguage('it')" [class]="'lang-btn' + (ts.lang === 'it' ? ' active' : '')">IT</button>
+          <button (click)="setLanguage('en')" [class]="'lang-btn' + (ts.lang === 'en' ? ' active' : '')">EN</button>
         </div>
 
         <!-- User Profile -->
-        <a [routerLink]="'/admin'" class="user-profile">
-          <i class="ri-user-line"></i>
-        </a>
+        <div class="d-flex gab-2">
+           <layout-theme-toggler />
+          <a [routerLink]="'/admin'" class="user-profile">
+            <i class="ri-user-line"></i>
+          </a>
+        </div>
+
       </div>
     </div>
   `,
   imports: [
-    RouterLink
+    RouterLink,
+    LayoutThemeTogglerComponent
   ],
   styles: [`
     .topbar {
@@ -200,6 +206,10 @@ import {RouterLink} from "@angular/router";
     }
   `]
 })
-export class TopbarComponent {
-  ts = inject(TranslateService);
+export class TopbarWizardCollectionComponent {
+  readonly ts = inject(TranslateService);
+
+  setLanguage(lang:string){
+    this.ts.lang = lang
+  }
 }

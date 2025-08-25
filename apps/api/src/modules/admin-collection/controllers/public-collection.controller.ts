@@ -111,7 +111,7 @@ export class PublicCollectionController {
     }));
   }
 
-  @Put('entry')
+  @Put('entry/:identifier')
   @ApiBody({ type: CollectionCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: CollectionResultDto })
   async createCollection(
@@ -124,7 +124,7 @@ export class PublicCollectionController {
   }
 
 
-  @Put('many')
+  @Put('many/:identifier')
   @ApiBody({ type: CollectionManyCreateDto })
   @ApiResponse({ status: 200, description: 'Success.', type: [CollectionResultDto] })
   async createCollections(
@@ -132,7 +132,7 @@ export class PublicCollectionController {
     @Body() body: CollectionManyCreateDto) {
     const tenantId: string = await this.getTenantByIdentifier(identifier);
     const groupId = uuidv4();
-    
+
     try {
       const collections = [];
 

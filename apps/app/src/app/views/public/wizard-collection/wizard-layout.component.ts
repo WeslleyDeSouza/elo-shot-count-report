@@ -2,15 +2,15 @@ import {Component, ChangeDetectionStrategy, OnInit, inject, computed, signal} fr
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { WizardService } from './_common/services/wizard.service';
 import { WIZARD_ROUTES } from './wizard.routes.constants';
-import { TopbarComponent, WizardStepperComponent } from './_components';
+import { TopbarWizardCollectionComponent, WizardStepperComponent } from './_components';
 import { filter } from 'rxjs';
 import { Debounce } from "@app-galaxy/sdk-ui";
 import { TranslatePipe } from '@app-galaxy/translate-ui';
 
 @Component({
-  selector: 'app-wizard-layout',
+  selector: 'app-wizard-layoutma',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, TopbarComponent, WizardStepperComponent, ],
+  imports: [RouterOutlet, TopbarWizardCollectionComponent, WizardStepperComponent, ],
   template: `
     <div class="wizard-container">
       <app-topbar />

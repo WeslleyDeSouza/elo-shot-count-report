@@ -9,7 +9,7 @@ import { TranslatePipe } from '@app-galaxy/translate-ui';
 import { Router } from '@angular/router';
 import {EmptyStateComponent} from "../../_components";
 import { DataImporterComponent, type ArealData } from '../../_components/data-importer/data-importer.component';
-import {Debounce} from "@app-galaxy/sdk-ui";
+import {ComponentBase, Debounce} from "@app-galaxy/sdk-ui";
 
 const PATHS = {
   AREAL_CREATE: '/admin/areal/create',
@@ -48,7 +48,7 @@ const PATHS = {
     }
   `
 })
-export class ArealComponent implements OnInit, OnDestroy {
+export class ArealComponent extends ComponentBase implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private facade = inject(ArealFacade);
   private router = inject(Router);
@@ -97,12 +97,15 @@ export class ArealComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupFacadeSubscriptions();
-    this.loadCategories();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  override getData() {
+    this.loadCategories()
   }
 
   private setupFacadeSubscriptions(): void {

@@ -1,5 +1,6 @@
 import type { Route } from '@angular/router'
 import {LocaleResolver} from "@app-galaxy/translate-ui";
+import {AdminLayoutComponent} from "./admin/admin.layout";
 
 export const VIEWS_PUBLIC_ROUTES: Route[] = [
   {
@@ -48,6 +49,7 @@ export const VIEWS_ROUTES: Route[] = [
         loadChildren:()=> import('./admin/areal-weapon-relation')
           .then(mod => mod.AREAL_WEAPON_RELATION_ROUTES),
       },
-    ]
+    ],
+    component: AdminLayoutComponent,
   },
 ].flat(2)

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
-import { TranslatePipe } from '@app-galaxy/translate-ui';
+import {TranslatePipe} from '@app-galaxy/translate-ui';
 
 export interface WizardStep {
   id: string;
@@ -12,7 +12,7 @@ export interface WizardStep {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe],
   template: `
-    <div class="container-fluid py-3">
+    <div class="container-fluid py-1">
       <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
           <div class="steps-container">
@@ -43,7 +43,7 @@ export interface WizardStep {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 12px;
-      padding: 1.5rem;
+      padding: 0.75rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
@@ -57,26 +57,26 @@ export interface WizardStep {
 
     .step-item {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      text-align: center;
-      min-width: 120px;
+      text-align: left;
+      gap: 0.5rem;
     }
 
     .step-circle {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
       border: 2px solid #e9ecef;
       background: #fff;
       color: #6c757d;
       transition: all 0.3s ease;
+      flex-shrink: 0;
     }
 
     .step-item.active .step-circle {
@@ -92,11 +92,11 @@ export interface WizardStep {
     }
 
     .step-label {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       font-weight: 500;
       color: #6c757d;
-      max-width: 100px;
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .step-item.active .step-label,
@@ -109,10 +109,10 @@ export interface WizardStep {
       flex: 1;
       height: 2px;
       background: #e9ecef;
-      margin: 0 0.5rem;
-      margin-bottom: 1.5rem;
+      margin: 0 0.75rem;
       min-width: 20px;
       transition: background 0.3s ease;
+      align-self: center;
     }
 
     .step-connector.active {
@@ -165,7 +165,6 @@ export interface WizardStep {
 export class WizardStepperComponent {
   steps = input.required<WizardStep[]>();
   currentStepIndex = input.required<number>();
-
   getStepClass(index: number): string {
     const current = this.currentStepIndex();
     if (index < current) return 'completed';

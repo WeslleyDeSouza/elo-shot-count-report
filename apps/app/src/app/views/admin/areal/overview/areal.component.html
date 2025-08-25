@@ -1,39 +1,50 @@
 
-<!-- Action buttons -->
-<div class="row mb-3">
-  <div class="col-12">
-    <button type="button" class="btn btn-primary me-2" (click)="createArealCategory()">
-      <i class="ri-add-line"></i> {{ 'admin.common.add_category' | translate }}
-    </button>
-    @if (canAddAreal()) {
-      <button type="button" class="btn btn-primary me-2" (click)="createAreal()">
-        <i class="ri-add-line"></i> {{ 'admin.common.add_areal' | translate }}
-      </button>
-    }
-    @if (canBulkEdit()) {
-      <button type="button" class="btn btn-outline-primary me-2" (click)="openBulkEditor()">
-        <i class="ri-table-line"></i> {{ 'admin.common.bulk_edit' | translate }}
-      </button>
-    }
-    <button type="button" class="btn btn-outline-secondary me-2" (click)="openImporter()">
-      <i class="ri-upload-line"></i> {{ 'admin.common.import' | translate }}
-    </button>
-  </div>
-</div>
 
-<!-- Search -->
+<!-- Config Block -->
 <div class="row mb-3">
-  <div class="col-12">
-    <div class="input-group">
-      <span class="input-group-text">
-        <i class="ri-search-line"></i>
-      </span>
-      <input 
-        type="text" 
-        class="form-control" 
-        [placeholder]="'admin.common.search' | translate"
-        [value]="searchText()"
-        (input)="searchAreas($event)">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="position-relative">
+              <input 
+                type="text" 
+                class="form-control ps-3 rounded" 
+                [placeholder]="'admin.common.search' | translate"
+                [value]="searchText()"
+                (input)="searchAreas($event)">
+              <i class="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-1 text-muted"></i>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-end">
+            <div role="group" class="btn-group">
+              <button type="button" class="btn btn-outline-secondary" (click)="openImporter()">
+                <i class="ri-upload-line"></i> {{ 'admin.common.import' | translate }}
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary" 
+                (click)="getData()">
+                <i class="ri-refresh-line"></i> {{ 'admin.common.refresh' | translate }}
+              </button>
+              @if (canBulkEdit()) {
+                <button type="button" class="btn btn-outline-primary" (click)="openBulkEditor()">
+                  <i class="ri-table-line"></i> {{ 'admin.common.bulk_edit' | translate }}
+                </button>
+              }
+              <button type="button" class="btn btn-primary" (click)="createArealCategory()">
+                <i class="ri-add-line"></i> {{ 'admin.common.add_category' | translate }}
+              </button>
+              @if (canAddAreal()) {
+                <button type="button" class="btn btn-primary" (click)="createAreal()">
+                  <i class="ri-add-line"></i> {{ 'admin.common.add_areal' | translate }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
